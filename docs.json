@@ -1,21 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "mint",
   "name": "Mellow",
   "colors": {
     "primary": "#1D8DFF",
     "light": "#5CACFF",
-    "dark": "#0A0A0A"
-  },
-  "background": {
-    "color": {
-      "light": "#FFFFFF",
-      "dark": "#0A0A0A"
-    },
-    "decoration": "grid"
-  },
-  "appearance": {
-    "default": "dark"
+    "dark": "#0B6FD1"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -402,8 +392,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Open App",
-      "href": "https://app.mellow.finance/vaults"
+      "label": "Dashboard",
+      "href": "https://app.mintlify.com"
     }
   },
   "contextual": {
