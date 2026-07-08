@@ -1,0 +1,14 @@
+---
+title: "Overview"
+description: "What Core Vaults are, why they exist, how they encode strategy constraints onchain, and the curated model separating depositors from curators."
+---
+
+Core Vaults are Mellow’s primary vault architecture for deploying curated onchain structured products.
+
+They exist to address a specific class of problems that emerge once vaults move beyond simple asset routing: the need for explicit risk boundaries, predictable execution surfaces, and stable interfaces that remain valid as strategies evolve. Core Vaults formalize these requirements at the vault level.
+
+Core Vaults encode strategy constraints directly into the vault configuration. This includes which integrations can be used, which actions are permitted, and how capital can move between execution paths. Enforcement happens onchain, making strategy behavior inspectable and resistant to off-policy execution.
+
+Core Vaults are designed to be extensible without requiring protocol-specific adapters for every new integration. Instead of hard-coding execution paths per protocol, Core Vaults expose a flexible execution surface that allows curators to route capital to new DeFi venues within the bounds of existing vault constraints. This significantly reduces integration overhead and shortens time-to-deployment, enabling strategies to incorporate new protocols or shift execution paths as market conditions change. As a result, Core Vaults can adapt strategy behavior without requiring redeployment of the vault itself, while still preserving onchain enforcement of permissions and risk limits.
+
+Core Vaults operate under a curated model. Depositors supply capital to the vault, while curators operate strategy logic within predefined guardrails. Curators cannot arbitrarily change strategy behavior, all actions are bounded by the vault’s permissions, limits, and execution rules. This separation of roles allows strategies to remain actively managed while keeping risk parameters explicit and enforceable.

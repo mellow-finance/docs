@@ -1,0 +1,66 @@
+---
+title: "Overview"
+description: "Loyalty points program: Mellow and Symbiotic points calculation for users (0.00025*N per hour), DVstETH incentive formulas (SSV monthly, Obol weekly), curator points logic, and eligibility rules."
+---
+
+Mellow believes that early adopters play a significant role in the growth and success of the ecosystem. Therefore, through the points program, we want to recognize and reward healthy engagement from community members and partners.
+
+
+
+### **Loyalty Points logic for users**
+
+**Restaked vaults**
+
+Consider a user who just deposited N USD in one of the vaults. When depositing assets like (w)stETH, (W)ETH, wBTC, tBTC, ENA and sUSDE into Mellow LRT vault, user receives some LRT.
+
+For every hour these N USD stay in a vault, the address holding an LRT gets 0.00025\*N Mellow points. As a general rule, loyalty points are updated hourly. Here's a breakdown of what these points consist of.
+
+All users receive the same amount of Symbiotic and Mellow points as it was assumed, in contrast to what may have been in some cases before Migration to Symbiotic vaults. To access the old methodology, please head over to [points-in-symbiotic-pre-deposit-contracts.md](points-in-symbiotic-pre-deposit-contracts "mention").
+
+On top of Mellow points, users also receive points from other protocols, including Symbiotic points. Users of Mellow vaults get pro-rata symbiotic points from two sources: pre-deposit vaults and vaults with slashing. For more info on Symbiotic points in vaults with slashing, check: [https://docs.symbiotic.fi/points-season2/](https://docs.symbiotic.fi/points-season2/). Mellow redistributes all partner points in a fair proportional manner without taking a cut. <br/>
+
+**Decentralized Validator Vault**&#x20;
+
+Incentives from Obol are updated on a weekly basis and incentives from SSV are updated on a monthly basis, while Mellow point updates will be reflected once an hour. Rewards from Obol and SSV for users are calculated based on ETH placed in the Vault, which is used for validators within the Lido protocol. As more DVT based validators are activated, the amount of incentives will increase. Incentives are claimable as SSV and Obol tokens. \
+\
+Current APR formula is (we consider a 3-day interval to provide a stable and sufficiently accurate spot APR calculation):\
+`reward_rate := latest_report_reward_amount / report_range_in_seconds;`
+
+`reward_estimation := reward_rate * 3 days;`
+
+`reward_estimation_in_eth := reward_estimation * avg(reward_price_in_eth, 3 days);`
+
+
+`reward_apr := reward_estimation_in_eth / avg(vault_tvl_in_eth, 3 days) * 365 / 3 * 100%;`
+
+The vault APR is computed as:
+
+`vault_apr := reward_apr(SSV) + reward_apr(OBOL) + stETH_yield;`\
+where `reward_rate_per_1_eth_per_second` is derived from the latest reward distribution.
+
+To dissuade possibly harmful effects to the Lido on the Ethereum protocol, cross-team analysis will be conducted on Vault participants, and certain potentially abusive actions may render the user completely or partially ineligible for consideration for points.
+
+In order to be eligible to potentially receive Obol and SSV incentives for the capital provided, Vault participants must:
+
+1. Hold a position for a minimum of 3 days in the vault through the conclusion of the Snapshot period.
+2. Not unstake existing stETH or wstETH that is then restaked via the vault from the moment of vault launch. The incentives are calculated on the basis of ETH staked to and persisting within the vault during the relevant snapshot period, minus any stETH withdrawn after the launch of the vault.
+3. Do not sell existing stETH on DEXs/CEXs. This condition does not exclude stakers from all incentives, but reduces the corresponding amount of capital provided by the volume of sold ETH. Similar to the above, the incentives would be calculated on the base of non-swapped ETH staked to and persisting within the vault during the relevant snapshot period.
+
+
+
+### **Loyalty Points logic for curators**
+
+Curators serve as the primary intermediary between the restaking middleware and passive restakers. Mellow plans to aid LRT curators to launch permissionless LRTs with deployment, maintenance, DeFi integrations and Loyalty Points Offering Loyalty Points to Mellow curators is strategic because it:
+
+• Makes curating vaults more profitable and therefore more attractive\
+• Aligns risk curators with the success of Mellow\
+• Encourages them to focus on providing the best product for users rather than direct revenue (thus encouraging lower fees)\
+• Provides them with resources to participate in the future governance of Mellow LRTs<br/>
+
+<br/>
+
+\
+<br/>
+
+\
+<br/>

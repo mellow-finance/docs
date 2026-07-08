@@ -1,0 +1,221 @@
+---
+title: "Core"
+---
+
+The `Core` contract is a central component, orchestrating interactions between users, liquidity pools, and various strategy modules within Automated Market Makers (AMMs). It acts as a comprehensive manager for liquidity positions, facilitating deposits, withdrawals, rebalances, and the strategic allocation of assets across different pools. By interfacing with AMM modules, strategy modules, and oracles, the `Core` contract enables a dynamic and responsive liquidity management system tailored to the evolving conditions of the DeFi market.
+
+### Structures Overview for `Core` Contract
+
+This document details the essential data structures used in the `Core` contract, pivotal for managing liquidity positions within AMM environments. Each structure is designed to encapsulate and manage different aspects of liquidity positions, from initiation and strategic rebalancing to security considerations.
+
+#### ManagedPositionInfo
+
+This structure describes current position of a user in some AMM pool. The position itself assumes that there could be several ERC-721 tokens of AMM but they reside in the same pool, have the same owner and same strategy params and security params. In other words, this is something that describes a strategy for rebalancing a set of ERC-721 positions. It captures various parameters crucial for the operation, management, and strategic decision-making for a specific position in Automated Market Makers (AMM) environments.
+
+```solidity
+struct ManagedPositionInfo {
+    uint16 slippageD4;
+    uint24 property;
+    address owner;
+    address pool;
+    uint256[] ammPositionIds;
+    bytes callbackParams;
+    bytes strategyParams;
+    bytes securityParams;
+}
+```
+
+* **slippageD4**: Determines the portion of the Total Value Locked (TVL) in the ManagedPosition that can be used to pay for rebalancer services. Value is multiplied by 1e4. For instance, slippageD4 = 10 corresponds to 1% of the position. This allows for fine-grained control over the economic parameters governing rebalancing actions.
+* **property**: A pool parameter corresponding to the ManagedPosition, usually representing tickSpacing or fee. This parameter helps in identifying and utilizing specific characteristics of the pool that are relevant to the management of the position.
+* **owner**: The owner of the position, capable of performing actions such as withdraw, emptyRebalance, and parameter updates. Ensures that only the designated owner can modify or interact with the position, safeguarding against unauthorized access or actions.
+* **pool**: The pool corresponding to the ManagedPosition. Identifies the specific AMM pool that this position is associated with, facilitating targeted management and operations.
+* **ammPositionIds**: An array of NFTs from the AMM protocol corresponding to the ManagedPosition. Allows for the aggregation and management of multiple AMM positions under a single managed position, enhancing the flexibility and capabilities of the system.
+* **callbackParams**: A byte array containing custom data for the corresponding AmmModule. Stores information necessary for operations like staking, reward collection, etc., enabling customizable and protocol-specific interactions.
+* **strategyParams**: A byte array containing custom data for the corresponding StrategyModule. Holds information about the parameters of the associated strategy, allowing for the implementation and execution of tailored strategic decisions.
+* **securityParams**: A byte array containing custom data for the corresponding Oracle. Contains parameters for price fetching and protection against MEV (Miner Extractable Value) attacks, enhancing the security and integrity of the position.
+
+#### TargetPositionInfo
+
+This structure contains data that allows a rebalancer to obtain information about the required final parameters of AMM positions for a specific ManagedPosition.
+
+```solidity
+struct TargetPositionInfo {
+    int24[] lowerTicks;
+    int24[] upperTicks;
+    uint256[] liquidityRatiosX96;
+    uint256[] minLiquidities;
+    uint256 id;
+    ManagedPositionInfo info;
+}
+```
+
+* **lowerTicks:** Array of lower ticks corresponding to the expected AMM Positions after rebalancing. These ticks define the lower bound of the price ranges for each targeted AMM position. They are integral in determining the optimal positioning and allocation of liquidity within the AMM environment post-rebalance.
+* **upperTicks**: Array of upper ticks corresponding to the expected AMM Positions after rebalancing. Similar to `lowerTicks`, these define the upper bound of the price ranges for each targeted AMM position. Together, the lower and upper ticks delineate the price intervals where liquidity will be optimally positioned.
+* **liquidityRatiosX96**: Distribution ratio of liquidity among positions, where the sum in the array equals Q96. This array represents the precise distribution of liquidity across the targeted positions, allowing for balanced and strategic allocation post-rebalance. The Q96 notation indicates fixed-point arithmetic for enhanced precision.
+* **minLiquidities**: Minimum liquidity values for each of the expected AMM Positions after rebalancing. Sets the minimum acceptable liquidity for each position, ensuring that rebalancing actions do not result in suboptimal or excessively diluted positions.
+* **id**: Index of the ManagedPosition. Serves as a unique identifier for the ManagedPosition being targeted for rebalancing. This facilitates tracking and management within the broader system.
+* **info**: Information about the original corresponding ManagedPosition. Captures the initial state and parameters of the ManagedPosition prior to rebalancing. This includes detailed information necessary for the rebalancer to accurately target the desired end state.
+
+#### DepositParams
+
+This structure contains data for depositing AMM Positions and creating corresponding ManagedPositions with specified parameters. It is crucial for initializing and setting up ManagedPositions based on existing AMM positions.
+
+```solidity
+struct DepositParams {
+    uint256[] ammPositionIds;
+    address owner;
+    uint16 slippageD4;
+    bytes callbackParams;
+    bytes strategyParams;
+    bytes securityParams;
+}
+```
+
+* **ammPositionIds**: Array of NFTs from the AMM protocol corresponding to the ManagedPosition. Enables the aggregation of multiple AMM positions under a single managed position, facilitating collective management and strategic oversight.
+* **owner**: The owner of the position, who is authorized to perform actions such as withdraw, emptyRebalance, and parameter updates. Ensures that only the designated owner has the authority to manage and modify the position, safeguarding against unauthorized interventions.
+* **slippageD4**: Defines the portion of the Total Value Locked (TVL) in the ManagedPosition that can be used to pay for rebalancer services. The value is multiplied by 1e4, meaning a `slippageD4` value of 10 corresponds to 1% of the position. This parameter allows for precise economic management of the position with regard to rebalancing costs.
+* **callbackParams**: A byte array containing custom data for the corresponding AmmModule. Stores operational data such as staking details, reward collection mechanisms, etc., providing a flexible interface for AMM-specific functionalities.
+* **strategyParams**: A byte array containing custom data for the corresponding StrategyModule. Encapsulates strategic information, including parameters guiding the management and rebalancing of the position, allowing for tailored strategic execution.
+* **securityParams**: A byte array containing custom data for the corresponding Oracle. Contains parameters critical for accurate price fetching and MEV (Miner Extractable Value) protection mechanisms, enhancing the position's security and market responsiveness.
+
+#### RebalanceParams
+
+This structure contains parameters for rebalancing, filled out by the rebalancer. It is crucial for specifying which ManagedPositions are to be rebalanced and detailing how rebalancing actions should be conducted through interactions with a specified callback contract.
+
+```solidity
+struct RebalanceParams {
+    uint256[] ids;
+    address callback;
+    bytes data;
+}
+```
+
+* **ids**: Array of IDs for ManagedPositions that the rebalancer intends to rebalance. Identifies the specific positions within the liquidity management system that are targeted for rebalancing. This allows for focused and efficient rebalancing actions, addressing the needs of selected positions.
+* **callback**: Address of the contract to which Core.sol will make calls during the rebalancing process to execute all operations with swaps, creation of new positions, etc. Specifies the external contract responsible for the operational aspects of the rebalancing process, such as executing swaps and managing position adjustments. This modular approach enables flexible and customizable rebalancing strategies.
+* **data**: Data for the above-mentioned callback contract. Contains the necessary information and instructions for the callback contract to execute the rebalancing actions. The format and content of this data are tailored to the specific requirements and functionalities of the callback contract.
+
+### **Functions:**
+
+### `function ammModule() external view returns (IAmmModule);`
+
+* **Purpose:** Retrieves the address of the AMM Module, integral for interacting with AMM functionalities.
+* **Return:** Address of the AMM module.
+
+#### `function oracle() external view returns (IOracle);`
+
+* **Purpose:** Fetches the address of the Oracle contract, crucial for accessing real-time price data and market conditions.
+* **Return:** Address of the oracle contract.
+
+#### `function strategyModule() external view returns (IStrategyModule);`
+
+* **Purpose:** Gets the address of the Strategy Module associated with the contract, facilitating strategic liquidity management.
+* **Return:** Address of the strategy module contract.
+
+### `function operatorFlag() external view returns (bool);`
+
+* **Purpose:** Indicates the state of the operator flag, determining if specific operations require operator privileges.
+* **Return:** Boolean value of the operator flag.
+
+### `function managedPositionAt(uint256 id) external view returns (ManagedPositionInfo);`
+
+* **Purpose:** Provides details about a specific managed position by its ID.
+* **Parameters:** `id` - The ID of the managed position.
+* **Return:** `ManagedPositionInfo` struct with details about the position.
+
+#### `function positionCount() external view returns (uint256);`
+
+* **Purpose:** Counts all managed positions within the contract.
+* **Return:** Total number of managed positions.
+
+#### `function getUserIds(address user) external view returns (uint256[] memory);`
+
+* **Purpose:** Retrieves all managed position IDs associated with a user address.
+* **Parameters:** `user` - User's address.
+* **Return:** Array of position IDs.
+
+### `function protocolParams() external view returns (bytes memory);`
+
+* **Purpose:** This function provides access to protocol-wide settings and parameters that govern the behavior and functionalities of the contract. These parameters can include configurations related to fees and treasuries.
+* **Returns:** bytes representation of the protocol parameters. The structure and interpretation of these parameters depend on the AmmModule implementation and the specific protocol logic it adheres to.
+
+#### `function setOperatorFlag(bool operatorFlag_) external;`
+
+* **Purpose:** Sets the operator flag to enable or disable specific operator functionalities, such as the requirement for operator privileges to execute rebalances. This adjustment allows for the dynamic control over who can initiate and execute rebalance operations, a critical aspect of managing the protocol's liquidity and position strategies. By toggling this flag, the protocol's administrator can restrict or open rebalancing capabilities in response to operational, security, or strategic considerations.
+* **Parameters:** `operatorFlag_` - A boolean value indicating the new state of the operator flag. Setting this flag to `true` requires operator privileges for rebalancing actions, adding an additional layer of control and security. Conversely, setting it to `false` removes the necessity for such privileges, potentially broadening the pool of entities that can perform rebalances under certain conditions.
+* **Requirements:** Only the admin of the `Core.sol` contract can call this function. This restriction ensures that changes to the operator flag, which can significantly impact the protocol's operation and security posture, are made solely by the most trusted level of authority within the protocol's governance structure.
+
+#### `function setProtocolParams(bytes memory params) external;`
+
+* **Purpose:** Sets the global protocol parameters for the contract. This function is intended for administrative use, allowing for the adjustment of critical operational parameters that govern the overall behavior of the protocol. Changes made through this function can affect rebalancing logic, fee structures, security mechanisms, and other foundational aspects of the protocol's operation.
+* **Parameters:** `params` - A bytes memory data structure containing the new protocol parameters. The structure and content of this data should adhere to the protocol's specification, ensuring compatibility and correctness. This could include parameters such as global slippage settings, fee rates, security thresholds, or other protocol-wide settings.
+* **Requirements**: Only the admin of Core.sol can call this function.
+
+#### `function setPositionParams(uint256 id, uint16 slippageD4, bytes memory callbackParams, bytes memory strategyParams, bytes memory securityParams) external;`
+
+* **Purpose:** Sets the parameters for a specific managed position identified by its ID. This function allows updating the position's slippage, callback, strategy, and security parameters, enabling dynamic adjustment of the position's operational and strategic settings. It is essential for maintaining the relevance and efficiency of the position's strategy and security posture over time.
+* **Parameters:**
+  * `id`: The unique identifier of the managed position to update.
+  * `slippageD4`: The maximum allowable proportion of the position's capital that can be allocated as compensation to rebalancers for their services. This value is scaled by a factor of 10,000 (1e4), such that a value of 10,000 represents 100%, allowing for fine-grained control over rebalancing compensation.
+  * `callbackParams`: Custom data for the callback operation, facilitating specific interactions and operational adjustments during the rebalancing or other contract-driven processes.
+  * `strategyParams`: Custom data defining the strategic parameters of the position, enabling strategic adjustments and alignments with market conditions or portfolio objectives.
+  * `securityParams`: Custom data outlining the security parameters, crucial for adjusting the position's security settings and mechanisms in response to evolving market threats or operational requirements.
+* **Requirements**:
+  * The caller must be the owner of the position, ensuring that only authorized entities can make adjustments to the position's parameters.
+  * The strategy and security parameters must be valid, adhering to the contract's and underlying protocols' requirements and constraints, ensuring the integrity and effectiveness of the position's strategy and security.
+
+### `function deposit(DepositParams memory params) external returns (uint256)`
+
+* **Parameter**: `DepositParams memory param` - a struct containing all necessary information for depositing into a ManagedPosition, including:
+  * `ammPositionIds[]`: Array of NFT IDs representing AMM positions to be included.
+  * `owner`: Address of the position owner.
+  * `slippageD4`: Permitted slippage in the deposit, scaled by 1e4.
+  * `callbackParams`: Custom data for AMM module callbacks.
+  * `strategyParams`: Strategy-related parameters.
+  * `securityParams`: Oracle security parameters to prevent MEV (Miner Extractable Value) related issues.
+* **Returns**: `uint256 id`: The unique identifier of the created or augmented ManagedPosition.
+* **Execution Flow:**
+  1. **Validation**: Initially, the function validates `callbackParams`, `strategyParams`, and `securityParams` using respective modules (`ammModule`, `strategyModule`, `oracle`). It ensures parameters comply with predefined rules and security checks.
+  2. **Pool Consistency**: It verifies all provided AMM position IDs belong to the same pool and rejects any discrepancies, ensuring deposit coherence.
+  3. **Token Transfer**: Tokens are transferred from the depositor to the Core contract. This step involves interacting with the AMM module to handle the token transfer securely and efficiently. The function will return with an error if for these ammPositionIds there are not enough ERC721 approvals to make transfers
+  4. **ManagedPosition Creation**: A new ManagedPosition is created with the deposited tokens. This involves updating the internal state with new position details, including owner, pool, and parameter information.
+  5. **ID Assignment**: The function assigns a unique ID to the new ManagedPosition, facilitating future interactions and queries.
+
+#### `function withdraw(uint256 id, address to) external`
+
+* Parameters
+  * `uint256 id`: The unique identifier of the ManagedPosition from which tokens are to be withdrawn.
+  * `address to`: The recipient address where the withdrawn tokens and any associated NFTs are sent.
+* Execution Flow
+  1. **Ownership Validation**: Verifies that the caller of the function is the owner of the ManagedPosition, ensuring that unauthorized users cannot withdraw assets from positions they do not own.
+  2. **Position Retrieval**: Fetches the ManagedPosition information based on the provided `id`, including details such as AMM position IDs, strategy, and security parameters.
+  3. **Token Transfer**: Iterates through all AMM position IDs associated with the ManagedPosition, performing the following steps for each:
+     * Pre-Rebalance Callback: Executes any necessary pre-rebalance logic specified in the callback parameters.
+     * Transfer NFTs: Moves the AMM NFTs from the Core contract to the specified recipient address (`to`).
+     * Post-Rebalance Callback: Carries out post-rebalance actions as defined in the callback parameters.
+  4. **Position Deletion**: Removes the ManagedPosition from the Core contract's storage, effectively deleting it and freeing up resources. The user's association with the ManagedPosition's ID is also cleared.
+
+#### `function rebalance(RebalanceParams memory params) external`
+
+* Parameter: `RebalanceParams params` - structure containing all necessary parameters for rebalancing, including:
+  * `uint256[] ids`: An array of ManagedPosition IDs to be rebalanced.
+  * `address callback`: The address of the callback contract to execute operational tasks (e.g., swaps, liquidity adjustments).
+  * `bytes data`: Additional data required by the callback contract to execute the rebalancing actions.
+* Execution Flow
+  1. **Operator Validation**: If the `operatorFlag` is enabled, the function validates that the caller has at least operator privileges. This ensures that rebalance operations can be tightly controlled and executed by authorized entities.
+  2. **Prepare Targets**: Constructs an array of `TargetPositionInfo` structures, representing the desired final state for each position after rebalancing. This involves:
+     * Verifying no potential MEV (Miner Extractable Value) opportunities could adversely affect the rebalance.
+     * Consulting the strategy module to determine if rebalancing is necessary and, if so, calculating the target position parameters.
+  3. **Preprocessing**: Before executing the rebalance, performs necessary preparations, such as collecting rewards and fees from positions by calling beforeRebalance callback, and transferring AMM NFTs to the callback contract.
+  4. **Execute Callback**: Invokes the callback contract with the prepared `data` and target positions, allowing the execution of complex rebalancing logic, including swaps and liquidity adjustments.
+  5. **Postprocessing**: After the callback execution, updates the ManagedPositions within the Core contract to reflect the new state, ensuring the internal state is consistent with the on-chain reality.
+  6. **Validation and Cleanup**: Verifies the final state of rebalanced positions against the strategy's requirements, ensuring all operations were successful and the positions are correctly updated.
+
+#### `function emptyRebalance(uint256 id) external`
+
+* Parameters: `uint256 id` - the unique identifier of the ManagedPosition to undergo an empty rebalance operation.
+* Execution Flow
+  1. **Ownership Validation**: Confirms that the caller is the owner of the ManagedPosition, enhancing security by preventing unauthorized rebalance attempts.
+  2. **Position Retrieval**: Extracts the ManagedPosition details using the provided `id`, including the list of AMM position IDs, strategy parameters, and security settings.
+  3. **Rebalance Operations**: Executes the rebalance logic for each AMM position associated with the ManagedPosition, while not altering the overall liquidity. The process involves:
+     * Pre-Rebalance Callbacks: Invokes any pre-defined logic before the rebalancing action, which may include collecting fees or rewards and unstaking.
+     * Post-Rebalance Callbacks: Invokes any pre-defined logic after the rebalancing action, which may include staking into farms or gauges.

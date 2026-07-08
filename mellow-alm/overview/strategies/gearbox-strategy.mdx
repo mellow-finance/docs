@@ -1,0 +1,58 @@
+---
+title: "Fearless Gearbox strategy"
+---
+
+Our gearbox strategy works through our special gearboxVault.&#x20;
+
+The gearboxVault is a one-token vault. The basic use case we want to cover by the strategy is as follows:
+
+* The vault accepts deposits/withdrawals in some token X (for example, USDC or WETH)
+* The vault opens a credit account in Gearbox V2 in token Y (which can be any token allowed in Gearbox V2 as basic tokens for credit accounts). Note that it's possible token X is the same as token Y.
+* The vault accepts deposits of some token X into the vault, adds it as collateral into the credit account, takes a loan of token Y with leverage, puts all belonging token Y into a Curve pool chosen by the strategist (such that Y is one of the tokens of this pool), puts curve LP tokens into Convex staking, earns rewards there
+
+As a result, the vault earns some decent yield as the Convex rewards rate is greater than the Gearbox V2 borrowing rate.
+
+For example, token X might be WETH, token Y might be USDC and the Curve pool might be frax. But, the strategist is able to choose any combination of token X, token Y, and the Curve pool allowed by the Gearbox system and shown description.
+
+### Deposits and withdrawals
+
+Gearbox V2 doesn’t have an option of a partial withdrawal of funds from its credit accounts. Hence, there is a new RootVault (named GearboxRootVault) that uses the following scheme:
+
+* A deposit into the RootVault goes directly to the gearboxVault, without going through the ERC20Vault (as it's usually done). After the deposit, a depositor is given an LP tokens amount proportional to his share of the vault funds.
+* An instant withdrawal is not permitted. Instead, the vault collects requests for withdrawals from users willing to withdraw. Every two weeks, the existing credit account in Gearbox V2 is closing and sends tokens corresponding to the sum of all withdrawal requests to the ERC20Vault, where users can claim them back at any moment. Then, the credit account on Gearbox V2 is reopened back, and the process repeats.
+* This procedure is subject to some losses for long-time users because every 2 weeks all funds go through adding and removing liquidity in the Curve pool, so some fees are paid to Curve because those addings and removals are made in one token. As for the current version of the strategy, Mellow Protocol compensates those losses for the users by adding funds equal to the fees to the vault.
+
+### Gearbox vault internal logic
+
+The vault has a parameter _marginalFactor_ (let’s call it `$$M > 1$$` for simplicity). If the vault has `$$x$$` USD of pure capital (total assets - total debts), it’s supposed the vault should generally have `$$x \cdot M$$` USD of assets (so, `$$x \cdot (M - 1)$$` USD of debts). This parameter can be changed by the admin or an approved address in the vault
+
+Here are the main functions’ logic of the vault:
+
+* _openCreditAccount()_ opens a new credit account (required to be called to start using Gearbox). Gearbox requires a min limit cap of borrowing which has always to be fulfilled during using the credit account (which means, we have to already have some funds in our vault before this call to be able to borrow). Typically, supposed to be called by our external bot which is responsible for having enough funds
+* _tvl()_ returns tvl = total assets - total debts. Here, minTvl always equals maxTvl
+* \__push()_ simply deposits all received collateral into the credit account
+* \__pull()_ closes the credit account, sends the required amount of money to the ERC20Vault, and the remaining funds remain in the vault. Either pays the required amount of money or sends all funds to the ERC20Vault (if the request can’t be fulfilled fully)
+* _adjustPosition()_ adjusts the amount of total assets to `$$M \cdot x$$`. This means, if the amount of the current assets is smaller, the vault takes additional debt of token Y and puts it into Curve and then Curve LP tokens to Convex. If in opposition, it’s greater, it repays exceeding debt (if necessary, taking some amounts back from Convex or from deposited collateral). The external bot is supposed to call this function (for example, every day)
+* _updateTargetMarginalFactor_() changes target _marginalFactor_ and adjusts the amount of the assets to the new marginal factor
+
+Calls to Gearbox V2 go mainly through [multicalls](https://dev.gearbox.fi/docs/documentation/credit/multicall) feature.
+
+We maintain the following invariants for the Gearbox Vault:
+
+* If the vault’s token doesn’t equal the token of the credit account, we maintain that _amount ≤ tvl,_ where _amount_ is how many vault’s tokens are in the credit account. If false, some amount of tokens are swapped to the tokens of the credit account at the first stage of the _adjustPosition()_ function to fulfill this requirement
+* Before _pull()_, tokens of the credit account are not swapped to the tokens of the vault if it’s not necessary. After closing the credit account, both tokens may return to the vault in some amount (and be swapped afterward if needed)
+
+### Risks
+
+The strategy has the same risks as the underlying Curve position. It may suffer from IL. The strategy provides liquidity only on the stable pools, so IL is equal to depeg of the tokens.
+
+Special off-chain module constantly monitors the situation with the status of leveraged funds and the health factor of the vault. In case of some early depeg, it instantly closes the vault if the health factor of our vault is lower than some pre-defined threshold, avoiding liquidation and saving some users' funds.
+
+It's possible that at some moments market conditions turn out to be such that the current operating of the strategy becomes unprofitable (for example, borrow rates in Gearbox rise too high). If this happens, the strategy can be put on hold until market conditions go back to positive APR.
+
+### Role of external bot
+
+Our external bot will be launched and it will be responsible for maintaining two main goals:
+
+* Doing the weekly cycle of opening/closing credit accounts and subsequent withdrawals
+* Monitoring the prices and being able to emergency shutdown the system (i.e close the credit account and secure the money on the vault system) in case of the health of the Gearbox position is too low (for example, at the beginning of a sudden depeg)

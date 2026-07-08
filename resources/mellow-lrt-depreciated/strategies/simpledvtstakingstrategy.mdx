@@ -1,0 +1,64 @@
+---
+title: "SimpleDVTStakingStrategy"
+---
+
+### Overview
+
+The `SimpleDVTStakingStrategy` contract manages staking operations by interacting with a staking module and vault. It extends the `DefaultAccessControl` to incorporate robust access management while providing functionalities to set staking parameters, initiate deposits, and process withdrawals.
+
+### Key Features
+
+* **Staking Operations**: Manages the conversion and deposit of tokens for staking.
+* **Withdrawal Management**: Handles withdrawals from the vault based on the staking strategy.
+* **Parameter Management**: Allows setting the maximum allowable remainder of staked assets in the vault after instant staking operation.
+
+### Constructor
+
+* Initializes the contract with an admin, a vault, and a staking module.
+  * **Parameters**:
+    * **admin**: Administrator of the contract.
+    * **vault\_**: Address of the associated vault.
+    * **stakingModule\_**: Address of the staking module used for conversion and deposit operations.
+
+### Core Methods
+
+1. **Staking Operations**
+   * `convertAndDeposit(uint256, uint256, bytes32, bytes32, uint256, bytes, IDepositSecurityModule.Signature[])`: Converts a specified amount of WETH into WSTETH using `StakingModule` and `DepositSecurityModule`
+     * **Parameters**:
+       * **amount**: The amount to convert and deposit.
+       * **blockNumber**: The block number for the deposit.
+       * **blockHash**: The hash of the block.
+       * **depositRoot**: The root hash of the deposit.
+       * **nonce**: A unique identifier for the operation.
+       * **depositCalldata**: Additional calldata for the deposit.
+       * **sortedGuardianSignatures**: Signatures from guardians for security validation.
+     * **Returns**:
+       * **success**: Indicates if the deposit was successful.
+     * **Event**:
+       * **ConvertAndDeposit**: Emitted upon a deposit attempt.
+2. **Withdrawal Management**
+   * `processWithdrawals(address[], uint256)`: Processes withdrawals for specified users.
+     * **Parameters**:
+       * **users**: Array of user addresses to process withdrawals for.
+       * **amountForStake**: Amount of tokens to convert for staking before processing withdrawals.
+     * **Returns**:
+       * **statuses**: Array indicating the success or failure of withdrawals for each user.
+     * **Event**:
+       * **ProcessWithdrawals**: Emitted when withdrawals are processed.
+3. **Parameter Management**
+   * `setMaxAllowedRemainder(uint256)`: Sets the maximum allowed remainder of staked tokens in the vault.
+     * **Parameters**:
+       * **newMaxAllowedRemainder**: The new limit for the maximum remainder.
+     * **Event**:
+       * **MaxAllowedRemainderChanged**: Emitted when the max allowed remainder is updated.
+
+### Modifiers
+
+* **\_requireAdmin()**: Ensures that only an administrator can perform certain actions.
+* **\_requireAtLeastOperator()**: Ensures that only operators or higher level roles can perform specific operations.
+
+### Events
+
+* **MaxAllowedRemainderChanged**: Emitted when the maximum allowed remainder is updated.
+* **ConvertAndDeposit**: Emitted after attempting to convert and deposit tokens.
+* **ProcessWithdrawals**: Emitted when withdrawals are processed.

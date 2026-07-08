@@ -1,0 +1,134 @@
+---
+title: "Core"
+---
+
+There are several basic principles that shape the design of the Mellow Permissionless Vaults protocol:
+
+1. Liquidity put into protocol can always be withdrawn (but, maybe not through one block, because we have a withdrawal limit for a single block in order to protect us from potential attacks). That is governance, strategy or any other entity cannot preclude a [Liquidity Provider](definitions#liquidity-provider) from withdrawing the funds.
+2. Actions of [Strategist](definitions#strategist) or [Governance](definitions#governance) that change substantial protocol parameters undergo some time between the moment changes are proposed in the contract (so anybody can see this proposal) and the moment they are effectively staged (typically 1 day).
+3. Strategy actions are limited by the permissions of the particular [Vault System](definitions#vault-system).
+4. Everyone can create a [Vault System](definitions#vault-system) ready for accepting deposits by [Liquidity Providers](definitions#liquidity-provider) and managing the liquidity by the [Strategy](definitions#strategy).
+5. The Strategy is an arbitrary contract constrained by the [Vault System](definitions#vault-system) permissions system
+
+![Mellow permissionless vaults smart contracts](/images/Frame%206.png)
+
+### Vault groups
+
+A vault group is a set of entities that manage [Vaults](architecture#vault) of a specific [Vault kind](architecture#undefined). It is used to create a new [Vault](architecture#vault-system) or manage [Vault](architecture#vault) params. It has 3 main entities:
+
+1. Vault Governance is a contract that contains a set of parameters for a specific [Vault kind](architecture#undefined) managed by a [Strategist](definitions#strategist) or [Governance](definitions#governance). The params are defined by being:
+   * Being instant or delayed (changes take into effect after some delay, which is set in the Protocol Governance)
+   * Being applied to all Vaults in the Vault Group System or to some specific vaults
+   * Being managed by a [Strategist](definitions#strategist) or by [Governance](definitions#governance).
+2. Vault Factory is a singleton instance of a certain Vault kind, serving as a prototype for all vaults of the Vault Group
+3. Vault instances (pink color), where each new vault is created using EIP-1167 lightweight proxy clone from Vault Factory
+
+### Vault Governance
+
+We have several Vault kinds, and, as stated above, any Vault kind has its own Vault Governance. Any governance, in its turn, has its own parameters. You may explore the info about those parameters in [this section](governance-parameters#vault-governances-parameters).
+
+### Protocol Governance
+
+Protocol governance manages the global parameters of the protocol. You may see those parameters in [this section](governance-parameters#protocol-governance-parameters).
+
+#### **Withdrawal limits**
+
+For each withdrawn token, there's a per block limit = withdrawLimit \* unitPrices\[token]. This is used mainly for the flashloan attacks protection as a potential attacker couldn't withdraw large amounts from the pool in one block.
+
+To protect the protocol from the governance hijack DDOS attack (set withdraw limit to 0), the minimum threshold of 200\_000 USD for withdrawLimit is hardcoded. The other vector of attack could be setting unitPrices to 0 but that's mitigated by the required 14 days delay to update prices.
+
+Given the above, unitPrices don't need to be updated very frequently as they are used only for withdrawals limit (used only for protection from attacks). For example, the ETH price of 1500 USD / ETH could be used for months.
+
+#### **Permissions**
+
+ProtocolGovernance manages the permission system for other vaults. The ProtocolGovernance itself doesn't impose any restrictions with these permissions, rather it's only the data used by Vaults to impose restrictions. Each permission is a mapping from the address to a bitmask.
+
+| Permission                 | Description                                                                                                                   | Bitmask             |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| REGISTER\_VAULT            | The address is allowed to register a new vault in Vault Registry                                                              | 0x1 (0th bit)       |
+| CREATE\_VAULT              | The address is allowed to create a new vault                                                                                  | 0x10 (1st bit)      |
+| ERC20\_TRANSFER            | The address (token) is allowed to be transfered by the vault                                                                  | 0x100 (2nd bit)     |
+| ERC20\_VAULT\_TOKEN        | The address (token) is allowed to be a vault token                                                                            | 0x1000 (3rd bit)    |
+| ERC20\_APPROVE             | The address (other protocol) can have ERC20 allowance from the Vault                                                          | 0x10000 (4th bit)   |
+| ERC20\_APPROVE\_RESTRICTED | The address (other protocol) can have ERC20 allowance from the Strategy  if the Strategy is Trusted (see below)               | 0x100000 (5th bit)  |
+| TRUSTED\_STRATEGY          | The strategy is Trusted, which means it can transfer tokens to the addresses which have ERC20\_APPROVE\_RESTRICTED permission | 0x1000000 (6th bit) |
+
+The latest two permissions are made in order to prevent transferring funds to relatively unknown protocols from any strategy but to remain this right for strategies we verify as Trusted.
+
+Note: `forceAllowMask` in protocolParams overrides the permission for all addresses (if a bit in this mask is set)
+
+#### **Roles**
+
+* ADMIN: allowed to update any params and assign ADMIN and ADMIN\_DELEGATE roles
+* ADMIN\_DELEGATE: allowed to update any params
+* OPERATOR: allowed to operate certain actions in strategies, which are determined by a strategist (for example, make rebalances or swaps of tokens when needed, typically a role for an off-chain bot that manages a strategy)
+
+#### **Validators**
+
+ProtocolGovernance also manages a set of validators for external calls (calls a Strategy can do on behalf of Vault). A validator is a contract that verifies that an external call is made in a good faith with correct parameters.&#x20;
+
+ProtocolGovernance has a mapping of an address to a validator. The Governance may set a validator for an address. If there is no validator for an address, an external call to this address is forbidden. Otherwise, the validator checks if the call is valid, using ProtocolGovernance permissions and other validation logic.
+
+### System management
+
+There are several levels of management in the Mellow Protocol:
+
+* Admin of the protocol is a head body, which governs the protocol and also grants or revokes the admin delegate role, hence exercising control over that entity (below). This will be governed by the Mellow DAO voting and implemented via special-purpose multi-sig wallets.
+* Admin delegate is an entity that normally governs the major parameters of the protocol and grants other Strategists rights to join our system.
+* A Vault System and a corresponding strategy are normally governed by a Strategist. In case this is one of our strategies, it's governed by a multi-sig wallet controlled by our team members, which owns VaultRegistry NFTs of the Vault System vaults and controls strategy parameters by changing them using rights of those NFTs (typically, through changing strategy parameters of the ERC20RootVault)
+
+### VaultRegistry
+
+VaultRegistry stores information about all open vaults.&#x20;
+
+The registry adheres to the ERC721 standard: each Vault is assigned an NFT. The semantics is that the NFT owner would be the ERC20Root vault that manages the actions of liquidity providers (i.e. deposits or withdraws tokens from vaults when needed), whereas the NFT approved address would be a Strategy, which is responsible for rebalancing tokens between vaults inside a Vault System.
+
+### Oracles
+
+Oracles are used for estimating the price of token X to token Y. Mellow oracle has 5 price safety levels:
+
+1. Spot price - exact price, but easy to manipulate
+2. UniV3 TWAP for 2.5 munites - somewhat stale price, but harder to manipulate
+3. Same as 2 but for 7.5 minutes
+4. Same as 2 but for 30 minutes
+5. Chainlink oracle
+
+The oracle is to be queried with a mask of desired safety levels. The oracle would take prices for all specified safety levels which are available for this pair of tokens and return the average of them.
+
+### Deposits / Withdrawals
+
+![](/images/mellow_scheme_8.gif)
+
+Deposits are made through ERC20RootVault in several steps:
+
+1. For every token, the higher estimate of its TVL in the whole system is fetched (each vault has 2 TVL estimates - higher and lower. The discrepancies in TVLs data are caused by different oracles price discrepancies. A mask of oracle safety levels is typically hardcoded inside a vault's code)
+2. Deposited tokens are used in the same ratio as in the TVL estimate. All the amounts that exceed those needed for keeping this ratio are returned back to the depositor.
+3. Tokens are transferred into ERC20RootVault
+4. The shares of deposited tokens to the TVL estimate are calculated for each token. Minumum is calculated
+5. Using the minimum in step 4 and the total LP supply, the LP tokens amount is calculated and minted
+
+The withdrawal is made similarly but with some modifications:
+
+1. For every token, the lower estimate of its TVL in the whole system is fetched&#x20;
+2. LP tokens amount desired to be burned by a withdrawer, total LP supply, and the lower estimate of TVL are used to calculate each token amount pending withdrawal
+3. ERC20RootVault transfers those tokens from the first subvault (typically ERC20Vault) in the Vault System. If those amounts are not enough then it goes to the 2nd subvault, etc.
+4. After ERC20RootVault has enough tokens on balance it burns lp tokens and transfers ERC20 tokens to withdrawer
+5. All leftovers are transferred to the first subvault
+
+The first deposit is supposed to be made by a strategist and is supposed to be relatively small (that means, between `$$10^{\frac{d}{2}+1}$$` and `$$10^{d}$$` for each token, where `$$d$$` means decimals of a token). It transfers all tokens and all minted LP tokens to the zero address (effectively burning them). This is done to always keep some amount of tokens in the system, which prevents potential attacks which would be possible if some token amounts were very close to zero.
+
+Withdrawal amounts are subject to [withdrawal limits](architecture#withdrawal-limits) imposed by ProtocolGovernance.
+
+### Fees
+
+Every period of time (set in the `managementFeeChargeDelay` parameter of ERC20Root vault), certain fees are charged to all the users (charging fees is triggered by any deposit or withdrawal, but done only if the set period of time from the latest charging has passed). Due annual fees rates are set in the ERC20RootVault parameters (see above).&#x20;
+
+Management and protocol fees are charged by the elapsed time, at a rate correspondingly proportional to the rate of the annual fee, from all the users, in form of minting new LP tokens for the benefit of the protocol Treasury.
+
+Performance fees are charged only if the value of 1 LP token has increased from its ATH. In this case, the fee is charged at the established rate on the increase of the value of all LP tokens, in form of minting new LP tokens for the benefit of the protocol Treasury.
+
+### Rebalances
+
+To rebalance tokens between the vaults `pull` method is used (available for anyone approved for ERC721 vault NFT). If it's called on any subvault except the first, it pulls tokens into the first vault. If it's called on the first vault then tokens can be pulled to any Vault of the Vault System.
+
+To rebalance tokens within the first vault `externalCall` function is typically used. External calls are allowed to be called by Strategy on behalf of the Vault to external DEXes like Uniswap and Curve.&#x20;

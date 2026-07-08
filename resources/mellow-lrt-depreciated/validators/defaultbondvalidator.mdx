@@ -1,0 +1,39 @@
+---
+title: "DefaultBondValidator"
+---
+
+### Overview
+
+`DefaultBondValidator` ensures that only authorized bonds are involved in deposit and withdrawal operations. It uses validation methods, mappings for supported bonds, and emits events when bonds are updated, ensuring comprehensive control over delegate `DefaultBondModule`.
+
+### Key Features
+
+* **Bond Support**: Determines which bonds are authorized for deposits and withdrawals.
+* **Validation**: Enforces compliance for bond operations, ensuring only supported bonds are accessed.
+* **Error Reporting**: Raises specific errors when bond operations fail validation.
+
+### Error Definitions
+
+* **InvalidLength**: Raised when the data length for bond transactions is incorrect.
+* **ZeroAmount**: Indicates that the transaction specifies a zero amount, which is invalid.
+* **InvalidSelector**: The function selector is unrecognized.
+* **UnsupportedBond**: The bond used in the transaction is unsupported.
+
+### Core Methods
+
+1. **View Functions**
+   * `isSupportedBond(address)`: Checks if a bond is authorized for deposits and withdrawals.
+2. **Configuration Functions**
+   * `setSupportedBond(address, bool)`: Sets a bond's supported status.
+3. **Validation Function**
+   * `validate(address, address, bytes)`: Verifies that the bond transaction complies with the rules:
+     * Checks for proper data formatting.
+     * Verifies that the bond is authorized.
+     * Checks for `deposit` and `withdraw` function signatures.
+
+### Event
+
+* `DefaultBondValidatorSetSupportedBond(address, bool, uint256)`: Emitted when a bond's support status is updated.
+  * **bond**: Address of the bond.
+  * **flag**: Boolean indicating support status.
+  * **timestamp**: Timestamp of the action.

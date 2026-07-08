@@ -1,0 +1,38 @@
+---
+title: "DefaultBondModule"
+---
+
+### Overview
+
+`DefaultBondModule` contract handles deposits and withdrawals for bonds in the symbiotic module system.
+
+### Key Features
+
+* **Bond Deposits**: Facilitates deposits into bonds, managing token allowances securely.
+* **Bond Withdrawals**: Enables secure withdrawals from bonds.
+* **Allowance Management**: Uses `safeIncreaseAllowance` to ensure the appropriate token allowances are set.
+
+### Methods
+
+1. **Bond Deposit**
+   * `deposit(address, uint256)`: Deposits tokens into a specified bond.
+     * **bond**: The address of the bond.
+     * **amount**: The amount of tokens to deposit.
+     * **Returns**: The deposited amount.
+     * **Errors**: Returns 0 if the amount is zero.
+     * **Event**:
+       * `DefaultBondModuleDeposit(address, uint256, uint256)`: Emitted after a successful deposit.
+         * **bond**: Address of the bond.
+         * **amount**: Amount deposited.
+         * **timestamp**: Timestamp of the deposit.
+2. **Bond Withdrawal**
+   * `withdraw(address, uint256)`: Withdraws tokens from a specified bond.
+     * **bond**: The address of the bond.
+     * **amount**: The amount of tokens to withdraw.
+     * **Returns**: The amount withdrawn.
+     * **Errors**:
+       * Returns 0 if the amount is zero or the bond balance is insufficient.
+     * **Event**:
+       * `DefaultBondModuleWithdraw(address, uint256)`: Emitted after a successful withdrawal.
+         * **bond**: Address of the bond.
+         * **amount**: Amount withdrawn.

@@ -1,0 +1,119 @@
+---
+title: "Vault"
+---
+
+Main contract of the system managing interactions between users, administrators, and operators. System parameters are set within the corresponding contract - [`VaultConfigurator`](vaultconfigurator). Upon deposit, LP tokens are issued to users based on asset valuation by oracles. Deposits are made through the deposit function, where a deposit can only be made in `underlyingTokens` and only at the specified `ratiosOracle` ratio. Deposits can be paused by setting the `isDepositsLocked` flag.
+
+Withdrawals can occur through two scenarios: regular withdrawal via the `registerWithdrawal` function and emergency withdrawal via the `emergencyWithdraw` function.
+
+In a regular withdrawal, the user registers a withdrawal request, after which the operator must perform a series of operations to ensure there are enough `underlyingTokens` on the vault's balance to fulfill the user's request. Subsequently, the operator must call the `processWithdrawals` function.
+
+If a user's request is not processed within the `emergencyWithdrawalDelay` period, the user can perform an emergency withdrawal. Note! In this case, the user may receive less funds than entitled by the system, as this function only handles ERC20 tokens in the system. Therefore, if the system has a base asset that is not represented as an ERC20 token, the corresponding portion of the funds will be lost by the user.
+
+It is assumed that the main system management will occur through calls to delegateModules via delegateCalls on behalf of the operator. For this to be possible, certain conditions must be met:
+
+* From the validator's perspective, two conditions must be met:
+  *
+    1. The caller must have the right to call the `delegateCall` function with the corresponding data parameter.
+  *
+    2. The contract itself must be able to call the function on the delegateModule with the specified data.
+* From the configurator's perspective, the called module must have the appropriate approval - `isDelegateModuleApproved`.
+
+If external calls need to be made, the `externalCall` function is used, for the execution of which a similar set of properties exists:
+
+* From the validator's perspective, two conditions must be met:
+  * The caller must have the right to call the `externalCall` function with the corresponding data parameter.
+  * The contract itself must be able to call the function on the external contract with the specified data.
+* From the configurator's perspective, the called contract must NOT have `isDelegateModuleApproved` permission.
+
+Vault also has the functionality of adding and removing `underlyingTokens`, as well as tvlModules. For this purpose, the following functions are available, which can only be called by the vault's admin: `addToken`, `removeToken`, `addTvlModule`, `removeTvlModule`. Upon calling `removeToken`, it is checked that the `underlyingTvl` function for the specified token returns a zero value. Otherwise, the function reverts with a `NonZeroValue` error. It is important to note that there is no such check when calling `removeTvlModule`, so when updating parameters, sequential execution of a transaction to remove the old and add the new tvlModule is implied.
+
+### Key Features:
+
+* **Deposit Management**: Handles the process of depositing assets into the vault and minting corresponding LP tokens.
+* **Withdrawal Management**: Supports both regular and emergency withdrawals, ensuring asset accessibility and flexibility for users.
+* **Token and TVL Module Management**: Allows the addition and removal of tokens and tvl modules.
+* **External and Delegate Calls**: Supports secure execution of external and delegate calls, with permission checks via validators.
+
+### Data Structures
+
+1. **WithdrawalRequest**
+   * **to** (`address`): Destination address for the withdrawal.
+   * **lpAmount** (`uint256`): Amount of LP tokens being withdrawn.
+   * **tokensHash** (`bytes32`): Hash of the tokens array at the time of request.
+   * **minAmounts** (`uint256[]`): Minimum acceptable amounts for each underlying token.
+   * **deadline** (`uint256`): Time before which the withdrawal must occur.
+   * **timestamp** (`uint256`): Request creation timestamp.
+2. **ProcessWithdrawalsStack**
+   * **tokens** (`address[]`): List of underlying tokens involved in processing.
+   * **ratiosX96** (`uint128[]`): Ratios used for calculating each token's value.
+   * **erc20Balances** (`uint256[]`): ERC20 token balances.
+   * **totalSupply** (`uint256`): Current supply of LP tokens.
+   * **totalValue** (`uint256`): Total value of all assets.
+   * **ratiosX96Value** (`uint256`): Aggregated value based on the ratios.
+   * **timestamp** (`uint256`): Timestamp for the current state.
+   * **feeD9** (`uint256`): Fee multiplier (scaled to 1e9).
+   * **tokensHash** (`bytes32`): Hash of the tokens list for verification.
+
+### Error Definitions
+
+The vault interface defines multiple custom error types for handling edge cases and validations:
+
+* **Deadline**: Raised when the deadline for an operation has passed.
+* **InvalidState**: Indicates an incorrect or unsupported state.
+* **InvalidLength**: Raised when input arrays have mismatched lengths.
+* **InvalidToken**: Invalid or unauthorized token address.
+* **NonZeroValue**: Raised if a value is expected to be zero but isn't.
+* **ValueZero**: Indicates a zero value where non-zero is required.
+* **InsufficientLpAmount**: Not enough LP tokens for withdrawal.
+* **InsufficientAmount**: Token amount insufficient for withdrawal.
+* **LimitOverflow**: Operation exceeds the defined limits.
+
+### Methods:
+
+1. **View Functions:**
+   * `Q96()`: Returns 2^96, used for fixed-point arithmetic.
+   * `D9()`: Returns a multiplier of 1e9.
+   * `configurator()`: Returns the configurator contract address.
+   * `withdrawalRequest(address)`: Fetches a user's current withdrawal request.
+   * `pendingWithdrawers()`: Returns an array of addresses with pending withdrawal requests.
+   * `underlyingTokens()`: Lists all tokens held as the vault's underlying assets.
+   * `tvlModules()`: Returns addresses of all TVL modules in the vault.
+   * `underlyingTvl()`: Computes the vault's total value in underlying tokens.
+   * `baseTvl()`: Returns the base TVL for all tokens.
+2. **Admin Functions:**
+   * `addToken(address)`: Adds a new token to the vault's list (Admin only).
+   * `removeToken(address)`: Removes a token if its value is zero (Admin only).
+   * `addTvlModule(address)`: Adds a new TVL module to the vault (Admin only).
+   * `removeTvlModule(address)`: Removes a TVL module (Admin only).
+3. **External and Delegate Calls:**
+   * `externalCall(address, bytes)`: Executes an external call to a specified contract (at least operator + permission checks).
+   * `delegateCall(address, bytes)`: Executes a delegate call to a specified module (at least operator + permission checks).
+4. **Deposit and Withdrawal:**
+   * `deposit(address, uint256[], uint256, uint256)`: Deposits tokens and mints LP tokens.
+   * `emergencyWithdraw(uint256[], uint256)`: Allows users to withdraw all tokens proportionally in an emergency.
+   * `cancelWithdrawalRequest()`: Cancels a pending withdrawal request.
+   * `registerWithdrawal(address, uint256, uint256[], uint256, uint256, bool)`: Registers or updates a withdrawal request.
+   * `analyzeRequest(ProcessWithdrawalsStack, WithdrawalRequest)`: Evaluates whether a withdrawal request is eligible for processing.
+   * `calculateStack()`: Retrieves the current state stack for withdrawals.
+   * `processWithdrawals(address[])`: Processes the given list of withdrawal requests.
+
+### Events
+
+* **Token Management:**
+  * `TokenAdded(address)`: Emitted when a new token is added.
+  * `TokenRemoved(address)`: Emitted when a token is removed.
+* **TVL Module Management:**
+  * `TvlModuleAdded(address)`: Emitted when a TVL module is added.
+  * `TvlModuleRemoved(address)`: Emitted when a TVL module is removed.
+* **External and Delegate Calls:**
+  * `ExternalCall(address, bytes, bool, bytes)`: Emitted for every external call.
+  * `DelegateCall(address, bytes, bool, bytes)`: Emitted for every delegate call.
+* **Deposit and Withdrawal:**
+  * `Deposit(address, uint256[], uint256)`: Emitted when a deposit is made.
+  * `DepositCallback(address, uint256[], uint256)`: Emitted during deposit callbacks.
+  * `WithdrawalRequested(address, WithdrawalRequest)`: When a new withdrawal request is submitted.
+  * `WithdrawalRequestCanceled(address, address)`: When a withdrawal request is canceled.
+  * `EmergencyWithdrawal(address, WithdrawalRequest, uint256[])`: During emergency withdrawals.
+  * `WithdrawalsProcessed(address[], bool[])`: Emitted after processing withdrawal requests.
+  * `WithdrawCallback(address)`: Emitted during withdrawal callbacks.

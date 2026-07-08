@@ -1,0 +1,18 @@
+---
+title: "Points in Symbiotic pre-deposit contracts"
+description: "Legacy points methodology for deposits before and after Symbiotic limits were reached, including 1.5x Mellow boost, DeFi multipliers, and anti-gaming rules."
+---
+
+Users who deposited before Symbiotic limits were reached\* will receive the same amount of Symbiotic and Mellow points as it was assumed, 1x + 1x of both.
+
+Users who deposited after Symbiotic limits were reached will start receiving Symbiotic points as we will push their deposits into Symbiotic after limits will increase, but before that will get 1.5x boost for Mellow points for the time while their liquidity is idle into Mellow vaults.
+
+Please note that there are multipliers and special calculation scheme for using DeFi integrations. You can check out integrations at [https://app.mellow.finance/defi](https://app.mellow.finance/defi).
+
+Points are given to the user are proportional to the total points emission on LRTs currently in the pool. It means that rate of Symbiotic/Mellow loyalty points are the same for each user of DeFi integration. At the same time, note the that the ratio of points given out is changing with every new deposit into pooled liquidity. To incentivise LRTs usage in DeFi eco and simultaneously compensate for less points due to LRTs currently not staked in Symbiotic, there often is a Mellow multiplier, however.
+
+When a user buys LRT from a liquidity pool, they receive LRTs that are not staked in Symbiotic, if there are any. When the user buys more LRTs than the amount that was not in Symbiotic, they get all those non-staked LRTs and some of the staked ones. The same last-in-Mellow, first-out logic applies to other DeFi integrations even if there are no swaps but some deposit/withdraw mechanics are present.
+
+Gaming the Loyalty Points program — i.e. using the same LRT to generate rewards multiple times by selling LRT for ETH to repeat the process is not encouraged. If we encounter such cases, we may void you from the multiplier or your Loyalty Points.
+
+\*-Initial limit of 41290 wstETH was filled at block height of 20070701 and 210600 — at 20227052, info on new limit raise fill, be there any, will be added retrospectively.

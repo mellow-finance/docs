@@ -1,0 +1,87 @@
+---
+title: "ManagedValidator"
+---
+
+### Overview
+
+`ManagedValidator` provides role-based access control and validation for smart contract functions. It uses a bitmask structure to represent different roles, ensuring that only authorized users can interact with specific functions or contracts. This contract is a primary validator in the system, granting or revoking permissions based on roles and supporting custom validation logic.
+
+### Key Features
+
+* **Role-Based Access Control**: Allows access based on predefined roles stored in bitmasks.
+* **Permission Validation**: Verifies if a user has the required permission to call specific functions on contracts.
+* **Custom Validators**: Supports setting custom validators to enforce additional rules.
+* **Flexible Roles**: Uses four different types of roles:
+  * **Public Roles**: Globally accessible roles.
+  * **User Roles**: Roles assigned directly to users.
+  * **Allow-All Signatures Roles**: Roles allowing full access to a contract.
+  * **Allow-Signature Roles**: Roles allowing access to specific functions.
+
+### Role Assignment Algorithm
+
+1. Determine the roles assigned to a user (`userRoles[from] | publicRoles`).
+2. If the user has the `ADMIN_ROLE` (role index 255), access is automatically granted.
+3. If the contract has a role in common with the user's roles, access is granted.
+4. If the function signature within a contract matches a user's roles, access is granted.
+5. Otherwise, access is denied.
+
+### Error Definitions
+
+* **Forbidden**: Raised when a user attempts an unauthorized action.
+* **InvalidData**: The input data is not long enough for the function signature.
+
+### Data Structure
+
+1. **Storage**
+   * **userRoles**: Mapping of user addresses to their assigned roles (bitmask).
+   * **publicRoles**: Bitmask representing globally accessible roles.
+   * **allowAllSignaturesRoles**: Mapping of contract addresses to roles that provide full access.
+   * **allowSignatureRoles**: Mapping of contract addresses and function signatures to roles.
+   * **customValidator**: Mapping of contracts to their respective custom validators.
+
+### Core Methods
+
+1. **Permission Checking:**
+   * `hasPermission(address, address, bytes4)`: Checks if a user has permission to call a specific function on a contract.
+   * `requirePermission(address, address, bytes4)`: Verifies that a user has the necessary permissions; reverts with `Forbidden` if not.
+2. **Role Management:**
+   * **Public Roles:**
+     * `grantPublicRole(uint8)`: Grants a public role to all users.
+     * `revokePublicRole(uint8)`: Revokes a public role.
+   * **User Roles:**
+     * `grantRole(address, uint8)`: Assigns a specific role to a user.
+     * `revokeRole(address, uint8)`: Removes a role from a user.
+   * **Contract Roles:**
+     * `grantContractRole(address, uint8)`: Grants a role to a contract.
+     * `revokeContractRole(address, uint8)`: Revokes a role from a contract.
+     * `grantContractSignatureRole(address, bytes4, uint8)`: Grants a role to a specific function within a contract.
+     * `revokeContractSignatureRole(address, bytes4, uint8)`: Revokes a function-specific role from a contract.
+3. **Custom Validators:**
+   * `setCustomValidator(address, address)`: Sets a custom validator for a specific contract.
+   * `customValidator(address)`: Returns the custom validator assigned to a contract.
+4. **Role Information:**
+   * `ADMIN_ROLE_MASK()`: Returns the bitmask representing the admin role.
+   * `STORAGE_POSITION()`: Returns the storage position identifier for role data.
+   * `userRoles(address)`: Returns the bitmask representing a user's roles.
+   * `publicRoles()`: Returns the bitmask representing public roles.
+   * `allowAllSignaturesRoles(address)`: Returns the bitmask of roles that allow full access to a contract.
+   * `allowSignatureRoles(address, bytes4)`: Returns the roles that allow access to a specific function.
+5. **Validation:**
+   * `validate(address, address, bytes)`: Ensures that a user has the required permissions to execute a function on a target contract.
+
+### Events
+
+* **Public Roles:**
+  * `PublicRoleGranted(uint8)`: Emitted when a public role is granted.
+  * `PublicRoleRevoked(uint8)`: Emitted when a public role is revoked.
+* **User Roles:**
+  * `RoleGranted(address, uint8)`: Emitted when a role is granted to a user.
+  * `RoleRevoked(address, uint8)`: Emitted when a role is revoked from a user.
+* **Contract Roles:**
+  * `ContractRoleGranted(address, uint8)`: Emitted when a role is granted to a contract.
+  * `ContractRoleRevoked(address, uint8)`: Emitted when a role is revoked from a contract.
+* **Contract Signature Roles:**
+  * `ContractSignatureRoleGranted(address, bytes4, uint8)`: Emitted when a role is granted to a function within a contract.
+  * `ContractSignatureRoleRevoked(address, bytes4, uint8)`: Emitted when a role is revoked from a function within a contract.
+* **Custom Validator:**
+  * `CustomValidatorSet(address, address)`: Emitted when a custom validator is set for a contract.

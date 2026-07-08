@@ -1,0 +1,41 @@
+---
+title: "Counter"
+---
+
+Designed to maintain a count, `Counter` offers functionality to incrementally update a value and manage access through ownership and operator privileges. This can be used in scenarios requiring tallying, tracking usage or interactions, and other numerical record-keeping in smart contracts.
+
+#### Functions
+
+#### `value()`
+
+* **Description**: Retrieves the current value of the counter.
+* **Returns**: `uint256` representing the current counter value.
+
+#### `owner()`
+
+* **Description**: Fetches the address recognized as the owner of the counter.
+* **Returns**: Address of the current owner.
+
+#### `operator()`
+
+* **Description**: Obtains the address designated as the operator of the counter, who is permitted to perform specific actions like adding to the counter.
+* **Returns**: Operator's address.
+
+#### `transferOwnership(address newOwner)`
+
+* **Description**: Assigns ownership of the counter to a new address, transferring all associated control and privileges.
+* **Parameters**:
+  * `newOwner`: The address to be assigned as the new owner of the counter.
+* **Restrictions**: Can only be executed by the current owner.
+
+#### `add(uint256 additionalValue)`
+
+* **Description**: Increments the counter by a specified value.
+* **Parameters**:
+  * `additionalValue`: The amount by which to increase the counter.
+* **Restrictions**: Can only be executed by the current operator.
+
+#### `reset()`
+
+* **Description**: Resets the counter value to zero, effectively restarting any count or tally being maintained.
+* **Restrictions**: Can only be executed by the current owner.

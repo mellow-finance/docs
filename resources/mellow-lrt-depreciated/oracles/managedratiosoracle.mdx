@@ -1,0 +1,51 @@
+---
+title: "ManagedRatiosOracle"
+---
+
+### Overview
+
+The `ManagedRatiosOracle` contract provides ratio management for underlying tokens within a vault. It allows updating and retrieving target ratios for the vault's assets using a 96-bit fixed-point precision system.
+
+### Key Features
+
+* **Ratio Management**: Sets and retrieves target ratios for vault tokens.
+
+### Error Definitions
+
+* **InvalidLength**: Raised if the number of ratios doesn't match the number of underlying tokens or if data is absent.
+* **InvalidToken**: The token hash does not match the stored ratios data hash.
+* **InvalidCumulativeRatio**: The cumulative sum of ratios does not match the expected value.
+
+### Constants
+
+* **Q96**: Fixed-point scaling constant (2^96) used for precise ratio calculations.
+
+### Methods:
+
+1. **Ratio Management**
+   * `updateRatios(address, bool, uint128[])`: Updates the target ratios for a specific vault.
+     * **vault**: The address of the vault.
+     * **isDeposit**: A boolean indicating whether the ratios are for a deposit or a withdrawal.
+     * **ratiosX96**: An array of ratios, each with 96-bit precision.
+     * **Errors**:
+       * `InvalidLength`: The number of ratios does not match the number of tokens.
+       * `InvalidCumulativeRatio`: Cumulative ratio sum does not match `Q96`.
+   * `getTargetRatiosX96(address, bool)`: Retrieves the target ratios for a given vault.
+     * **vault**: The address of the vault.
+     * **isDeposit**: A boolean indicating whether the ratios are for a deposit or a withdrawal.
+     * **Errors**:
+       * `InvalidLength`: Data is missing.
+       * `InvalidToken`: The stored token hash does not match the current hash.
+
+**Data Structures**
+
+* **Data**
+  * **tokensHash** (`bytes32`): Keccak256 hash of the tokens array to ensure consistency.
+  * **ratiosX96** (`uint128[]`): An array of ratios with 96-bit precision.
+
+### Event
+
+* `ManagedRatiosOracleUpdateRatios(address, bool, uint128[])`: Emitted when the target ratios are updated for a vault.
+  * **vault**: The address of the vault.
+  * **isDeposit**: A boolean indicating whether the ratios are for a deposit or a withdrawal.
+  * **ratiosX96**: An array of updated target ratios.

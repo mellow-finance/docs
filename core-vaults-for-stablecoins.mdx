@@ -1,0 +1,118 @@
+---
+title: "Core Vaults for Stablecoins"
+description: "How fintechs, payment platforms, and institutional treasuries use Mellow vault infrastructure to manage stablecoin balances – multi-strategy allocations, full treasury mandates, and Earn products."
+---
+
+### Overview
+
+Stablecoins are one of the primary asset types for vault-based yield and treasury products on Mellow. Companies holding stablecoin balances – payment processors, fintechs, exchanges, banks, neobanks, stablecoin issuers, marketplaces, trading platforms – can use Core Vaults to manage that capital under defined mandates with onchain risk enforcement and compliance controls.
+
+The same vault architecture supports multiple stablecoin use cases, from narrow yield mandates to full treasury management. The product is defined by the mandate. The infrastructure remains the same.
+
+### Time to market
+
+Building a stablecoin vault product from scratch requires smart contracts, security audits, DeFi integrations, risk monitoring, and compliance review per jurisdiction. Mellow provides these components as existing, audited infrastructure. The distribution partner and vault manager configure a vault, define the mandate, and launch. This can reduce launch timelines from months of custom development to weeks of configuration and review.
+
+### Key concepts
+
+**Mandate**
+
+A mandate is the set of rules that defines how a vault may operate. It includes eligible depositors, supported assets, approved venues, allocation caps, liquidity requirements, verifier rules, and oracle constraints. The mandate is encoded at the contract level and enforced by onchain verifiers. Operations that fall outside the mandate revert.
+
+**Roles**
+
+* **​Depositors** provide stablecoin capital
+* **​Distribution partners** – wallets, exchanges, fintechs, banks, brokers, stablecoin platforms – own the product surface and customer relationship
+* **​Curators or vault managers** operate the strategy within the mandate
+* **​Mellow** provides the vault infrastructure
+* ​**Vault contracts** enforce the mandate
+
+​
+
+### Stablecoin use cases
+
+#### **Earn products**
+
+Earn products on Mellow exist across multiple asset types. This section covers stablecoin Earn specifically. A distribution partner – wallet, exchange, fintech, bank, neobank, broker, asset issuer, or stablecoin platform – offers yield on stablecoin balances under their own brand. The user deposits an eligible stablecoin, sees an APY, and can withdraw according to the product's redemption rules.​
+
+In the stablecoin context, an Earn product is a vault with a yield-focused mandate: approved strategies, risk limits, compliance constraints, and depositor eligibility configured for the partner's product requirements. The distribution partner owns the customer and the brand. The vault manager operates the strategy. Mellow provides the vault infrastructure.
+
+The examples below describe possible product profiles. Actual availability depends on the vault mandate, integrations, jurisdiction, and asset eligibility.
+
+
+
+| Configuration     | Strategy set                                                                                      | Risk profile                                                                  | Typical partner                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **Conservative**  | Tokenized T-bills and money-market funds only                                                     | Low yield, low risk                                                           | Regulated platforms needing defensible underlying assets            |
+| **Balanced**      | Tokenized treasuries + onchain lending markets                                                    | Moderate yield, transparent risk parameters, vault-enforced allocation limits | Fintechs and exchanges with institutional user base                 |
+| **Amplified**     | Lending, stablecoin AMMs, basis opportunities, CeFi venues via institutional custody integrations | Higher return target, higher operational and market risk                      | Platforms with higher risk tolerance and active strategy management |
+| **Ecosystem**     | Chain-specific or protocol-specific native venues                                                 | Yield from ecosystem incentives + native sources                              | L1/L2 networks, DeFi protocols, RWA and stablecoin issuers          |
+
+#### **Treasury management**
+
+Treasury management applies to any holder of stablecoin balances – whether a company managing its balance sheet or an individual managing personal holdings. In both cases, the vault serves the holder's own capital, not an end-user yield product. A Core Vault defines the full operating mandate: liquidity reserve ratios, approved strategies, allocation caps, asset and venue whitelists, and compliance perimeter. The vault manager – or an authorized agent – operates within these constraints.
+
+**Companies**
+
+Companies using stablecoin settlement – payment processors, marketplaces, fintechs, trading platforms – accumulate balances that need active management: maintain operating reserves, deploy idle capital into approved strategies, enforce risk limits, and satisfy compliance requirements across jurisdictions.
+
+**Users**
+
+Individuals holding stablecoin balances can manage them under the same vault architecture – a defined mandate with approved strategies, risk limits, and automated enforcement, operated directly or by an authorized agent.
+
+### Vault architecture for stablecoin capital
+
+#### **Strategy allocation**
+
+The mandate defines the approved strategy set. The following are example strategy categories. Actual availability depends on the vault mandate, integrations, jurisdiction, and asset eligibility.
+
+​
+
+* ​**Tokenized T-bills and money-market funds** – BlackRock's BUIDL, Ondo's USDY, Superstate's USTB, Franklin Templeton's BENJI. Conservative base layer. Redemption timing varies by issuer (T+0 to T+2); the vault handles async settlement natively.
+* **​Lending markets** – Aave, Morpho, Compound, and other onchain lending protocols. The vault enforces which markets are approved, maximum allocation per market, and utilization thresholds for rebalancing.
+* ​**Short-duration yield** – liquidity pools, stablecoin AMMs, and other venues with intraday deployment and withdrawal. Serve as both yield generation and liquidity buffer.
+* **​CEX venues** – via Copper ClearLoop and Ceffu, capital routes to centralized opportunities under the same permission model as DeFi allocations.
+
+​
+
+A single vault can hold positions across all strategy types simultaneously. Multi-asset accounting and oracle-defined NAV produce a coherent portfolio view across assets with different pricing sources, settlement timings, and liquidity profiles. Adding a new approved venue is typically configuration rather than new contract code.
+
+#### **Risk enforcement and verifiers**
+
+Core Vaults enforce 60+ onchain permissions at the contract level:
+
+
+
+* Allocation caps per strategy, per asset, and per venue
+* ​Asset whitelists – the vault only holds approved assets
+* ​Venue whitelists – the vault only routes to approved targets
+* ​Oracle price checks before operations execute
+* ​Withdrawal queue controls for fair redemption ordering
+
+
+
+Verifiers are the onchain components that validate each action against the vault's permission set. The verifier model is composable – routine operations may require a single verifier, while high-impact operations can require multiple verifier approvals, time locks, or enhanced validation. Verifiers do not distinguish between human curators and autonomous agents. The same rules apply.​
+
+Guardrails are configurable through structured governance but cannot be breached during execution.
+
+#### **Compliance**
+
+Compliance rules are applied at the vault level, so different products can enforce different eligibility and transfer requirements without changing the base vault architecture. Core Vaults treat mandates as configurable objects.
+
+​Share-token eligibility – configurable hooks for KYC/KYB providers, transfer agents, accreditation registries, jurisdiction-based restrictions
+
+Asset eligibility – per-asset and per-issuer rules; regulated tokenized instruments with transfer restrictions are handled separately from permissionless positions
+
+Different products on the same platform enforce different compliance perimeters without separate codebases.
+
+### Agent-operated stablecoin vaults
+
+As autonomous agents take on more asset management responsibilities, the infrastructure they operate in matters as much as the models behind them. Autonomous agents need execution environments with hard constraints that prevent unauthorized actions at the contract level.
+
+Core Vaults provide this through the verifier model – approved targets, functions, assets, allocation bands, NAV constraints, and time-locked operations are enforced before execution. Operations outside the mandate revert without requiring human oversight.
+
+Agents operating stablecoin vaults can rebalance, manage liquidity, and react to strategy conditions at frequencies impractical for human operators – while the vault ensures they never exceed their mandate.<br/>
+
+### Related pages
+
+* [Vault Infrastructure for Fintech Earn Products](https://docs.mellow.finance/vault-infrastructure-for-fintech-earn-products) – architecture overview and full use case reference

@@ -1,0 +1,49 @@
+---
+title: "Pulse strategy"
+---
+
+### Strategy
+
+#### Abstract
+
+Pulse strategy will maintain a position for the wstETH-USDC Uniswap V3 pool with a 0.3% fee. This strategy utilizes an interval with a width of 4200 ticks. When the price of the wstETH-USDC pair approaches the current interval margin, the strategy automatically rebalances the liquidity to a new interval by swapping funds and providing liquidity to a new interval. If there is no need to rebalance, the strategy collects and compounds the fees into the current position. The strategy utilizes integration with 1inch, which leads to reduced swap fees for rebalances.
+
+### Rebalance
+
+Rebalancing happens like this:
+
+If the spot tick deviates from the weighted average over the last timespanForAverageTick seconds, then the transaction is reverted. Otherwise, the current position of the spot tick relative to the interval boundaries is checked.
+
+If the tick is not farther than the tickNeighborhood to any boundary of the interval, then a new position is minted, the center of which is equal to the nearest tick on the tickSpacing grid of the given pool, and the width of the interval remains the same.
+
+For the exchange of tokens, 1inch AggregationRouterV5 is used, the data for which is received by the bot off-chain and transferred to the rebalance function. After the swap, the received number of tokens is compared with the expected one. The swap price should not deviate by more than swapSlippageD, and the number of swapped tokens should not deviate more than by swappingAmountsCoefficientD.
+
+## Olympus rebalance
+
+A key feature of Olympus Pulse strategy lies in its ability to dynamically select the boundaries of the interval based on the values provided by the Olympus RBS, enabling the maintenance of an active position not reliant on manipulated market prices, but instead on the price limits set for the OHM token.
+
+### Parameters
+
+ImmutableParams
+
+| Name       | Description                                      | Value in strategy                                                                         |
+| ---------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| router     | address of 1inch AggregationRouterV5             | 0x1111111254EEB25477B68fb85Ed929f73A960582                                                |
+| erc20Vault | address of buffer vault of the root vault system | 0x749b85100D66525Eec385638b46bD3Ee590c0c79                                                |
+| uniV3Vault | address of vault that holds Uniswap V3 position  | 0x3D120987e85C1C294577a1c39C96693A6F9be97b                                                |
+| tokens     | arrays of strategy tokens                        | \[0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48] |
+
+MutableParams
+
+| Name                        | Description                                                                                                                                             | Value in strategy       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| priceImpactD6               | Additional coefficient for expected price impact of swap of tokens                                                                                      | 0                       |
+| intervalWidth               | Width of UniswapV3 position                                                                                                                             | 4200                    |
+| tickNeighborhood            | Minimal required difference between tick and current position border to call rebalance                                                                  | 500                     |
+| maxDeviationForVaultPool    | If the spot tick in UniswapV3Pool deviates from the average tick by a larger value, then rebalance reverts with LIMIT\_OVERFLOW error                   | 50                      |
+| timespanForAverageTick      | The time interval in seconds used to determine the average tick values and prices in UniswapV3Pool                                                      | 60                      |
+| amount0Desired              | Required number of tokens (wstETH in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance | 1000000000              |
+| amount1Desired              | Required number of tokens (USDC in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance   | 1000000                 |
+| swapSlippageD               | Permissible slippage level during swap                                                                                                                  | 1000000000 (1.0%)       |
+| swappingAmountsCoefficientD | Permissible level of difference between the amount of expected tokens for swap and the exchanged ones during swap                                       | 1000000000 (1.0%)       |
+| minSwapAmounts              | Thresholds that cut off swap of an insignificant amount of tokens (in weis)                                                                             | \[10000000000000,10000] |

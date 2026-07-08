@@ -1,0 +1,100 @@
+---
+title: "Architecture"
+---
+
+SimpleLRT is a modular “liquid restaking primitive” built on a series of vault contracts tailored to different risk profiles.
+
+The system is based on the following key contracts:
+
+1. **MellowSymbioticVault** (or **MellowVaultCompat**)
+2. **asset** (such as **wstETH** or other ERC20 token), with a corresponding **DefaultCollateral**.
+3. **SymbioticVault** - a contract created via the VaultConfigurator [link](https://docs.symbiotic.fi/handbooks/vaults-handbook)
+
+`MellowSymbioticVault` is a core vault contract in Simple-LRT. It has the following functional features:
+
+1. Deposit and withdrawal are ERC4626 style, withdrawals are async though.
+2. Claim rewards from Symbiotic vaults and distribute it to farms.
+3. Control mechanics for setting limits, pausing withdrawals, deposits and whitelisting deposits.
+
+<Frame>
+  <img src="/images/image%20%283%29.png" alt="Architecture" />
+</Frame>
+
+### Functions
+
+In the vault contract, several key functions help to manage assets, withdrawals, and interactions with ERC20 tokens. Below is an overview of the most important functions:
+
+1. all ERC20 functions
+2. **asset()**: Returns the underlying token of the vault, which is usually `wstETH`.
+3. **totalAssets()**: Returns the total value locked (TVL) of the vault, measured in the underlying `asset`.
+4. **convertToShares(amount)**: Calculates the number of LP tokens (shares) you would receive when depositing a specified `amount` of the underlying `asset` into the vault.
+5. **convertToAssets(shares)**: Converts a given number of LP tokens (shares) back into the equivalent amount of the underlying `asset`.
+6. **previewDeposit / previewWithdraw / previewMint / previewRedeem**: These functions provide information on expected outcomes from various operations (deposits, withdrawals, minting, or redeeming shares). They are useful for estimating returns or required amounts.
+7. **getBalances(userAddress)**: Returns four parameters related to the user’s holdings:
+   * `accountAssets`: The total assets (underlying tokens) that the user holds in the vault.
+   * `accountInstantAssets`: The portion of the user’s assets that can be instantly withdrawn from the vault.
+   * `accountShares`: The total shares (LP tokens) the user holds in the vault.
+   * `accountInstantShares`: The portion of the user’s shares that can be instantly withdrawn.
+
+#### Withdrawal Queue Functions:
+
+In the case of Symbiotic vaults, withdrawals may take some time due to processing delays. To handle this, we use a separate contract for managing the withdrawal queue, which includes the following functions:
+
+* **claimableAssetsOf**: Returns the amount of assets that the user can claim after a pending withdrawal.
+* **pendingAssetsOf**: Provides information about the assets that are pending for withdrawal and are yet to be claimed.
+* **claim()**: Allows the user to claim the assets that have become available after a pending withdrawal has been processed.
+
+By splitting the withdrawal logic into a separate contract, we ensure that users can request and later claim their withdrawals without affecting the rest of the vault's operations.
+
+### Class diagram
+
+<Frame>
+  <img src="/images/image%20%284%29.png" alt="" />
+</Frame>
+
+Idle vault is a do-nothing vault for buffering ERC20s for immediate withdrawals.
+
+There is a factory contract for permissionless deployments of the vault.
+
+### Roles
+
+<Frame>
+  <img src="/images/image%20%285%29.png" alt="" />
+</Frame>
+
+### Flows
+
+#### Deposit process
+
+1. User transfers ETH/WETH/STETH/WSTETH to `EthWrapper`, where it’s wrapped into the WSTETH. In case of other base asset, skip to step 2.
+2. `MellowSymbioticVault` mints LRT to the user
+3. Base asset is pushed into `SymbioticVault`
+
+#### Withdrawal process
+
+This withdrawal is a 2-step process. First a call to `withdraw` or `redeem` that will try to fulfill the withdrawal request with liquid funds as much as possible. If the request is not fulfilled in full on the previous step then the user calls the `claim`method after two epochs for withdrawing the rest of the funds.
+
+**Withdrawal call**
+
+1. User calls `withdraw` or `redeem` method of the `MellowSymbioticVault`.
+2. This eventually delegates to internal `_withdraw` method that takes as input `assets` - the amount of assets the user wants to withdraw.
+3. If there’s some WSTETH on the vault balance then it’s immediately used to fulfill the request
+4. If there is still some assets (`staked` variable) that needs to be withdrawn, then a withdrawal request for a `staked`amount is made into Symbiotic vault. The receiver of the a`staked` amount is `SymbioticWithdrawalQueue`
+5. A `request` call to `SymbioticWithdrawalQueue` is made that puts a record that it owes. This call uses `shares` of symbiotic corresponding to `staked` rather than assets. This is because shares can be slashed while being withdrawn.
+6. `SymbioticWithdrawalQueue` checks the last epoch the user claimed assets (`epoch` variable). It then updates the data for account’s available funds to claim (`_handlePendingEpoch` method) for `epoch` and `epoch` - 1 and then claims (if possible) funds from symbiotic and stores the record that epoch was claimed and funds are ready for distribution (`_pullFromSymbioticForEpoch` method).
+
+**Claim call**
+
+1. User calls `claim` method of the `MellowSymbioticVault`.
+2. It delegates to the `claim` method of the `SymbioticWithdrawalQueue`.
+3. `SymbioticWithdrawalQueue` makes the same update as in withdrawal call step #6 (update claimable assets for user, pull from symbiotic)
+4. The funds are transferred to the user
+
+#### Claiming rewards process
+
+The vault simply acts as a proxy for rewards claiming and the forwarding the rewards to the merkle farm. The distribution of the funds for the rewards will be calculated offchain pro-rata mellow points.
+
+1. `pushRewards` method is called in `SymbioticWithdrawalQueue`
+2. The rewards are claimed to the vault balance
+3. A share of the rewards (`curatorFeeD6`) is cut and distributed to the curator
+4. The rest of the funds goes into the predefined merkle farm (`symbioticFarm(farmId).distributionFarm`)

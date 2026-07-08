@@ -1,0 +1,126 @@
+---
+title: "Vault Infrastructure for Fintech Earn Products"
+description: "Reference page for teams evaluating vault infrastructure to power Earn, treasury, and managed yield products. Covers Mellow's architecture, use cases, compliance model, and integration approach"
+---
+
+### Overview
+
+Mellow provides modular vault infrastructure for Earn and managed yield products. Fintechs, wallets, banks, neobanks, exchanges, brokers, asset issuers, stablecoin platforms, custodians, and agent platforms use Core Vaults to build these products under their own brand – without constructing the management layer from scratch.
+
+The partner owns the customer and the brand. Vault manager provides the strategy. Mellow provides the vault layer – smart contracts, risk enforcement, compliance hooks, execution, oracle pricing, queues and fees.
+
+### Market context
+
+The onchain asset layer is established: stablecoins settle trillions annually, tokenized treasuries and money-market funds hold tens of billions, lending markets and staking protocols carry real liquidity, and RWA tokenization is expanding into private credit, commodities, and equities. The distribution layer exists: wallets, exchanges, brokers, fintechs. The strategy and routing layer in the middle – the management layer – is being built now.
+
+The market has three layers:
+
+* **Asset layer** – what moves onchain: stablecoins, tokenized treasuries, money-market funds, private credit, equities, LSTs, LP positions
+* **Strategy layer** – what capital does: lend, stake, provide liquidity, capture basis, manage treasury allocations, execute structured strategies across DeFi and CeFi venues
+* **Distribution layer** – who brings users and capital: banks, neobanks, wallets, exchanges, custodians, brokers, fintechs, payment platforms, stablecoin issuers, asset issuers, ecosystems, agentic platforms
+
+Mellow operates in the strategy layer – providing the infrastructure that connects assets to distribution through managed, mandate-bound vault products.
+
+### Core Vault architecture
+
+Core Vaults are the primary vault type for institutional and partner deployments – asset managers, fintechs, banks and neobanks, exchanges, stablecoin platforms, ecosystems. They support asynchronous deposit and redemption flows, multi-asset accounting, strategy isolation via subvaults, oracle-defined NAV, operation-level risk enforcement – all enforced at the contract level. Execution spans DeFi protocols and centralized exchanges via Copper ClearLoop and Ceffu under one permission model.
+
+#### Asynchronous deposits and redemptions
+
+Deposit and redemption queues are first-class mechanics. Economic NAV and withdrawable NAV are tracked separately. Pending requests, assets, redemption buffers, and strategy state are visible and auditable. This enables a broader set of underlying strategies such as staking with cooldowns or tokenized treasuries with redemption windows – within a single vault product.
+
+#### Risk enforcement
+
+60+ onchain permissions enforced at the contract level. Allocation caps per strategy, per asset, and per venue. Asset and venue whitelists. Oracle price checks. Withdrawal queue controls.
+
+Strategy isolation via subvaults – each strategy operates within its own constraints, and adding or removing a strategy does not affect the rest of the portfolio.
+
+Verifiers validate each operation against the vault's permission set, with configurable sign-off per operation type. Routine operations may require a single verifier approval, while high-impact operations can require multiple verifier approvals, time locks, or enhanced validation.
+
+Guardrails are configurable through structured governance but cannot be breached during execution.
+
+#### Multi-asset accounting and oracle-defined NAV
+
+Native multi-asset accounting across stablecoins, tokenized treasuries, RWAs, DeFi positions, and CeFi allocations. NAV is calculated through oracle reports rather than derived from spot prices, supporting externalized capital and multi-venue positions where spot pricing is unreliable.
+
+#### Compliance architecture
+
+Mandates are treated as first-class configuration objects.&#x20;
+
+Jurisdiction-aware mandates, allowlisted depositors, transfer-restricted shares, and per-issuer eligibility can be enforced at the vault level rather than only at the distribution endpoint.
+
+Share-token eligibility supports configurable hooks for KYC/KYB providers, transfer agents, and accreditation registries.
+
+Asset eligibility applies per-asset and per-issuer rules governing what the vault can hold, including regulated tokenized instruments with transfer restrictions.&#x20;
+
+Different products on the same platform enforce different compliance perimeters without separate codebases.
+
+#### **Distribution-ready design**
+
+The distribution partner owns the front-end, branding, and customer relationship. The vault layer handles permissions, strategy execution, oracle pricing, queues, fees, venue management, and risk controls.
+
+#### **White-label ready**
+
+Partners launch vault products under their own brand. Mellow infrastructure operates underneath – the end user interacts with the partner's product, not with Mellow directly.
+
+### Use cases
+
+#### Embedded Earn
+
+White-label Earn products for wallets, exchanges, fintechs, brokers, and stablecoin platforms. The partner owns the customer and the brand. Mellow provides the vault infrastructure. Partners launch Earn products without building custom smart contracts, managing DeFi integrations directly, or standing up risk-monitoring systems. The vault enforces the partner's mandate. The partner controls depositor eligibility, product naming, pricing, and distribution.
+
+#### Stablecoin treasury management
+
+Companies using stablecoin settlement – payment processors, marketplaces, fintechs, trading platforms – accumulate significant balances that need to be put to work. A treasury vault manages those balances under a single mandate: liquidity requirements, approved strategies (tokenized T-bills, lending markets, CeFi venues), risk limits, NAV calculation, and jurisdictional constraints, all with automated enforcement.&#x20;
+
+See [Core Vaults for Stablecoins](core-vaults-for-stablecoins) for the full reference.
+
+#### RWA allocation vaults
+
+Multi-asset vaults holding tokenized treasuries (BUIDL, USDY, USTB), lending positions, and liquidity buffers. Per-issuer eligibility constraints, async settlement, transfer restriction handling, and oracle-defined NAV across mixed positions with different pricing sources and settlement timings.
+
+#### Ecosystem vaults
+
+L1 and L2 networks, DeFi protocols, and their foundations, RWA and stablecoin issuers need to attract and retain capital beyond short-term incentive programs. Ecosystem vaults are managed capital products built around a specific network's or protocol's native venues – stablecoin vaults allocating across the ecosystem's lending markets, ETH vaults combining staking with selected strategies, foundation treasury allocation, and co-branded Earn products with distribution partners. Curators, mandates, and risk controls are configured per vault.
+
+#### Agent-operated vaults
+
+Vaults where the operator is an autonomous agent. Core Vaults act as the safety harness and execution environment for agentic asset management – the agent operates within hard, contract-level constraints it cannot override. The vault enforces the same permission model as for human curators: action-level verifiers, target whitelists, asset whitelists, role-scoped operations, time-locked sensitive calls, and oracle-defined NAV constraints. Only actions within the permission set can be executed. The agent decides; the vault bounds what it can execute.
+
+#### Meta-vaults
+
+Allocation layer above multiple vaults, curators, assets, venues, jurisdictions, and risk profiles. A single product with capital diversified across approved sources. Similar to a fund-of-funds structure in traditional finance. Supports both human and agentic allocation across underlying vault products.
+
+### Integration model
+
+#### Partnership structure
+
+The **distribution partner** – wallet, exchange, fintech, bank, or broker – owns the customer and the brand. The **vault manager** – an institutional strategy team, asset manager, or DeFi curator – operates the vault within the mandate. **Mellow** provides the vault infrastructure: smart contracts, risk enforcement, and compliance hooks.
+
+#### Distribution partners
+
+Mellow serves partners across concentric rings:
+
+* **Institutions and crypto-native operators** – onchain strategy products with yield, liquidity, and risk controls
+* **Wallets, exchanges, brokers, custodians** – embedded Earn, treasury, and cash-sweep products
+* **Stablecoin companies and payment platforms** – treasury products for stablecoin balances
+* **Asset issuers** – strategy products that make issued assets productive and liquid
+* **Ecosystems** – managed capital formation products
+* **Agent platforms** – vault infrastructure for finance-aware autonomous agents
+
+#### Multi-venue allocation
+
+Vaults route capital across DeFi protocols, centralized exchanges (through institutional custody integrations), and tokenized real-world assets under one permission model. Core Vaults support crosschain execution with bridge-agnostic architecture.
+
+### Security
+
+Mellow cooperates with leading independent security firms including StateMind, ChainSecurity, OpenZeppelin, Sherlock, MixBytes, Nethermind, and Decurity.\
+[https://github.com/mellow-finance](https://github.com/mellow-finance)
+
+The async deposit and redemption model provides structural protection against flash loan attacks and other single-transaction exploit vectors.
+
+60+ onchain permissions and verifier-enforced policies constrain every operation at the contract level – only actions within the permission set can be executed.
+
+<br/>
+
+<br/>

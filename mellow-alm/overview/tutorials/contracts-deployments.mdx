@@ -1,0 +1,70 @@
+---
+title: "Contracts deployments"
+---
+
+### Deployment requirements
+
+To follow this guide, you must have the following installed:
+
+* [nodejs >= v12.x & npm >= 6.x](https://nodejs.org/en/)
+* [yarn >= 1.x](https://classic.yarnpkg.com/lang/en/docs/install/)
+
+### Set up the local environment
+
+At first, you have to pull the [mellow vaults repository](https://github.com/mellow-finance/mellow-vaults) and checkout on the actual main branch.
+
+```
+git clone https://github.com/mellow-finance/mellow-vaults.git
+```
+
+Secondly, you should install all necessary dependencies, including [hardhat](https://hardhat.org/).
+
+```
+yarn
+```
+
+Then you have to set up environment variables. You can do it by creating `.env` file and set the required variables there.
+
+```
+// .env
+MAINNET_RPC=<ethereum RPC endpoint>
+MAINNET_DEPLOYER_PK=0x... # for mainnet deploy
+
+MAINNET_PROTOCOL_ADMIN_ADDRESS=0x...
+MAINNET_STRATEGY_ADMIN_ADDRESS=0x...
+MAINNET_PROTOCOL_TREASURY_ADDRESS=0x...
+MAINNET_STRATEGY_TREASURY_ADDRESS=0x...
+
+<CHAIN_NAME>_RPC=<ethereum RPC endpoint>
+<CHAIN_NAME>_DEPLOYER_PK=0x... # for specific chain deploy
+```
+
+Make sure, that all necessary constants in `hardhat.config.js` file is set.
+
+Congratulations! You are ready to deploy.
+
+### Deploying
+
+You must check the gas value on chain block explorer for smooth deployment and update `TRANSACTION_GAS_LIMITS` constant at `deploy/0000_utils.ts` file with actual values.
+
+Hardhat sometimes couldn't estimate base and priority fees correctly, so we set `maxFeePerGas` and  `maxPriorityFeePerGas` manually in weis to prevent transaction execution from failing.
+
+Everything we have to do now is to only run one command in the shell to deploy the system.
+
+```
+yarn deploy:mainnet
+```
+
+You can also use `yarn deploy:<CHAIN_NAME>` for deploying on any other chain, but make sure that this command is initialized in `package.json`.
+
+In case of the command failing check, that you've set all necessary env variables, and re-run it. The command won't redeploy contracts, that have already been deployed, except strategies.
+
+### Verifying
+
+You can verify contracts after deployment using the following command
+
+```
+yarn verify:mainnet
+```
+
+You can also use `yarn verify:<CHAIN_NAME>` for deploying on any other chain, but make sure that this command is initialized in `package.json`.

@@ -1,0 +1,57 @@
+---
+title: "ChainlinkOracle"
+---
+
+### Overview
+
+`ChainlinkOracle` contract integrates with Chainlink to provide accurate and real-time pricing data for various tokens. It manages base tokens and their associated Chainlink oracles (aggregators), ensuring reliable price conversions.
+
+### Key Features
+
+* **Chainlink Integration**: Utilizes Chainlink Aggregators to fetch accurate pricing data.
+* **Base Token Management**: Supports setting and managing base tokens for price calculations.
+* **Error Reporting**: Raises specific errors for unsupported or stale data scenarios.
+
+### Error Definitions
+
+* **InvalidLength**: Raised when the input arrays for tokens and oracles are not of equal length.
+* **AddressZero**: Raised when an address is expected but not provided.
+* **StaleOracle**: The data from the Chainlink oracle is older than the maximum allowable age (`MAX_ORACLE_AGE`).
+
+### Constants
+
+* **MAX\_ORACLE\_AGE**: The maximum allowable age for Chainlink oracle data, set to 2 days.
+* **Q96**: A fixed-point scaling constant (2^96), used for ratio calculations.
+
+### Core Methods
+
+1. **Base Token Management**
+   * `setBaseToken(address, address)`: Sets the base token for a specific vault.
+     * **vault**: The address of the vault.
+     * **baseToken**: The address of the base token.
+2. **Chainlink Oracle Management**
+   * `setChainlinkOracles(address, address[], address[])`: Associates tokens with their Chainlink oracles for a given vault.
+     * **vault**: The address of the vault.
+     * **tokens**: An array of token addresses.
+     * **oracles**: An array of oracle addresses matching the tokens.
+3. **Pricing**
+   * `getPrice(address, address)`: Retrieves the price and decimals of a token from its associated Chainlink oracle.
+     * **vault**: The address of the vault.
+     * **token**: The address of the token.
+   * `priceX96(address, address)`: Computes the price of a token in base token terms, using a 96-bit fixed-point representation.
+     * **vault**: The address of the vault.
+     * **token**: The address of the token.
+
+### Events
+
+1. **Base Token Events:**
+   * `ChainlinkOracleSetBaseToken(address, address, uint256)`: Emitted when a base token is set for a specific vault.
+     * **vault**: The address of the vault.
+     * **baseToken**: The address of the base token.
+     * **timestamp**: The timestamp when the base token was set.
+2. **Oracle Setup Events:**
+   * `ChainlinkOracleSetChainlinkOracles(address, address[], address[], uint256)`: Emitted when Chainlink oracles are set for tokens in a vault.
+     * **vault**: The address of the vault.
+     * **tokens**: Array of token addresses.
+     * **oracles**: Array of oracle addresses.
+     * **timestamp**: The timestamp when the oracles were set.

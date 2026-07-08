@@ -1,0 +1,99 @@
+---
+title: "Core Vaults for RWA Allocation"
+description: "Core Vault infrastructure for managing tokenized RWA allocations with per-issuer eligibility, async redemption, oracle-defined NAV, and verifier-enforced controls."
+---
+
+## Core Vaults for RWA Allocation
+
+#### Overview
+
+Tokenized real-world assets (RWA) are one of the primary asset types for vault-based allocation products built on Mellow. Asset managers, funds, treasuries, and asset issuers can use Core Vaults to hold and manage eligible tokenized instruments – tokenized treasuries, money-market funds, private credit, and commodities – under defined mandates with onchain risk enforcement and compliance controls.
+
+Tokenization creates the asset. It does not create the management layer around it. Each tokenized instrument carries its own eligibility, pricing, settlement, and transfer requirements, and a managed product has to respect them throughout the asset lifecycle. The product is defined by the mandate. The infrastructure remains the same.
+
+#### Time to market
+
+Building an RWA allocation product from scratch requires smart contracts, security audits, integrations with regulated issuers, risk monitoring, and compliance review per jurisdiction. Mellow provides these components as existing, audited infrastructure. The distribution partner and vault manager configure a vault, define the mandate, and launch. This can reduce launch timelines from months of custom development to weeks of configuration and review.
+
+#### Key concepts
+
+**Mandate**
+
+A mandate is the set of rules that defines how a vault may operate. It includes eligible depositors, supported assets and issuers, approved venues, allocation caps, liquidity requirements, verifier rules, and oracle constraints. The mandate is encoded at the contract level and enforced by onchain verifiers. Operations that fall outside the mandate revert.
+
+**Roles**
+
+* Depositors provide capital
+* Distribution partners own the product surface and customer relationship. For RWA allocation they include:
+  * Institutions and asset managers – onchain allocation products with eligibility, oracle-defined NAV, liquidity, and risk controls
+  * Asset issuers – strategy products that make their tokenized instruments more useful
+  * Wallets, exchanges, brokers, custodians – managed RWA and treasury products under their own brand
+  * Vault managers or curators operate the strategy within the mandate
+* Mellow provides the vault infrastructure
+* Vault contracts enforce the mandate
+
+#### RWA use cases
+
+**Allocation vaults**
+
+A multi-asset vault that holds tokenized treasuries, tokenized credit, commodity exposure, lending positions, and liquidity buffers under one mandate. The mandate defines eligible assets and issuers, depositors, venues, allocation limits, and liquidity requirements. The vault manager operates inside that mandate. The vault enforces the boundary.
+
+Per-issuer eligibility, asynchronous settlement, transfer-restriction handling, and oracle-defined NAV apply across positions with different pricing sources and settlement timings. Tokenized treasuries held in these vaults can also serve as the conservative base layer of a stablecoin treasury product; see[ Core Vaults for Stablecoins](https://docs.mellow.finance/core-vaults-for-stablecoins) for that use case.
+
+**Asset-issuer vaults**
+
+Asset issuers can use vaults to make tokenized instruments more useful across treasury, collateral, reinvestment, and allocation products. A stablecoin issuer can build treasury yield products. A tokenized treasury issuer can build reinvestment vaults. A credit issuer can build allocation vaults around its origination flow. Vault infrastructure becomes part of how an asset competes on utility, not only on trust and liquidity.
+
+#### Vault architecture for RWA allocation
+
+RWA allocation uses the full Core Vault feature set – multi-asset accounting, asynchronous liquidity, asset eligibility, and oracle-defined NAV – rather than a simple ERC-4626 interface.
+
+**Strategy allocation**
+
+The mandate defines the approved asset and strategy set. The following are example categories. Actual availability depends on the vault mandate, integrations, jurisdiction, and asset eligibility.
+
+* Tokenized treasuries and money-market funds – BlackRock's BUIDL, Ondo's USDY, Superstate's USTB, Franklin Templeton's BENJI, Ondo's OUSG, Circle's USYC. Conservative base layer. Redemption timing varies by issuer (T+0 to T+2); the vault handles async settlement natively.
+* Tokenized credit – tokenized private credit and credit funds such as ACRED and ACRDX. Longer redemption windows and offchain administration; the vault processes redemptions through queues and tracks withdrawable separately from economic NAV.
+* Commodity-backed tokens – gold-backed instruments such as PAXG and XAUT. Largely permissionless; these exercise multi-asset accounting and oracle-defined NAV rather than eligibility controls.
+* Lending markets – Aave, Morpho, Compound, and other onchain lending protocols, where RWA positions can also serve as collateral. The vault enforces approved markets and allocation caps.
+* CeFi venues – via Copper ClearLoop and Ceffu, under the same permission model as onchain allocations.
+
+A single vault can hold positions across all categories simultaneously. Multi-asset accounting and oracle-defined NAV produce a coherent portfolio view across assets with different pricing sources, settlement timings, and liquidity profiles. Adding a new approved asset or venue is typically configuration rather than new contract code. Beyond being held, tokenized RWAs can serve as allocation inputs – collateral, liquidity buffers, or yield legs – within a broader mandate.
+
+**Risk enforcement and verifiers**
+
+Core Vaults enforce 60+ onchain permissions at the contract level:
+
+* Allocation caps per strategy, per asset, and per venue
+* Asset whitelists – the vault only holds approved assets
+* Venue whitelists – the vault only routes to approved targets
+* Oracle price checks before operations execute
+* Withdrawal queue controls for fair redemption ordering
+
+Verifiers are the onchain components that validate each action against the vault's permission set. The verifier model is composable – routine operations may require a single verifier, while high-impact operations can require multiple verifier approvals, time locks, or enhanced validation. Verifiers do not distinguish between human curators and autonomous agents. The same rules apply.
+
+Guardrails are configurable through structured governance but cannot be breached during execution.
+
+**Compliance**
+
+Regulation is moving into the asset and the mandate. The token enforces who can hold it. The mandate enforces what can be done with it. The vault enforces who can operate it.
+
+Compliance rules are applied at the vault level, so different products can enforce different eligibility and transfer requirements without changing the base vault architecture. Core Vaults treat mandates as configurable objects.
+
+* Share-token eligibility – configurable hooks for KYC and KYB providers, transfer agents, accreditation registries, and jurisdiction-based restrictions
+* Asset eligibility – per-asset and per-issuer rules; regulated tokenized instruments with transfer restrictions are handled separately from permissionless positions
+
+Two consequences for RWA allocation: the vault itself must be an eligible holder of each instrument it allocates to, and the vault's own share token may need downstream transfer restrictions so that vault exposure stays inside the same eligibility perimeter as the underlying.
+
+Different products on the same platform enforce different compliance perimeters without separate codebases.
+
+#### Agent-operated RWA vaults
+
+RWA allocation suits agent operation: continuous, mandate-bounded decisions across instruments with different settlement and liquidity profiles. The same verifier model that bounds a human vault manager bounds an agent – approved assets, venues, allocation bands, and NAV constraints are enforced before execution, and operations outside the mandate revert.
+
+An agent can rebalance and manage liquidity at frequencies impractical for human operators, while the vault ensures it never exceeds its mandate.
+
+#### Related pages
+
+* [Core Vaults for Stablecoins](https://docs.mellow.finance/core-vaults-for-stablecoins) – stablecoin yield and treasury vaults
+* [Vault Infrastructure for Fintech Earn Products](https://docs.mellow.finance/vault-infrastructure-for-fintech-earn-products) – architecture overview and full use case reference

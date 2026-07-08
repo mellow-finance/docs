@@ -1,0 +1,106 @@
+---
+title: "Tamper strategy"
+---
+
+SU is a strategy for the WSTETH/WETH pair of tokens, which works on top of the corresponding Uniswap V3 pool. It holds two positions in this pool, changing them and rebalancing liquidity between them depending on the price in the pool.
+
+_**Note for future understanding**._ Some strategy parameters, which are typically from 0 to 1, need to be multiplied by a special constant `DENOMINATOR` (typically `$$10^9$$`) in order to be saved as integers in the code. Hence, when we mention parameters as is, it's mentioned as is, whereas we mention them multiplied by `DENOMINATOR,` we mention them with the letter D at the end. For example, `erc20UniV3CapitalRatio` = `$$0.5$$`, whereas`erc20UniV3CapitalRatioD` = `$$5 \cdot 10^8$$`.
+
+## Strategy
+
+### Abstract
+
+The strategy operates with three vaults, one ERC20 vault, and two UniV3 vaults. Each of those UniV3 vaults holds a Uniswap V3 position on the WSTETH/WETH pair.
+
+One portion of capital (e.g. 5%) is supposed to be stored inside the ERC20 vault, whereas the remaining part is supposed to be distributed between UniV3 vaults. Below, we describe how this distribution works.
+
+The ratio of the portfolio which is allocated to the ERC20 vault is defined by the                               `0 <= erc20UniV3CapitalRatio <= 1` parameter. The remaining part `1 - erc20UniV3CapitalRatio` goes to the Uniswap V3 positions.
+
+The strategy takes UniV3 pool price estimations from the Mellow Oracle, where typically the average is taken between the spot, UniV3 Oracle (last 30 minutes), and Chainlink Oracle prices (but other safety masks can be stated).
+
+### Uniswap V3 positions
+
+Two UniV3 vaults holding the positions are called lower and upper vaults. The strategy has a parameter set in the constructor, `intervalWidthInTicks,` which set the width on both positions in ticks. Positions always have to hold the following:
+
+* The lower vault holds a position with bounds `$$[x; x + width]$$`
+* The upper vault holds a position with bounds `$$[x + \frac{width}{2}; x + \frac{3 \cdot width}{2}]$$`
+
+The initial positions should be set in vaults by the strategist in process of the deployment, holding the mentioned property for some `$$x$$`. Then, the strategy itself would change positions in vaults (as described below), always holding that property.
+
+### Rebalances
+
+There are three types of rebalances that might be called by an operator (in fact, that would be an off-chain bot operating the strategy).
+
+#### UniV3 rebalance
+
+Imagine the property for positions is held for some `$$x$$`. We denote the current price in ticks as `$$p$$` Then, there are three scenarios.
+
+* `$$p > x + width$$`. That means that the price is higher than the upper bound of the position of the lower vault. In that case, we firstly drain all liquidity from the position in the lower vault. As token ratios in positions are different, we can't drain all liquidity from the lower vault to the upper vault, so we push to the upper vault as much as we can, and the remains go to the ERC20 vault. Then, the rebalance function has to be called again. Now, as the position in the lower vault contains zero liquidity, we can close it and open a new position with bounds `$$[x + width; x + 2 \cdot width]$$`. Finally, we swap the previous lower and upper vaults, keeping the property with a new `$$x' = x + \frac{width}{2}$$`. Then, a new rebalance is to be called and we're back to choose a scenario in new circumstances.
+* `$$p < x + \frac{width}{2}$$`. That means that the price is lower than the lower bound of the position of the upper vault. In that case, we firstly drain all liquidity from the position in the upper vault. As token ratios in positions are different, we can't drain all liquidity from the upper vault to the lower vault, so we push to the lower vault as much as we can, and the remains go to the ERC20 vault. Then, the rebalance function has to be called again. Now, as the position in the upper vault contains zero liquidity, we can close it and open a new position with bounds `$$[x - \frac{width}{2}; x + \frac{width}{2}]$$`. Finally, we swap the previous lower and upper vaults, keeping the property with a new `$$x' = x - \frac{width}{2}$$`. Then, a new rebalance is to be called and we're back to choose a scenario in new circumstances.
+* `$$x + \frac{width}{2} \leq p \leq x + width$$`. That means that the price is inside both intervals. In this case, if we denote the amount of UniV3 liquidity in the lower vault positions as `$$l_x$$` and the amount of UniV3 liquidity in the lower vault positions as `$$l_y$$`, the following must be obtained eventually.
+
+```
+$$
+s_x = \frac{2 \cdot (x + width - p)}{width}, s_y = 1 - s_x
+$$
+```
+
+Where `$$s_x = \frac{l_x}{l_x + l_y}, s_y = \frac{l_y}{l_x + l_y}$$`(i.e. shares of total strategy Uniswap V3 liquidity in the lower and the upper vault). To obtain those ratios, the strategy transfers tokens from one UniV3 vault to another, depending on which vault lacks liquidity. Let `$$r_x$$` be `$$\frac{l_x}{l_x + l_y}$$`before the rebalance. The rebalance is done only if `$$|s_x - r_x|$$` `> minUniV3LiquidityRatioDeviation`, which is a strategy parameter.
+
+By design, rebalances must not change `$$l_x + l_y$$`​. Hence, as token ratios in positions are different, additional tokens from the ERC20 vault might be needed for rebalance to succeed. This is the responsibility of the operator to have enough tokens on the ERC20 vault at the time of this rebalance. If there are not enough tokens, rebalance would be done partially (i.e. ratios would become closer to those which needed).
+
+Generally, as can be seen, the operator might need to call several such rebalances to obtain desired positions and token ratios, depending on market circumstances.&#x20;
+
+#### Erc20-UniV3 rebalance
+
+This rebalance is to be done to restore the portion of capital in the ERC20 vault as `erc20UniV3CapitalRatio`. For that, the following steps are done.
+
+* The capital of each vault, nominated in WETH, is calculated. For that, token amounts are obtained from `tvl()`, the average between `minTvl` and `maxTvl` is taken for each token, and then the total capital is obtained using the price between tokens from the oracle. Let the ERC20 capital be `$$e$$`, the lower vault capital be `$$l$$`, the upper vault capital be `$$u$$`.&#x20;
+* We want `$$\frac{e}{e + l + u}$$`to be equal to `erc20UniV3CapitalRatio`. If they differ less than `minErc20UniV3CapitalRatioDeviation`, we don't do a rebalance.
+* Hence, we calculate `$$d$$`, which is the amount of capital to be taken from Uniswap V3 positions to obtain this ratio (of course, `$$d$$` can be negative, which means the capital is actually to be taken from the ERC20 vault to Uniswap V3 positions)
+* Certain amounts of tokens to be taken are calculated, based on `$$d$$`. The tokens are taken from (or to) Uniswap V3 positions keeping the ratio of Uniswap V3 liquidity between them the same.
+* If `$$d \geq 0$$`, tokens are just taken from Uniswap V3 positions to the ERC20 vault.
+* If `$$d < 0$$`, it's also necessary for corresponding amounts of tokens to be on the ERC20 vault (it obviously can be not true, for example, if all the capital is in one token). For achieving that, the operator might use the next kind of rebalance prior to this rebalance (see below).
+
+#### Erc20 rebalance
+
+There is a parameter `erc20TokenRatio`, which is what share of the capital of the ERC20 vault we want to have in WSTETH. All the remaining share of capital is to be in WETH.&#x20;
+
+If the current ratio and the desired ratio differ less than by `minErc20TokenRatioDeviation`, we don't do anything.
+
+In the other case, we have to swap some amount of an excessively presented token to get the second token and align the ratio. We do swaps using Cowswap. At first, a preorder is placed on-chain by the operator. Then, an off-chain bot submits the actual Cowswap order using preorder parameters and calls the `signOrder()` function. This function verifies that the actual order matches the preorder's requirements and signs the orders using the Cowswap `setPresignature()` function.
+
+### Parameters
+
+TradingParams:
+
+| Name             | Description                                                                                 | Value in the strategy                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| oracle           | Mellow Oracle we use for WSTETH/WETH price getting                                          | [0x9d992650B30C6FB7a83E7e7a430b4e015433b838](https://etherscan.io/address/0x9d992650B30C6FB7a83E7e7a430b4e015433b838) |
+| maxSlippageD     | Maximum acceptable price slippage in a tokens swap on rebalance (multiplied by DENOMINATOR) | 10000000                                                                                                              |
+| orderDeadline    | Number of seconds strategy Cowswap orders live                                              | 900                                                                                                                   |
+| oracleSafetyMask | Mask of safety levels used in the Mellow Oracle                                             | 32                                                                                                                    |
+| maxFee0          | Maximal WSTETH fees we are ready to pay in Cowswap in one order                             | 40000000000000000                                                                                                     |
+| maxFee1          | Maximal WETH fees we are ready to pay in Cowswap in one order                               | 40000000000000000                                                                                                     |
+
+RatioParams:
+
+| Name                                | Description                                                                                                                                                      | Value in the strategy |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| erc20UniV3CapitalRatioD             | The target ratio for erc20 vault capital to the total system capital (multiplied by DENOMINATOR)                                                                 | 50000000              |
+| erc20TokenRatioD                    | The target ratio of capital in WSTETH on the ERC20 vault (multiplied by DENOMINATOR)                                                                             | 500000000             |
+| minErc20UniV3CapitalRatioDeviationD | The minimum deviation between the target and current `erc20UniV3CapitalRatio` needed for an ERC20-UniV3 rebalancing (multiplied by DENOMINATOR)                  | 20000000              |
+| minErc20TokenRatioDeviationD        | The minimum deviation between the target and current `erc20TokenRatioD` needed for an ERC20 rebalancing (multiplied by DENOMINATOR)                              | 50000000              |
+| minUniV3LiquidityRatioDeviationD    | The minimum deviation between the target and current share of Uniswap V3 liquidity on the lower vault needed for a UniV3 rebalancing (multiplied by DENOMINATOR) | 50000000              |
+
+OtherParams:
+
+| Name                | Description                                                           | Value in the strategy |
+| ------------------- | --------------------------------------------------------------------- | --------------------- |
+| minToken0ForOpening | The amount of WSTETH we want to use to open a new Uniswap V3 position | 1000000               |
+| minToken1ForOpening | The amount of WETH we want to use to open a new Uniswap V3 position   | 1000000               |
+| rebalanceDeadline   | Deadline in seconds for any rebalance to be done                      | 0                     |
+
+## Risks
+
+The only major risk the strategy holds is a sudden de-peg of STETH and subsequent IL of the positions we hold in the corresponding Uniswap V3 pool.

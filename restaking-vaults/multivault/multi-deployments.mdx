@@ -1,0 +1,1247 @@
+---
+title: "Multi Deployments"
+---
+
+### Navigation
+
+* [#lido-v3-pre-deposit-vaults](multi-deployments#lido-v3-pre-deposit-vaults "mention")
+* [#wsteth-vaults](multi-deployments#wsteth-vaults "mention")
+* [#resolv-vault](multi-deployments#resolv-vault "mention")
+* [#bima-vault](multi-deployments#bima-vault "mention")
+* [#symbiosis-vault](multi-deployments#symbiosis-vault "mention")
+
+| WhitelistedEthWrapper     | [0xfD4a4922d1AFe70000Ce0Ec6806454e78256504e](https://etherscan.io/address/0xfD4a4922d1AFe70000Ce0Ec6806454e78256504e) |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| RatiosStrategy            | [0x3aA61E6196fb3eb1170E578ad924898624f54ad6](https://etherscan.io/address/0x3aA61E6196fb3eb1170E578ad924898624f54ad6) |
+| MultiVault implementation | [0x0C5BC4C8406Fe03214D18bbf2962Ae2fa378c6f7](https://etherscan.io/address/0x0C5BC4C8406Fe03214D18bbf2962Ae2fa378c6f7) |
+| Claimer                   | [0x25024a3017B8da7161d8c5DCcF768F8678fB5802](https://etherscan.io/address/0x25024a3017B8da7161d8c5DCcF768F8678fB5802) |
+| Rewards multisig          | [0x66e137A2D4Fdb520c4B0e4eae3f0b33ed1Cf2980](https://etherscan.io/address/0x66e137a2d4fdb520c4b0e4eae3f0b33ed1cf2980) |
+
+### Lido v3 pre-deposit vaults
+
+<details>
+
+<summary>Encapsulate Vault (encapETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x00464CC86244AcECEB827e66719998c40F95F462](http://eth.blockscout.com/address/0x00464CC86244AcECEB827e66719998c40F95F462) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x61ae864074e3c925ae37e5439cef3ba3602383f2](http://eth.blockscout.com/address/0x61ae864074e3c925ae37e5439cef3ba3602383f2) |
+| Curator                          | [0xeccc61414856a83a8ad7db9c0540a49e981fe034](http://eth.blockscout.com/address/0xeccc61414856a83a8ad7db9c0540a49e981fe034) |
+| Name                             | Encapsulate Vault                                                                                                          |
+| Symbol                           | encapETH                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xE596b8d74d260eb8bF8c6B055c61D4E07C45350E](http://eth.blockscout.com/address/0xE596b8d74d260eb8bF8c6B055c61D4E07C45350E) |
+| SymbioticWithdrawalQueue address | [0xA51C58Fb4dF7750F1B6624169365BfD6926496d6](http://eth.blockscout.com/address/0xA51C58Fb4dF7750F1B6624169365BfD6926496d6) |
+| Symbiotic Delegator address      | [0x4c3c19efacC7ca708C4A88bDB7DDB32Fb690084a](http://eth.blockscout.com/address/0x4c3c19efacC7ca708C4A88bDB7DDB32Fb690084a) |
+| Symbiotic Slasher address        | [0xcCC5Bc1154F6469f0f90aE5374CAa3EbFE36abed](http://eth.blockscout.com/address/0xcCC5Bc1154F6469f0f90aE5374CAa3EbFE36abed) |
+| Symbiotic Burner address         | [0x4A448fBd739667844f047c111caFbb6a679B165e](http://eth.blockscout.com/address/0x4A448fBd739667844f047c111caFbb6a679B165e) |
+
+</details>
+
+<details>
+
+<summary>Fungl (FNGL)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x04784AeFB2f9FE31fD1ff05A4B331A5DdB46910A](http://eth.blockscout.com/address/0x04784AeFB2f9FE31fD1ff05A4B331A5DdB46910A) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x7098192f08ff10cbedf166a3614b79701e69f092](http://eth.blockscout.com/address/0x7098192f08ff10cbedf166a3614b79701e69f092) |
+| Curator                          | [0xd8f496d1f3a07b86a545ba4b167c74b3173f89b1](http://eth.blockscout.com/address/0xd8f496d1f3a07b86a545ba4b167c74b3173f89b1) |
+| Name                             | Fungl                                                                                                                      |
+| Symbol                           | FNGL                                                                                                                       |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x43B05272F9d1ba626B56806C19C265a031b88d9c](http://eth.blockscout.com/address/0x43B05272F9d1ba626B56806C19C265a031b88d9c) |
+| SymbioticWithdrawalQueue address | [0x294D1876D8D8d2BE77964c2f3d6C75647a6c8366](http://eth.blockscout.com/address/0x294D1876D8D8d2BE77964c2f3d6C75647a6c8366) |
+| Symbiotic Delegator address      | [0x9496ebb689fC36CDaBaaa56761ac43F611f66a75](http://eth.blockscout.com/address/0x9496ebb689fC36CDaBaaa56761ac43F611f66a75) |
+| Symbiotic Slasher address        | [0x0a93d1eDd7251E1BB57FdAAEdd43aC99651A3060](http://eth.blockscout.com/address/0x0a93d1eDd7251E1BB57FdAAEdd43aC99651A3060) |
+| Symbiotic Burner address         | [0x76253324df4Adc55ACC2C89c4381a44B8ef20D18](http://eth.blockscout.com/address/0x76253324df4Adc55ACC2C89c4381a44B8ef20D18) |
+
+</details>
+
+<details>
+
+<summary>MEV Capital Lidov3 stVault x Kiln (mevkstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x0F37f1ff51Fc2f8a9907eF3e226A12fDC47de4aD](http://eth.blockscout.com/address/0x0F37f1ff51Fc2f8a9907eF3e226A12fDC47de4aD) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x80b394aff4c9718350e4b9ad56c0106d91f5fe06](http://eth.blockscout.com/address/0x80b394aff4c9718350e4b9ad56c0106d91f5fe06) |
+| Curator                          | [0xa1e38210b06a05882a7e7bfe167cd67f07fa234a](http://eth.blockscout.com/address/0xa1e38210b06a05882a7e7bfe167cd67f07fa234a) |
+| Name                             | MEV Capital Lidov3 stVault x Kiln                                                                                          |
+| Symbol                           | mevkstETH                                                                                                                  |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x308781da38Be867Ec435D32b3156E0Dc5348Db51](http://eth.blockscout.com/address/0x308781da38Be867Ec435D32b3156E0Dc5348Db51) |
+| SymbioticWithdrawalQueue address | [0xFcFA9e51C0A4D569e5616Ed3018CEdCc5c70983B](http://eth.blockscout.com/address/0xFcFA9e51C0A4D569e5616Ed3018CEdCc5c70983B) |
+| Symbiotic Delegator address      | [0x783Bdfb6a6260Af39383C1734ba31809E624AE14](http://eth.blockscout.com/address/0x783Bdfb6a6260Af39383C1734ba31809E624AE14) |
+| Symbiotic Slasher address        | [0x2db34e19070dD24E414e6bFDD23b76c5dBc91251](http://eth.blockscout.com/address/0x2db34e19070dD24E414e6bFDD23b76c5dBc91251) |
+| Symbiotic Burner address         | [0x00Ba6E1Fc08D71784d31051257E79720e633651D](http://eth.blockscout.com/address/0x00Ba6E1Fc08D71784d31051257E79720e633651D) |
+
+</details>
+
+<details>
+
+<summary>XHash Dual-Yield Restake Vault (xstETH)</summary>
+
+| Type                             | multi-vault                                                                                                                |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Vault                            | [0x3EE460eFfBDEb6d5e1E2345435263c19cd68975f](http://eth.blockscout.com/address/0x3EE460eFfBDEb6d5e1E2345435263c19cd68975f) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x1021bb67ec974f1be09efc6033a9ec6c72eaf900](http://eth.blockscout.com/address/0x1021bb67ec974f1be09efc6033a9ec6c72eaf900) |
+| Curator                          | [0xD1f59ba974E828dF68cB2592C16b967B637cB4e4](http://eth.blockscout.com/address/0xD1f59ba974E828dF68cB2592C16b967B637cB4e4) |
+| Name                             | XHash Dual-Yield Restake Vault                                                                                             |
+| Symbol                           | xstETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xD6A7933D2Ac0BAf297944d254Eb62A48dEa6E19b](http://eth.blockscout.com/address/0xD6A7933D2Ac0BAf297944d254Eb62A48dEa6E19b) |
+| SymbioticWithdrawalQueue address | [0xa38Cd4aD4f81E71Aa86fafaE3FFf43cA7FB855F2](http://eth.blockscout.com/address/0xa38Cd4aD4f81E71Aa86fafaE3FFf43cA7FB855F2) |
+| Symbiotic Delegator address      | [0xEC48Ba9e7F455C289DCc39bAD830Ce237Db9698E](http://eth.blockscout.com/address/0xEC48Ba9e7F455C289DCc39bAD830Ce237Db9698E) |
+| Symbiotic Slasher address        | [0xEe43E93E30dE2820Ec173fa1478a852cEfDB00c4](http://eth.blockscout.com/address/0xEe43E93E30dE2820Ec173fa1478a852cEfDB00c4) |
+| Symbiotic Burner address         | [0xd0ca96bc39cb29dA299A9A05768F4e514c775898](http://eth.blockscout.com/address/0xd0ca96bc39cb29dA299A9A05768F4e514c775898) |
+
+</details>
+
+<details>
+
+<summary>A41 Lido v3 Restaking Vault (a41ETH)</summary>
+
+| Parameter       | Value                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type            | multi-vault                                                                                                                |
+| Vault           | [0x1EC4C1f8CDd7cb2Da5903701bFbD64f03ed33244](http://eth.blockscout.com/address/0x1EC4C1f8CDd7cb2Da5903701bFbD64f03ed33244) |
+| Asset           | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin      | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin      | [0x23fca22132a7b2623d176a71bea0fd67febc0ca8](http://eth.blockscout.com/address/0x23fca22132a7b2623d176a71bea0fd67febc0ca8) |
+| Curator         | [0xa01Cf5321824e045f54F19CBaf9cd90750417cF2](http://eth.blockscout.com/address/0xa01Cf5321824e045f54F19CBaf9cd90750417cF2) |
+| Name            | A41 Vault                                                                                                                  |
+| Symbol          | a41ETH                                                                                                                     |
+
+</details>
+
+<details>
+
+<summary>MEV Capital Lidov3 stVault x Alchemy (ALstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x1af14EBC81e8F92E0DA13D2912091d556a4Ac47B](http://eth.blockscout.com/address/0x1af14EBC81e8F92E0DA13D2912091d556a4Ac47B) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xa7bde0c55d4c85ccf0f27011d12ba3d9b7f2259d](http://eth.blockscout.com/address/0xa7bde0c55d4c85ccf0f27011d12ba3d9b7f2259d) |
+| Curator                          | [0xa1e38210b06a05882a7e7bfe167cd67f07fa234a](http://eth.blockscout.com/address/0xa1e38210b06a05882a7e7bfe167cd67f07fa234a) |
+| Name                             | Lido Alchemy stVault                                                                                                       |
+| Symbol                           | ALstETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xfBACB2e046BA5bee318237A9D0FF8E50Cb0ba82B](http://eth.blockscout.com/address/0xfBACB2e046BA5bee318237A9D0FF8E50Cb0ba82B) |
+| SymbioticWithdrawalQueue address | [0xa61AA3399933FDECe7d40EE9FD4eAf98d4557153](http://eth.blockscout.com/address/0xa61AA3399933FDECe7d40EE9FD4eAf98d4557153) |
+| Symbiotic Delegator address      | [0x3667B5794762b43A65F32DbB456406DA9b22E317](http://eth.blockscout.com/address/0x3667B5794762b43A65F32DbB456406DA9b22E317) |
+| Symbiotic Slasher address        | [0x4E69f127840883215b2805F8750CaAB2E636bfeD](http://eth.blockscout.com/address/0x4E69f127840883215b2805F8750CaAB2E636bfeD) |
+| Symbiotic Burner address         | [0x2A1f4cdDFb7d156fdEbC364Ab2260cFaa7DC6c46](http://eth.blockscout.com/address/0x2A1f4cdDFb7d156fdEbC364Ab2260cFaa7DC6c46) |
+
+</details>
+
+<details>
+
+<summary>Re7 LidoV3 x Luganodes (re7lugeth)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x2759E4741b370506BE2ccEf898960108e98f2faf](http://eth.blockscout.com/address/0x2759E4741b370506BE2ccEf898960108e98f2faf) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x7943becf03a96313a8bd9abb8e7054105625ba18](http://eth.blockscout.com/address/0x7943becf03a96313a8bd9abb8e7054105625ba18) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 LidoV3 x Luganodes                                                                                                     |
+| Symbol                           | re7lugeth                                                                                                                  |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x6d17D5e17e2e471fb8209b9101a4091717239d66](http://eth.blockscout.com/address/0x6d17D5e17e2e471fb8209b9101a4091717239d66) |
+| SymbioticWithdrawalQueue address | [0x96b3E88362369ce25BfC718252fdD6aB5E56CDeE](http://eth.blockscout.com/address/0x96b3E88362369ce25BfC718252fdD6aB5E56CDeE) |
+| Symbiotic Delegator address      | [0x3Ec597bECFa076dF2de431C2628614491a15A951](http://eth.blockscout.com/address/0x3Ec597bECFa076dF2de431C2628614491a15A951) |
+| Symbiotic Slasher address        | [0x383ca10D03E2Ff2DeB9A5AEbafEa08fffc0bb8F0](http://eth.blockscout.com/address/0x383ca10D03E2Ff2DeB9A5AEbafEa08fffc0bb8F0) |
+| Symbiotic Burner address         | [0x7C540FFa814c82C8162b60Cb67cfB2Ce6B570C97](http://eth.blockscout.com/address/0x7C540FFa814c82C8162b60Cb67cfB2Ce6B570C97) |
+
+</details>
+
+<details>
+
+<summary>Nodes.Guru Vault (ngETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x2818464883d4EfA130D25D414B6037570c489a7C](http://eth.blockscout.com/address/0x2818464883d4EfA130D25D414B6037570c489a7C) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x1ec3f035058627c2914604511cfc4621e03d0f63](http://eth.blockscout.com/address/0x1ec3f035058627c2914604511cfc4621e03d0f63) |
+| Curator                          | [0x97ab4ccfba2b465f77925e7a58003b5fc0a275b7](http://eth.blockscout.com/address/0x97ab4ccfba2b465f77925e7a58003b5fc0a275b7) |
+| Name                             | Nodes.Guru Vault                                                                                                           |
+| Symbol                           | ngETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xc323BfDe0f85086B38a22ec9Fd20D2e79A30e6F9](http://eth.blockscout.com/address/0xc323BfDe0f85086B38a22ec9Fd20D2e79A30e6F9) |
+| SymbioticWithdrawalQueue address | [0xE85060648d2FbE45e369Fe8A176D84012F61A5d5](http://eth.blockscout.com/address/0xE85060648d2FbE45e369Fe8A176D84012F61A5d5) |
+| Symbiotic Delegator address      | [0xf682E83b839A9376BE1B0cdB1E0128bCdA6Dba69](http://eth.blockscout.com/address/0xf682E83b839A9376BE1B0cdB1E0128bCdA6Dba69) |
+| Symbiotic Slasher address        | [0x796409D963e6E45B2C673bD3BA7f36896fE8842E](http://eth.blockscout.com/address/0x796409D963e6E45B2C673bD3BA7f36896fE8842E) |
+| Symbiotic Burner address         | [0xE4165d7Cf4a71402a2C911C1330e1fbf304a3Df9](http://eth.blockscout.com/address/0xE4165d7Cf4a71402a2C911C1330e1fbf304a3Df9) |
+
+</details>
+
+<details>
+
+<summary>HashKey Cloud Restaked ETH (hcETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x375A8eE22280076610cA2B4348d37cB1bEEBeba0](http://eth.blockscout.com/address/0x375A8eE22280076610cA2B4348d37cB1bEEBeba0) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xffad6500af7814540c27ea73d45f125f5fbebae3](http://eth.blockscout.com/address/0xffad6500af7814540c27ea73d45f125f5fbebae3) |
+| Curator                          | [0x323b1370ec7d17d0c70b2cbebe052b9ed0d8a289](http://eth.blockscout.com/address/0x323b1370ec7d17d0c70b2cbebe052b9ed0d8a289) |
+| Name                             | HashKey Cloud Restaked ETH                                                                                                 |
+| Symbol                           | hcETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x108784D6B93A010f62b652b2356697dAEF3D7341](http://eth.blockscout.com/address/0x108784D6B93A010f62b652b2356697dAEF3D7341) |
+| SymbioticWithdrawalQueue address | [0xAbE13a6aA98E37C413e08bf17BE896e65b564dA5](http://eth.blockscout.com/address/0xAbE13a6aA98E37C413e08bf17BE896e65b564dA5) |
+| Symbiotic Delegator address      | [0xeBDbF863f07E20842182c50C168524C6d86B68E4](http://eth.blockscout.com/address/0xeBDbF863f07E20842182c50C168524C6d86B68E4) |
+| Symbiotic Slasher address        | [0xca7F5040021d51748f65E8524bA11B7705B7A402](http://eth.blockscout.com/address/0xca7F5040021d51748f65E8524bA11B7705B7A402) |
+| Symbiotic Burner address         | [0x7b47648eeBde4778EE990e2C8D2d049D4e85829b](http://eth.blockscout.com/address/0x7b47648eeBde4778EE990e2C8D2d049D4e85829b) |
+
+</details>
+
+<details>
+
+<summary>Re7 LidoV3 x Stakin (re7stkETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x4C690C311d8A5aa16eC2a595D4ea3928a73C48d6](http://eth.blockscout.com/address/0x4C690C311d8A5aa16eC2a595D4ea3928a73C48d6) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x52e03091868b677b36972e9ced975df641bd598a](http://eth.blockscout.com/address/0x52e03091868b677b36972e9ced975df641bd598a) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 LidoV3 x Stakin                                                                                                        |
+| Symbol                           | re7stkETH                                                                                                                  |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x693F99dCEd615087eab28D95B1d471CC60843A67](http://eth.blockscout.com/address/0x693F99dCEd615087eab28D95B1d471CC60843A67) |
+| SymbioticWithdrawalQueue address | [0x6B44A8c1708d125C14AB8C3b59BdF0ca3c941C30](http://eth.blockscout.com/address/0x6B44A8c1708d125C14AB8C3b59BdF0ca3c941C30) |
+| Symbiotic Delegator address      | [0x24943A74b6f84a81DddFd2c5b5733ff661AC3a49](http://eth.blockscout.com/address/0x24943A74b6f84a81DddFd2c5b5733ff661AC3a49) |
+| Symbiotic Slasher address        | [0xFD418926CA0857aEfC63902ddA31415B158B9143](http://eth.blockscout.com/address/0xFD418926CA0857aEfC63902ddA31415B158B9143) |
+| Symbiotic Burner address         | [0xC25f9b8718fCFcEAc0e8c7D357D21Bf722D5843f](http://eth.blockscout.com/address/0xC25f9b8718fCFcEAc0e8c7D357D21Bf722D5843f) |
+
+</details>
+
+<details>
+
+<summary>Simply Staking Lido v3 Pre-Deposit Vault x Steakhouse (ssSTETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x4C797D53f4772325A8aDFd509F13A2d60Daa7d02](http://eth.blockscout.com/address/0x4C797D53f4772325A8aDFd509F13A2d60Daa7d02) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x7d244943911d87b02a33bc3e9ed722aa3c99b4a1](http://eth.blockscout.com/address/0x7d244943911d87b02a33bc3e9ed722aa3c99b4a1) |
+| Curator                          | [0x2e93913a796a6c6b2bb76f41690e78a2e206be54](http://eth.blockscout.com/address/0x2e93913a796a6c6b2bb76f41690e78a2e206be54) |
+| Name                             | Simply Staking Lido v3 Pre-Deposit Vault x Steakhouse                                                                      |
+| Symbol                           | ssSTETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x1a33f761ae602BFa3D2891972F25f2E677cfCEcd](http://eth.blockscout.com/address/0x1a33f761ae602BFa3D2891972F25f2E677cfCEcd) |
+| SymbioticWithdrawalQueue address | [0x4a47Ab501c2c089aFB2Fbf8f8a3E4C6F35370652](http://eth.blockscout.com/address/0x4a47Ab501c2c089aFB2Fbf8f8a3E4C6F35370652) |
+| Symbiotic Delegator address      | [0x6d8bbdd07167b15Dac8bA19B0f090488888eCC04](http://eth.blockscout.com/address/0x6d8bbdd07167b15Dac8bA19B0f090488888eCC04) |
+| Symbiotic Slasher address        | [0x1341367124a9c9C1775EAea373D2534AB1e5fd58](http://eth.blockscout.com/address/0x1341367124a9c9C1775EAea373D2534AB1e5fd58) |
+| Symbiotic Burner address         | [0xa33Adec67c78caA1cb5187a5c04d6665Ed737b95](http://eth.blockscout.com/address/0xa33Adec67c78caA1cb5187a5c04d6665Ed737b95) |
+
+</details>
+
+<details>
+
+<summary>Flow Traders Restaking Vault (flowETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x4b8b426D1a934b9C78f139526dc74249d40960ea](http://eth.blockscout.com/address/0x4b8b426D1a934b9C78f139526dc74249d40960ea) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xd2cc6ed47d0395403b360745f6d088ffe0d22bd0](http://eth.blockscout.com/address/0xd2cc6ed47d0395403b360745f6d088ffe0d22bd0) |
+| Curator                          | [0xe5f981ee3be4cb2af1d33b00c7a3d2a11de67924](http://eth.blockscout.com/address/0xe5f981ee3be4cb2af1d33b00c7a3d2a11de67924) |
+| Name                             | Flow Traders Restaking Vault                                                                                               |
+| Symbol                           | flowETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xA57f8127b500D937D3bddC8c1D9d6e4A5D20AdA3](http://eth.blockscout.com/address/0xA57f8127b500D937D3bddC8c1D9d6e4A5D20AdA3) |
+| SymbioticWithdrawalQueue address | [0x3ccE168586A5C8C60EA9a59E0321750c7c0A5f5e](http://eth.blockscout.com/address/0x3ccE168586A5C8C60EA9a59E0321750c7c0A5f5e) |
+| Symbiotic Delegator address      | [0x0F774eD150715eC0a21338B5499095533599aE23](http://eth.blockscout.com/address/0x0F774eD150715eC0a21338B5499095533599aE23) |
+| Symbiotic Slasher address        | [0x060996e8f4ACF25628F98fC319FCc0388aB86a44](http://eth.blockscout.com/address/0x060996e8f4ACF25628F98fC319FCc0388aB86a44) |
+| Symbiotic Burner address         | [0x919dA38e80E26935105b66C07F0c23A5bd9Ae0Cb](http://eth.blockscout.com/address/0x919dA38e80E26935105b66C07F0c23A5bd9Ae0Cb) |
+
+</details>
+
+<details>
+
+<summary>ProviVault (prvETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x54f506Bd8cC4838B42FB7640F0C811713f1d00Fb](http://eth.blockscout.com/address/0x54f506Bd8cC4838B42FB7640F0C811713f1d00Fb) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x17e65309d33ba33f4046fe91743dc26423834de1](http://eth.blockscout.com/address/0x17e65309d33ba33f4046fe91743dc26423834de1) |
+| Curator                          | [0x52aeb526da48d09f993d3504ba860048069562aa](http://eth.blockscout.com/address/0x52aeb526da48d09f993d3504ba860048069562aa) |
+| Name                             | ProviVault                                                                                                                 |
+| Symbol                           | prvETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xac7817e893EfB8401C5Cf6c625125725e139c326](http://eth.blockscout.com/address/0xac7817e893EfB8401C5Cf6c625125725e139c326) |
+| SymbioticWithdrawalQueue address | [0x0c3E33E133e715aEc43B74BD5bf8732b0775e08a](http://eth.blockscout.com/address/0x0c3E33E133e715aEc43B74BD5bf8732b0775e08a) |
+| Symbiotic Delegator address      | [0xD84Ac2585448793F80D2835F5c9C86784bdF6B66](http://eth.blockscout.com/address/0xD84Ac2585448793F80D2835F5c9C86784bdF6B66) |
+| Symbiotic Slasher address        | [0x4cF9a94280A8317d3B27f0673a0446C48fD5B1d7](http://eth.blockscout.com/address/0x4cF9a94280A8317d3B27f0673a0446C48fD5B1d7) |
+| Symbiotic Burner address         | [0xEABbae8CACfA1f32F91D7d0C6463aF8f30c88c9a](http://eth.blockscout.com/address/0xEABbae8CACfA1f32F91D7d0C6463aF8f30c88c9a) |
+
+</details>
+
+<details>
+
+<summary>Re7 LidoV3 x P-OPS Team (re7popseth)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x62F0BAf53959AF18Cab47082f5aB58A5B93e041C](http://eth.blockscout.com/address/0x62F0BAf53959AF18Cab47082f5aB58A5B93e041C) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x27d131000a485e5456d8b9e0d9b27e4baf2ce7df](http://eth.blockscout.com/address/0x27d131000a485e5456d8b9e0d9b27e4baf2ce7df) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 LidoV3 x P-OPS Team                                                                                                    |
+| Symbol                           | re7popseth                                                                                                                 |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x92c8aEE46534fBb88b70A54298763f22b458bA9d](http://eth.blockscout.com/address/0x92c8aEE46534fBb88b70A54298763f22b458bA9d) |
+| SymbioticWithdrawalQueue address | [0x27A02C23AC091aA2234E261f88a93050C4b4D33E](http://eth.blockscout.com/address/0x27A02C23AC091aA2234E261f88a93050C4b4D33E) |
+| Symbiotic Delegator address      | [0x482ed1C63541A0792b476C3D597E3B87C84E380C](http://eth.blockscout.com/address/0x482ed1C63541A0792b476C3D597E3B87C84E380C) |
+| Symbiotic Slasher address        | [0xeb1398f221D2035E5a97AD27D2ae04A4eE91f7A1](http://eth.blockscout.com/address/0xeb1398f221D2035E5a97AD27D2ae04A4eE91f7A1) |
+| Symbiotic Burner address         | [0x4A50B8C421eE6762652296a828759431707BB842](http://eth.blockscout.com/address/0x4A50B8C421eE6762652296a828759431707BB842) |
+
+</details>
+
+<details>
+
+<summary>HashKey Cloud Lido v3 Pre-Deposit Vault (hcstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x653c719E10cF65a7b902d2ba63d59FbE52D33184](http://eth.blockscout.com/address/0x653c719E10cF65a7b902d2ba63d59FbE52D33184) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xb9beca5f0f1184de84ce06a44a807d0af9039971](http://eth.blockscout.com/address/0xb9beca5f0f1184de84ce06a44a807d0af9039971) |
+| Curator                          | [0x323b1370ec7d17d0c70b2cbebe052b9ed0d8a289](http://eth.blockscout.com/address/0x323b1370ec7d17d0c70b2cbebe052b9ed0d8a289) |
+| Name                             | HashKey Cloud Lido v3 Pre-Deposit Vault                                                                                    |
+| Symbol                           | hcstETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xb225dC68Ab754DD5F84C9941766da1613B14A0C6](http://eth.blockscout.com/address/0xb225dC68Ab754DD5F84C9941766da1613B14A0C6) |
+| SymbioticWithdrawalQueue address | [0xD0658E61a09e9db05D784a25d41a846fE791d3Ed](http://eth.blockscout.com/address/0xD0658E61a09e9db05D784a25d41a846fE791d3Ed) |
+| Symbiotic Delegator address      | [0xaC2041826458cFD998c9B1F6Cf5873A8f6BCdE52](http://eth.blockscout.com/address/0xaC2041826458cFD998c9B1F6Cf5873A8f6BCdE52) |
+| Symbiotic Slasher address        | [0x2B1Ac92B8584D363146e1e23AB8bCBeeec609725](http://eth.blockscout.com/address/0x2B1Ac92B8584D363146e1e23AB8bCBeeec609725) |
+| Symbiotic Burner address         | [0x76E9823F699EdEB1BF14c3EE99b87910248CE20c](http://eth.blockscout.com/address/0x76E9823F699EdEB1BF14c3EE99b87910248CE20c) |
+
+</details>
+
+<details>
+
+<summary>Pier Two All Networks (ptstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x6a834527b3a99ebB48A9C57A4d7843a028e89823](http://eth.blockscout.com/address/0x6a834527b3a99ebB48A9C57A4d7843a028e89823) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xa682d1b87d28b7fb2437b424e59dacd5de9bb04e](http://eth.blockscout.com/address/0xa682d1b87d28b7fb2437b424e59dacd5de9bb04e) |
+| Curator                          | [0x2e93913a796a6c6b2bb76f41690e78a2e206be54](http://eth.blockscout.com/address/0x2e93913a796a6c6b2bb76f41690e78a2e206be54) |
+| Name                             | Pier Two All Networks                                                                                                      |
+| Symbol                           | ptstETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x87D9c00B21bAC2fD9e5A81e8B96A1268E74F9BE2](http://eth.blockscout.com/address/0x87D9c00B21bAC2fD9e5A81e8B96A1268E74F9BE2) |
+| SymbioticWithdrawalQueue address | [0xf82F5064775663AD8Af615D2116691653835398b](http://eth.blockscout.com/address/0xf82F5064775663AD8Af615D2116691653835398b) |
+| Symbiotic Delegator address      | [0xC26c8124f8e52Fd615617D0fDAF6cD9592c5D1f6](http://eth.blockscout.com/address/0xC26c8124f8e52Fd615617D0fDAF6cD9592c5D1f6) |
+| Symbiotic Slasher address        | [0x295dF6F9aEF8d61068a9ed3D80304a680Fb4075a](http://eth.blockscout.com/address/0x295dF6F9aEF8d61068a9ed3D80304a680Fb4075a) |
+| Symbiotic Burner address         | [0xaA5a68c077A453f2b63d944Fa54Acff0737D656A](http://eth.blockscout.com/address/0xaA5a68c077A453f2b63d944Fa54Acff0737D656A) |
+
+</details>
+
+<details>
+
+<summary>MEV Capital Lidov3 stVault x Blockscape (mevblETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x70558848f6b31AE03AD5a25868cD3d25E0fE8506](http://eth.blockscout.com/address/0x70558848f6b31AE03AD5a25868cD3d25E0fE8506) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x047efa2ecd6128e9dbc7fa035e08573475760af0](http://eth.blockscout.com/address/0x047efa2ecd6128e9dbc7fa035e08573475760af0) |
+| Curator                          | [0xa1e38210b06a05882a7e7bfe167cd67f07fa234a](http://eth.blockscout.com/address/0xa1e38210b06a05882a7e7bfe167cd67f07fa234a) |
+| Name                             | Lido Blockscape x MEV Capital stVault                                                                                      |
+| Symbol                           | mevblETH                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xC1f35a2FA20499064c635893C39aa56aa72146C9](http://eth.blockscout.com/address/0xC1f35a2FA20499064c635893C39aa56aa72146C9) |
+| SymbioticWithdrawalQueue address | [0x115ca43DC8fFf0c9260C42809a9Cf29e123e6E89](http://eth.blockscout.com/address/0x115ca43DC8fFf0c9260C42809a9Cf29e123e6E89) |
+| Symbiotic Delegator address      | [0x106dcf5889b4023cd6543C3c2E78fb31Ff546208](http://eth.blockscout.com/address/0x106dcf5889b4023cd6543C3c2E78fb31Ff546208) |
+| Symbiotic Slasher address        | [0xe90657F58Ad86894B8Aad4AAcc6C207DB33409a4](http://eth.blockscout.com/address/0xe90657F58Ad86894B8Aad4AAcc6C207DB33409a4) |
+| Symbiotic Burner address         | [0x6Ad9FC96AAC9e2BA26516E606C50FA2F97FB3eC3](http://eth.blockscout.com/address/0x6Ad9FC96AAC9e2BA26516E606C50FA2F97FB3eC3) |
+
+</details>
+
+<details>
+
+<summary>MEV Capital Lidov3 stVault x Nodeinfra (mevnoETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x73D596efEAe0A6833079e4fc999FD5ceE55770A5](http://eth.blockscout.com/address/0x73D596efEAe0A6833079e4fc999FD5ceE55770A5) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x659abfb5a8ed6307124fe9d0209eed362b4c5b62](http://eth.blockscout.com/address/0x659abfb5a8ed6307124fe9d0209eed362b4c5b62) |
+| Curator                          | [0xa1e38210b06a05882a7e7bfe167cd67f07fa234a](http://eth.blockscout.com/address/0xa1e38210b06a05882a7e7bfe167cd67f07fa234a) |
+| Name                             | MEV Capital Lidov3 stVault x Nodeinfra                                                                                     |
+| Symbol                           | mevnoETH                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xA3E1Ab575Eb40B1Aa5F2CC9A1B276C2Ee0fDffA5](http://eth.blockscout.com/address/0xA3E1Ab575Eb40B1Aa5F2CC9A1B276C2Ee0fDffA5) |
+| SymbioticWithdrawalQueue address | [0x510DEbA679107c7e6515057512f4de9E203D0475](http://eth.blockscout.com/address/0x510DEbA679107c7e6515057512f4de9E203D0475) |
+| Symbiotic Delegator address      | [0x729C5f8c9165a6754898f904c5F4dbf6BfeDE998](http://eth.blockscout.com/address/0x729C5f8c9165a6754898f904c5F4dbf6BfeDE998) |
+| Symbiotic Slasher address        | [0x5087887b1c2Ca9Da5601A1F181025714fCCc92D2](http://eth.blockscout.com/address/0x5087887b1c2Ca9Da5601A1F181025714fCCc92D2) |
+| Symbiotic Burner address         | [0xB64f53B03C64845982b89423F2b23c14996f9971](http://eth.blockscout.com/address/0xB64f53B03C64845982b89423F2b23c14996f9971) |
+
+</details>
+
+<details>
+
+<summary>Re7 LidoV3 x Node.Monster (re7ndmeth)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x883F81511Dae16713b2255B284bad333cd3B7913](http://eth.blockscout.com/address/0x883F81511Dae16713b2255B284bad333cd3B7913) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x338012f85e175f0fb57eee5ced316aaf8bba2546](http://eth.blockscout.com/address/0x338012f85e175f0fb57eee5ced316aaf8bba2546) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 LidoV3 x Node.Monster                                                                                                  |
+| Symbol                           | re7ndmeth                                                                                                                  |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xE49C38f5fc5F2e9826c81809C114d87eC0438619](http://eth.blockscout.com/address/0xE49C38f5fc5F2e9826c81809C114d87eC0438619) |
+| SymbioticWithdrawalQueue address | [0xe1FE154FEb97072996fbCe5822baC281bbEA239A](http://eth.blockscout.com/address/0xe1FE154FEb97072996fbCe5822baC281bbEA239A) |
+| Symbiotic Delegator address      | [0x5223759527226c5BBC90B9E82D685a393708439e](http://eth.blockscout.com/address/0x5223759527226c5BBC90B9E82D685a393708439e) |
+| Symbiotic Slasher address        | [0xe0cBdA2E9A2c37A2a7A044220e0773108d751E1F](http://eth.blockscout.com/address/0xe0cBdA2E9A2c37A2a7A044220e0773108d751E1F) |
+| Symbiotic Burner address         | [0x34D384b2Ea073885beeD933189eE5258C307dE08](http://eth.blockscout.com/address/0x34D384b2Ea073885beeD933189eE5258C307dE08) |
+
+</details>
+
+<details>
+
+<summary>Re7 LidoV3 x Blockscape (re7blETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x8b0e80716c4be087C271E964E0bDc7780d32A2E8](http://eth.blockscout.com/address/0x8b0e80716c4be087C271E964E0bDc7780d32A2E8) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xae98bb610b3c3e5d9489a4547f3e1e0919848ff4](http://eth.blockscout.com/address/0xae98bb610b3c3e5d9489a4547f3e1e0919848ff4) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 LidoV3 x Blockscape                                                                                                    |
+| Symbol                           | re7blETH                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x7FD837Fc6E6b1405E3D3Aca89EEf5D8438A2ad44](http://eth.blockscout.com/address/0x7FD837Fc6E6b1405E3D3Aca89EEf5D8438A2ad44) |
+| SymbioticWithdrawalQueue address | [0xCeA2f2D402381E53bfee85d7952a13A56c65108d](http://eth.blockscout.com/address/0xCeA2f2D402381E53bfee85d7952a13A56c65108d) |
+| Symbiotic Delegator address      | [0x987FD3a0e79a212711409b6Ab3354a92348019f5](http://eth.blockscout.com/address/0x987FD3a0e79a212711409b6Ab3354a92348019f5) |
+| Symbiotic Slasher address        | [0xcbdab84FD8958D2A62c3010736F7898C6Dbe4276](http://eth.blockscout.com/address/0xcbdab84FD8958D2A62c3010736F7898C6Dbe4276) |
+| Symbiotic Burner address         | [0x9062B294405461D919c178B9999fE22836a197D3](http://eth.blockscout.com/address/0x9062B294405461D919c178B9999fE22836a197D3) |
+
+</details>
+
+<details>
+
+<summary>Republic Enhanced Yield Vault (repETH)</summary>
+
+| Parameter       | Value                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type            | multi-vault                                                                                                                |
+| Vault           | [0x8f4478a6B0f049cB527EFECca6E1b23006B8812f](http://eth.blockscout.com/address/0x8f4478a6B0f049cB527EFECca6E1b23006B8812f) |
+| Asset           | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin      | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin      | [0xea51fb712c4fc75084e3000d2706a40163a58d79](http://eth.blockscout.com/address/0xea51fb712c4fc75084e3000d2706a40163a58d79) |
+| Curator         | [0x5aD82Bd975eB82af09E12D7D85dc3b5f6AC9B151](http://eth.blockscout.com/address/0x5aD82Bd975eB82af09E12D7D85dc3b5f6AC9B151) |
+| Name            | Republic Enhanced Yield Vault                                                                                              |
+| Symbol          | repETH                                                                                                                     |
+
+</details>
+
+<details>
+
+<summary>Luganodes Lido v3 Pre-Deposit Vault (lnstETHsteak)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x9707f14B6c8200CBf6c6F2c5498D1D0019A5f15A](http://eth.blockscout.com/address/0x9707f14B6c8200CBf6c6F2c5498D1D0019A5f15A) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xa40b65fc98a2caf92e8e8a76eb750c3a879cadc1](http://eth.blockscout.com/address/0xa40b65fc98a2caf92e8e8a76eb750c3a879cadc1) |
+| Curator                          | [0x2e93913a796a6c6b2bb76f41690e78a2e206be54](http://eth.blockscout.com/address/0x2e93913a796a6c6b2bb76f41690e78a2e206be54) |
+| Name                             | Luganodes Lido v3 Pre-Deposit Vault                                                                                        |
+| Symbol                           | lnstETHsteak                                                                                                               |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x4DCd1Da51C10D97c0FEaC12b47f4D19E3d56cd2B](http://eth.blockscout.com/address/0x4DCd1Da51C10D97c0FEaC12b47f4D19E3d56cd2B) |
+| SymbioticWithdrawalQueue address | [0xb59d3b962E8D214f179636cC38BBb30e90302a3b](http://eth.blockscout.com/address/0xb59d3b962E8D214f179636cC38BBb30e90302a3b) |
+| Symbiotic Delegator address      | [0x9a8Fa9d66E7935b40Ee27A48EaD76559C6972Ae8](http://eth.blockscout.com/address/0x9a8Fa9d66E7935b40Ee27A48EaD76559C6972Ae8) |
+| Symbiotic Slasher address        | [0x2C3498ABad800af73034f7eFf09bF7B5DE80ea9e](http://eth.blockscout.com/address/0x2C3498ABad800af73034f7eFf09bF7B5DE80ea9e) |
+| Symbiotic Burner address         | [0x33864e3Ca10746d39e0246B540Bf156843203618](http://eth.blockscout.com/address/0x33864e3Ca10746d39e0246B540Bf156843203618) |
+
+</details>
+
+<details>
+
+<summary>UltraYield x Edge x Allnodes (alluETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x9A6340ce1282e01Cb4Ec9faae5fc5F4b60Ca8839](http://eth.blockscout.com/address/0x9A6340ce1282e01Cb4Ec9faae5fc5F4b60Ca8839) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x15f43f2d05f675c118a040d9ea389ead49182b7f](http://eth.blockscout.com/address/0x15f43f2d05f675c118a040d9ea389ead49182b7f) |
+| Curator                          | [0x79b11a9f722b0f92e9a7dfae8006d3d755c1a8c4](http://eth.blockscout.com/address/0x79b11a9f722b0f92e9a7dfae8006d3d755c1a8c4) |
+| Name                             | UltraYield x Edge x Allnodes                                                                                               |
+| Symbol                           | alluETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x60b683aF37e15283f2623fC63eECa7726E934976](http://eth.blockscout.com/address/0x60b683aF37e15283f2623fC63eECa7726E934976) |
+| SymbioticWithdrawalQueue address | [0xbEE5468A8347dcb8E71f3283864a9F052d5f92a2](http://eth.blockscout.com/address/0xbEE5468A8347dcb8E71f3283864a9F052d5f92a2) |
+| Symbiotic Delegator address      | [0x8C88105D90f2a49EB45Da74aBd1cCdB4d26bC36f](http://eth.blockscout.com/address/0x8C88105D90f2a49EB45Da74aBd1cCdB4d26bC36f) |
+| Symbiotic Slasher address        | [0x86c4D749E0D5638BE344eC2b4A36DA3784C20648](http://eth.blockscout.com/address/0x86c4D749E0D5638BE344eC2b4A36DA3784C20648) |
+| Symbiotic Burner address         | [0x9A23733Fce6436490971F86864514193aAeD93C9](http://eth.blockscout.com/address/0x9A23733Fce6436490971F86864514193aAeD93C9) |
+
+</details>
+
+<details>
+
+<summary>Stakin Boosted ETH Vault (bstkETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xCeC15B365DC06Fac54114d8195B0253FffB9740F](http://eth.blockscout.com/address/0xCeC15B365DC06Fac54114d8195B0253FffB9740F) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xdef0000715a07d00f98763bc813e8a6c2f5cb631](http://eth.blockscout.com/address/0xdef0000715a07d00f98763bc813e8a6c2f5cb631) |
+| Curator                          | [0x059ae3f8a1eaddaab34d0a74e8eb752c848062d1](http://eth.blockscout.com/address/0x059ae3f8a1eaddaab34d0a74e8eb752c848062d1) |
+| Name                             | Stakin Boosted ETH Vault                                                                                                   |
+| Symbol                           | bstkETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xCa9c60Dc4A445A6e1B7E4FAD351603b1cEDb1B75](http://eth.blockscout.com/address/0xCa9c60Dc4A445A6e1B7E4FAD351603b1cEDb1B75) |
+| SymbioticWithdrawalQueue address | [0x1b37E807b85743c5a22459Edfdc9985298F9385c](http://eth.blockscout.com/address/0x1b37E807b85743c5a22459Edfdc9985298F9385c) |
+| Symbiotic Delegator address      | [0x9Bb6BBc1e967c76Be4A8b61147F9305539B71D80](http://eth.blockscout.com/address/0x9Bb6BBc1e967c76Be4A8b61147F9305539B71D80) |
+| Symbiotic Slasher address        | [0xd4AD3E0Bb5CD03F69005925a7DcF496119B26BCC](http://eth.blockscout.com/address/0xd4AD3E0Bb5CD03F69005925a7DcF496119B26BCC) |
+| Symbiotic Burner address         | [0xdE15D15AF8b7917321dBadc37B8E5C21B64be344](http://eth.blockscout.com/address/0xdE15D15AF8b7917321dBadc37B8E5C21B64be344) |
+
+</details>
+
+<details>
+
+<summary>InfraSingularity Restaked ETH Lido v3 (isETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xD024d4e1B0ac157aa5BDFDF96388e8dc9a43b19f](http://eth.blockscout.com/address/0xD024d4e1B0ac157aa5BDFDF96388e8dc9a43b19f) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xa2deb2ed381e4f10a0c39e3869f021f2acbb2d04](http://eth.blockscout.com/address/0xa2deb2ed381e4f10a0c39e3869f021f2acbb2d04) |
+| Curator                          | [0x903d4e20a3b70d6ae54e1cb91fec2e661e2af3a5](http://eth.blockscout.com/address/0x903d4e20a3b70d6ae54e1cb91fec2e661e2af3a5) |
+| Name                             | InfraSingularity Restaked ETH                                                                                              |
+| Symbol                           | isETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x24EC7ac12137E778731E1C1C54abf743CBF02881](http://eth.blockscout.com/address/0x24EC7ac12137E778731E1C1C54abf743CBF02881) |
+| SymbioticWithdrawalQueue address | [0x1e9940D9fc3dAdd5d4D5Dc6bf9e53ef56f3d3D3E](http://eth.blockscout.com/address/0x1e9940D9fc3dAdd5d4D5Dc6bf9e53ef56f3d3D3E) |
+| Symbiotic Delegator address      | [0x81503A9C5D83F8140F2f07eD42E09d30FdFcBf5C](http://eth.blockscout.com/address/0x81503A9C5D83F8140F2f07eD42E09d30FdFcBf5C) |
+| Symbiotic Slasher address        | [0xCaF91354b5e654d4d20b2d3beb5a9dDdc971AAfa](http://eth.blockscout.com/address/0xCaF91354b5e654d4d20b2d3beb5a9dDdc971AAfa) |
+| Symbiotic Burner address         | [0xB3140d59C63749f1a355d4284cB785BDe87AfD60](http://eth.blockscout.com/address/0xB3140d59C63749f1a355d4284cB785BDe87AfD60) |
+
+</details>
+
+<details>
+
+<summary>Nansen x Gauntlet Lido v3 stVault (nanETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xE1C01ebE1B65034F1e4dD7F65D5A6eC05233C5ec](http://eth.blockscout.com/address/0xE1C01ebE1B65034F1e4dD7F65D5A6eC05233C5ec) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xa1c38ab1be91c4ae45cd01f06931ae9ddac67689](http://eth.blockscout.com/address/0xa1c38ab1be91c4ae45cd01f06931ae9ddac67689) |
+| Curator                          | [0x059ae3f8a1eaddaab34d0a74e8eb752c848062d1](http://eth.blockscout.com/address/0x059ae3f8a1eaddaab34d0a74e8eb752c848062d1) |
+| Name                             | Nansen x Gauntlet Lido v3 stVault                                                                                          |
+| Symbol                           | nanETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x8327b8BD2561d28F914931aD57370d62C7968e40](http://eth.blockscout.com/address/0x8327b8BD2561d28F914931aD57370d62C7968e40) |
+| SymbioticWithdrawalQueue address | [0xDf7c0843f5c011a7d661CE509373A84e9cc8bBC4](http://eth.blockscout.com/address/0xDf7c0843f5c011a7d661CE509373A84e9cc8bBC4) |
+| Symbiotic Delegator address      | [0x8707efe5e148642ee28315285473D14EBe976a77](http://eth.blockscout.com/address/0x8707efe5e148642ee28315285473D14EBe976a77) |
+| Symbiotic Slasher address        | [0x6FA6b54EA8EF55B0B468ADA46F97636F3F133200](http://eth.blockscout.com/address/0x6FA6b54EA8EF55B0B468ADA46F97636F3F133200) |
+| Symbiotic Burner address         | [0x3E9582c2Cc32feb56d4338cfba09a24980089199](http://eth.blockscout.com/address/0x3E9582c2Cc32feb56d4338cfba09a24980089199) |
+
+</details>
+
+<details>
+
+<summary>01node Vault (01ETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xE7cAe487F8Da314cCac5F36b829f061983014D65](http://eth.blockscout.com/address/0xE7cAe487F8Da314cCac5F36b829f061983014D65) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xa51cacdc61a95c7a92aa95ad560f76bcaf665e59](http://eth.blockscout.com/address/0xa51cacdc61a95c7a92aa95ad560f76bcaf665e59) |
+| Curator                          | [0x7a30e4b6307c0db7aef247a656b44d888b23a2dc](http://eth.blockscout.com/address/0x7a30e4b6307c0db7aef247a656b44d888b23a2dc) |
+| Name                             | 01node Vault                                                                                                               |
+| Symbol                           | 01ETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xf9Fc625e2471211e2e58790AAFa38231A8C9b76b](http://eth.blockscout.com/address/0xf9Fc625e2471211e2e58790AAFa38231A8C9b76b) |
+| SymbioticWithdrawalQueue address | [0x96F0761A473C269BD95BE9585fA53CB9B78313e1](http://eth.blockscout.com/address/0x96F0761A473C269BD95BE9585fA53CB9B78313e1) |
+| Symbiotic Delegator address      | [0xe5d34A411284E8Ba70043Bb1188afb4d63F9DB4A](http://eth.blockscout.com/address/0xe5d34A411284E8Ba70043Bb1188afb4d63F9DB4A) |
+| Symbiotic Slasher address        | [0x9d48168326f407450FE71c58AbF1b0E5d0155abf](http://eth.blockscout.com/address/0x9d48168326f407450FE71c58AbF1b0E5d0155abf) |
+| Symbiotic Burner address         | [0x6cAA867b070D7A53ED0f05F9c9353c3E5BB0aE12](http://eth.blockscout.com/address/0x6cAA867b070D7A53ED0f05F9c9353c3E5BB0aE12) |
+
+</details>
+
+<details>
+
+<summary>DSRV Vault (vstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xF575F1C3DAd6B47f2045015baE313cA885921C8B](http://eth.blockscout.com/address/0xF575F1C3DAd6B47f2045015baE313cA885921C8B) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xc4a467695527338570a7761f0f8dd95e41829f13](http://eth.blockscout.com/address/0xc4a467695527338570a7761f0f8dd95e41829f13) |
+| Curator                          | [0xd4634a87ee960c208656175c27a4206e4ec43d17](http://eth.blockscout.com/address/0xd4634a87ee960c208656175c27a4206e4ec43d17) |
+| Name                             | DSRV Vault                                                                                                                 |
+| Symbol                           | vstETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x287bed263ec8973994719efB8d17E653Ac4a3E1b](http://eth.blockscout.com/address/0x287bed263ec8973994719efB8d17E653Ac4a3E1b) |
+| SymbioticWithdrawalQueue address | [0x85B6E0599D4F28115Ef92fDA9b9bF59b99fDb8fd](http://eth.blockscout.com/address/0x85B6E0599D4F28115Ef92fDA9b9bF59b99fDb8fd) |
+| Symbiotic Delegator address      | [0x2fb091430F81e7449f4E2868256E4E85fF126A54](http://eth.blockscout.com/address/0x2fb091430F81e7449f4E2868256E4E85fF126A54) |
+| Symbiotic Slasher address        | [0x46Fd23fA2870959A3F67B954d8dAb9bc7a5b0030](http://eth.blockscout.com/address/0x46Fd23fA2870959A3F67B954d8dAb9bc7a5b0030) |
+| Symbiotic Burner address         | [0xef981fD5898E44EdA1d5CD7C9860773b105c6b0c](http://eth.blockscout.com/address/0xef981fD5898E44EdA1d5CD7C9860773b105c6b0c) |
+
+</details>
+
+<details>
+
+<summary>Launchnodes Vault (LNO)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xFA1E351e89Fee843A1EdFb5efD4b3002743e3ed8](http://eth.blockscout.com/address/0xFA1E351e89Fee843A1EdFb5efD4b3002743e3ed8) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x3bbcf30336781aa14080abc5076923caa5527938](http://eth.blockscout.com/address/0x3bbcf30336781aa14080abc5076923caa5527938) |
+| Curator                          | [0x42c14013afe2440c3e5e0a33a968e458da710a4c](http://eth.blockscout.com/address/0x42c14013afe2440c3e5e0a33a968e458da710a4c) |
+| Name                             | Launchnodes Vault                                                                                                          |
+| Symbol                           | LNO                                                                                                                        |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x683af4B919a506fA1eE298F235Bd92074C9126B2](http://eth.blockscout.com/address/0x683af4B919a506fA1eE298F235Bd92074C9126B2) |
+| SymbioticWithdrawalQueue address | [0xCcB1545955ad88Ce083595216a123A762A494ed4](http://eth.blockscout.com/address/0xCcB1545955ad88Ce083595216a123A762A494ed4) |
+| Symbiotic Delegator address      | [0x02129f8639374Ee5cf154b2F8427c6d9d2a3B27c](http://eth.blockscout.com/address/0x02129f8639374Ee5cf154b2F8427c6d9d2a3B27c) |
+| Symbiotic Slasher address        | [0xC4e3F502b580E49B9C8cCd3454c987475282A002](http://eth.blockscout.com/address/0xC4e3F502b580E49B9C8cCd3454c987475282A002) |
+| Symbiotic Burner address         | [0xfec0d82Bed8615c98F19748A4598f5d9C388d231](http://eth.blockscout.com/address/0xfec0d82Bed8615c98F19748A4598f5d9C388d231) |
+
+</details>
+
+<details>
+
+<summary>stakefish Lido v3 Restaked ETH (sfETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xb11C95eeB53FF748B6Dd4e2F9f4294F8F4030aF0](http://eth.blockscout.com/address/0xb11C95eeB53FF748B6Dd4e2F9f4294F8F4030aF0) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x53d93f6cf5c54d3dbb602af1c826b71f3ccf7e51](http://eth.blockscout.com/address/0x53d93f6cf5c54d3dbb602af1c826b71f3ccf7e51) |
+| Curator                          | [0x3934632dde8224ae298e11cd040e732256a99d23](http://eth.blockscout.com/address/0x3934632dde8224ae298e11cd040e732256a99d23) |
+| Name                             | stakefish Lido v3 Restaked ETH                                                                                             |
+| Symbol                           | sfETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x403fdB36Cb82786AC82A5cd3be8E9B922AF4949A](http://eth.blockscout.com/address/0x403fdB36Cb82786AC82A5cd3be8E9B922AF4949A) |
+| SymbioticWithdrawalQueue address | [0xfb99844Af33eA897089C38640B6bE254CDf3938B](http://eth.blockscout.com/address/0xfb99844Af33eA897089C38640B6bE254CDf3938B) |
+| Symbiotic Delegator address      | [0x250798D35C07aC093CfAAdD11F259AE5CD5Cc5C2](http://eth.blockscout.com/address/0x250798D35C07aC093CfAAdD11F259AE5CD5Cc5C2) |
+| Symbiotic Slasher address        | [0xE246cD00812F197826f162EDEdFeeBfb69eccb23](http://eth.blockscout.com/address/0xE246cD00812F197826f162EDEdFeeBfb69eccb23) |
+| Symbiotic Burner address         | [0xd7BEcd9E8997813bdF0eAF1dDf918636F33C79e5](http://eth.blockscout.com/address/0xd7BEcd9E8997813bdF0eAF1dDf918636F33C79e5) |
+
+</details>
+
+<details>
+
+<summary>Stakely x Gauntlet Restaking Plus (sgrpETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xb2Bb0d53Fff7FF771855ad43F80c769860F627bD](http://eth.blockscout.com/address/0xb2Bb0d53Fff7FF771855ad43F80c769860F627bD) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x34bbc372831a41a44d020299230d9bc4e9ffd4a5](http://eth.blockscout.com/address/0x34bbc372831a41a44d020299230d9bc4e9ffd4a5) |
+| Curator                          | [0x059ae3f8a1eaddaab34d0a74e8eb752c848062d1](http://eth.blockscout.com/address/0x059ae3f8a1eaddaab34d0a74e8eb752c848062d1) |
+| Name                             | Stakely x Gauntlet Restaking Plus                                                                                          |
+| Symbol                           | sgrpETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xc10A7f0AC6E3944F4860eE97a937C51572e3a1Da](http://eth.blockscout.com/address/0xc10A7f0AC6E3944F4860eE97a937C51572e3a1Da) |
+| SymbioticWithdrawalQueue address | [0x47eb1616dA87566a8aEe9699F77d29E769C9a489](http://eth.blockscout.com/address/0x47eb1616dA87566a8aEe9699F77d29E769C9a489) |
+| Symbiotic Delegator address      | [0x7562437585DA000bE4815AC4A09430070Cf665D1](http://eth.blockscout.com/address/0x7562437585DA000bE4815AC4A09430070Cf665D1) |
+| Symbiotic Slasher address        | [0x84a79B33f0F6f92e926309A94Dfb5c2bF7D8716D](http://eth.blockscout.com/address/0x84a79B33f0F6f92e926309A94Dfb5c2bF7D8716D) |
+| Symbiotic Burner address         | [0xd10da736A8CACf99608541716434C0C6EF1420FD](http://eth.blockscout.com/address/0xd10da736A8CACf99608541716434C0C6EF1420FD) |
+
+</details>
+
+<details>
+
+<summary>Kukis Global Vault (kgETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xcAfC35fB68DFCD6AF2BC264E687c6c0279284068](http://eth.blockscout.com/address/0xcAfC35fB68DFCD6AF2BC264E687c6c0279284068) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x597b4664bc2d6118475e32298decc1f69f36f00c](http://eth.blockscout.com/address/0x597b4664bc2d6118475e32298decc1f69f36f00c) |
+| Curator                          | [0xd1f59ba974e828df68cb2592c16b967b637cb4e4](http://eth.blockscout.com/address/0xd1f59ba974e828df68cb2592c16b967b637cb4e4) |
+| Name                             | Kukis Global Vault                                                                                                         |
+| Symbol                           | kgETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x383038Bd10E40Ea3Aa4308f3CFb53420EB8ca7bf](http://eth.blockscout.com/address/0x383038Bd10E40Ea3Aa4308f3CFb53420EB8ca7bf) |
+| SymbioticWithdrawalQueue address | [0x91471029f2F38609F6C676af01b7EDe5E94b4C63](http://eth.blockscout.com/address/0x91471029f2F38609F6C676af01b7EDe5E94b4C63) |
+| Symbiotic Delegator address      | [0x0e5347215f7E27078B065927c414c2256a7923E5](http://eth.blockscout.com/address/0x0e5347215f7E27078B065927c414c2256a7923E5) |
+| Symbiotic Slasher address        | [0x0f73513ab0a1d3De42a3722eC9f905b831Af4D73](http://eth.blockscout.com/address/0x0f73513ab0a1d3De42a3722eC9f905b831Af4D73) |
+| Symbiotic Burner address         | [0x0b6472065d94Dc0616c09fC30D0d612d50a1D7F5](http://eth.blockscout.com/address/0x0b6472065d94Dc0616c09fC30D0d612d50a1D7F5) |
+
+</details>
+
+<details>
+
+<summary>Cosmostation Vault (stationETH)</summary>
+
+| Parameter       | Value                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type            | multi-vault                                                                                                                |
+| Vault           | [0xeDB7FA2aD67974C309c14Bb3610eE2E6703B5C04](http://eth.blockscout.com/address/0xeDB7FA2aD67974C309c14Bb3610eE2E6703B5C04) |
+| Asset           | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin      | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin      | [0x0405c5270951a6d3459b6e4af02aa9323fbb082b](http://eth.blockscout.com/address/0x0405c5270951a6d3459b6e4af02aa9323fbb082b) |
+| Curator         | [0x375e3157f29810F7928Da82035C1eFe3C7DF77B8](http://eth.blockscout.com/address/0x375e3157f29810F7928Da82035C1eFe3C7DF77B8) |
+| Name            | Cosmostation Vault                                                                                                         |
+| Symbol          | stationETH                                                                                                                 |
+
+</details>
+
+<details>
+
+<summary>OpenbitLab Vault (oblETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xea50De218A281a3E91D5e4033c4dd375f553d3bD](http://eth.blockscout.com/address/0xea50De218A281a3E91D5e4033c4dd375f553d3bD) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x4368198ed04ff3caf3828c0a46a07cfef0c742ed](http://eth.blockscout.com/address/0x4368198ed04ff3caf3828c0a46a07cfef0c742ed) |
+| Curator                          | [0xd1f59ba974e828df68cb2592c16b967b637cb4e4](http://eth.blockscout.com/address/0xd1f59ba974e828df68cb2592c16b967b637cb4e4) |
+| Name                             | OpenbitLab Vault                                                                                                           |
+| Symbol                           | oblETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xFFE9a42a4002CF9c3AbB2afA7dE6a503daE4cE30](http://eth.blockscout.com/address/0xFFE9a42a4002CF9c3AbB2afA7dE6a503daE4cE30) |
+| SymbioticWithdrawalQueue address | [0x278207cf84789C81F06B352613bB4f78e11cb375](http://eth.blockscout.com/address/0x278207cf84789C81F06B352613bB4f78e11cb375) |
+| Symbiotic Delegator address      | [0xfE98C28b7500Bf9D32A29Bbb25BBE345bbd17730](http://eth.blockscout.com/address/0xfE98C28b7500Bf9D32A29Bbb25BBE345bbd17730) |
+| Symbiotic Slasher address        | [0x98C4f94eeeb19b29f9B0290e8e4d879f4BF256b4](http://eth.blockscout.com/address/0x98C4f94eeeb19b29f9B0290e8e4d879f4BF256b4) |
+| Symbiotic Burner address         | [0x23ee3F25051Deced6A3Ac67E1216c0f4D3553244](http://eth.blockscout.com/address/0x23ee3F25051Deced6A3Ac67E1216c0f4D3553244) |
+
+</details>
+
+<details>
+
+<summary>MEV Capital Lidov3 stVault x Stake Capital (mevstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xf785a3637Fb8DC057a2a23c925e83859Ef212c8d](http://eth.blockscout.com/address/0xf785a3637Fb8DC057a2a23c925e83859Ef212c8d) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x52b2840ff193a0e544b3f10bd86492aab41531f5](http://eth.blockscout.com/address/0x52b2840ff193a0e544b3f10bd86492aab41531f5) |
+| Curator                          | [0xa1e38210b06a05882a7e7bfe167cd67f07fa234a](http://eth.blockscout.com/address/0xa1e38210b06a05882a7e7bfe167cd67f07fa234a) |
+| Name                             | MEV Capital Lidov3 stVault x Stake Capital                                                                                 |
+| Symbol                           | mevstETH                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xA86c8491Ce726d8C4B4dF21DcD07b52dE09f9179](http://eth.blockscout.com/address/0xA86c8491Ce726d8C4B4dF21DcD07b52dE09f9179) |
+| SymbioticWithdrawalQueue address | [0xfe814b7c90bf09F30f02A5943ACde2a738143183](http://eth.blockscout.com/address/0xfe814b7c90bf09F30f02A5943ACde2a738143183) |
+| Symbiotic Delegator address      | [0x5873491aB1027eC95Eff18Db56f065FF1D4D1CF6](http://eth.blockscout.com/address/0x5873491aB1027eC95Eff18Db56f065FF1D4D1CF6) |
+| Symbiotic Slasher address        | [0xA6edfD4F0D908983b4Cc1849a93EDE6e1788a2B9](http://eth.blockscout.com/address/0xA6edfD4F0D908983b4Cc1849a93EDE6e1788a2B9) |
+| Symbiotic Burner address         | [0x9de1975468012b80B74771D43b1f09203D811be1](http://eth.blockscout.com/address/0x9de1975468012b80B74771D43b1f09203D811be1) |
+
+</details>
+
+<details>
+
+<summary>Restaking Vault ETH (rstETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x7a4EffD87C2f3C55CA251080b1343b605f327E3a](http://eth.blockscout.com/address/0x7a4EffD87C2f3C55CA251080b1343b605f327E3a) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x17ac6a90ed880f9ce54bb63dab071f2bd3fe3772](http://eth.blockscout.com/address/0x17ac6a90ed880f9ce54bb63dab071f2bd3fe3772) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Restaking Vault ETH                                                                                                        |
+| Symbol                           | rstETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x7b276aAD6D2ebfD7e270C5a2697ac79182D9550E](http://eth.blockscout.com/address/0x7b276aAD6D2ebfD7e270C5a2697ac79182D9550E) |
+| SymbioticWithdrawalQueue address | [0x79bb9f68d0c3f4fd4dD917b2C04e932Dba20895B](http://eth.blockscout.com/address/0x79bb9f68d0c3f4fd4dD917b2C04e932Dba20895B) |
+| Symbiotic Delegator address      | [0xdc439a51AB1C1D4DB0CD09A009f94eC4D127D93c](http://eth.blockscout.com/address/0xdc439a51AB1C1D4DB0CD09A009f94eC4D127D93c) |
+| Symbiotic Slasher address        | [0x295F8c41eA17B330853AC74D1477a6F83B36ee31](http://eth.blockscout.com/address/0x295F8c41eA17B330853AC74D1477a6F83B36ee31) |
+| Symbiotic Burner address         | [0x04B01F1778A645f814E2555aE41BFF01e967c6f5](http://eth.blockscout.com/address/0x04B01F1778A645f814E2555aE41BFF01e967c6f5) |
+
+Cap subvault
+
+| Name                    | Address                                                                                                               |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Symbiotic Vault address | [0x5B1c752840CBA714E97AfCd75CD0eDEe5821B133](https://etherscan.io/address/0x5B1c752840CBA714E97AfCd75CD0eDEe5821B133) |
+| StakerRewards           | [0x460e5Ee46B55795f5a7dB7Ec82AEcf25086b9C09](https://etherscan.io/address/0x460e5Ee46B55795f5a7dB7Ec82AEcf25086b9C09) |
+| Agent                   | [0xa61F7f64F4e4B8E919DccfBE0dc5aa903e2c0Cca](https://etherscan.io/address/0xa61F7f64F4e4B8E919DccfBE0dc5aa903e2c0Cca) |
+| Limit                   | 2000000000000000000000                                                                                                |
+| MellowVault             | [0x7a4EffD87C2f3C55CA251080b1343b605f327E3a](https://etherscan.io/address/0x7a4EffD87C2f3C55CA251080b1343b605f327E3a) |
+| VaultAdmin              | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](https://etherscan.io/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| Curator                 | [0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433](https://etherscan.io/address/0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433) |
+
+</details>
+
+<details>
+
+<summary>ETH Restaking Pro (coETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xd6E09a5e6D719d1c881579C9C8670a210437931b](http://eth.blockscout.com/address/0xd6E09a5e6D719d1c881579C9C8670a210437931b) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x0375178c4d752b3ae35d806c6bb60d07faecba5e](http://eth.blockscout.com/address/0x0375178c4d752b3ae35d806c6bb60d07faecba5e) |
+| Curator                          | [0xd36be1d5d02ffbfe7f9640c3757999864bb84979](http://eth.blockscout.com/address/0xd36be1d5d02ffbfe7f9640c3757999864bb84979) |
+| Name                             | Chorus One Restaking Vault ETH                                                                                             |
+| Symbol                           | coETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x7154633EdA7569021e5b1cfCbf953715F8775CA8](http://eth.blockscout.com/address/0x7154633EdA7569021e5b1cfCbf953715F8775CA8) |
+| SymbioticWithdrawalQueue address | [0x1045E7e9154ED3a00Ce605C01e9dC6F8078aA5E7](http://eth.blockscout.com/address/0x1045E7e9154ED3a00Ce605C01e9dC6F8078aA5E7) |
+| Symbiotic Delegator address      | [0x88267FEe2185c6b2E701FeFd918482A5baefb9fb](http://eth.blockscout.com/address/0x88267FEe2185c6b2E701FeFd918482A5baefb9fb) |
+| Symbiotic Slasher address        | [0x0EA5Bf4C8dfA5D8c1aea846dA53Fa0a0c57F2cBC](http://eth.blockscout.com/address/0x0EA5Bf4C8dfA5D8c1aea846dA53Fa0a0c57F2cBC) |
+| Symbiotic Burner address         | [0x312D791126EbF9Fe62e1990B6673B153EF67f0A1](http://eth.blockscout.com/address/0x312D791126EbF9Fe62e1990B6673B153EF67f0A1) |
+
+</details>
+
+<details>
+
+<summary>InfStones Restaked ETH (ifsETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x49cd586dd9BA227Be9654C735A659a1dB08232a9](http://eth.blockscout.com/address/0x49cd586dd9BA227Be9654C735A659a1dB08232a9) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xd09b3193bb71b98027dd0f1a34eeaebd04b2e47c](http://eth.blockscout.com/address/0xd09b3193bb71b98027dd0f1a34eeaebd04b2e47c) |
+| Curator                          | [0x7d69615ddd0207ffad3d89493f44362b471cfc5c](http://eth.blockscout.com/address/0x7d69615ddd0207ffad3d89493f44362b471cfc5c) |
+| Name                             | InfStones Restaked ETH                                                                                                     |
+| Symbol                           | ifsETH                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x08144D10f6Aaa152EA88a99072a659E339d6152f](http://eth.blockscout.com/address/0x08144D10f6Aaa152EA88a99072a659E339d6152f) |
+| SymbioticWithdrawalQueue address | [0x9C76671CAfB6D1979632F24acAA57B95E2660432](http://eth.blockscout.com/address/0x9C76671CAfB6D1979632F24acAA57B95E2660432) |
+| Symbiotic Delegator address      | [0x5f81AD1955263447c8586cE701a0C2F07F0Ff7C4](http://eth.blockscout.com/address/0x5f81AD1955263447c8586cE701a0C2F07F0Ff7C4) |
+| Symbiotic Slasher address        | [0xE1B117e735b9f31B4970Df3c6c21315a137f70E6](http://eth.blockscout.com/address/0xE1B117e735b9f31B4970Df3c6c21315a137f70E6) |
+| Symbiotic Burner address         | [0xa4Ca29693D6F09FF90cA60BC903AEC8b9Aca63D3](http://eth.blockscout.com/address/0xa4Ca29693D6F09FF90cA60BC903AEC8b9Aca63D3) |
+
+</details>
+
+### wstETH vaults
+
+<details>
+
+<summary>Renzo Restaked LST (pzETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811](http://eth.blockscout.com/address/0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x985e459801d37749c331bbd2673b665b9114fb01](http://eth.blockscout.com/address/0x985e459801d37749c331bbd2673b665b9114fb01) |
+| Curator                          | [0x6e5cad73d00bc8340f38afb61fc5e34f7193f599](http://eth.blockscout.com/address/0x6e5cad73d00bc8340f38afb61fc5e34f7193f599) |
+| Name                             | Renzo Restaked LST                                                                                                         |
+| Symbol                           | pzETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xa88e91cEF50b792f9449e2D4C699b6B3CcE1D19F](http://eth.blockscout.com/address/0xa88e91cEF50b792f9449e2D4C699b6B3CcE1D19F) |
+| SymbioticWithdrawalQueue address | [0x87283edb0F12E7cd0eD3E18baEab20AaF43b5f6e](http://eth.blockscout.com/address/0x87283edb0F12E7cd0eD3E18baEab20AaF43b5f6e) |
+| Symbiotic Delegator address      | [0x6d636B070Cd59B17B47931E9E0108869A310FB39](http://eth.blockscout.com/address/0x6d636B070Cd59B17B47931E9E0108869A310FB39) |
+| Symbiotic Slasher address        | [0xCF42f1B5E0ABB6f1521D8D523715781F9cd933C5](http://eth.blockscout.com/address/0xCF42f1B5E0ABB6f1521D8D523715781F9cd933C5) |
+| Symbiotic Burner address         | [0x32cA52928e572684c54737A268AF7D8E1900C1b5](http://eth.blockscout.com/address/0x32cA52928e572684c54737A268AF7D8E1900C1b5) |
+| StakerRewards 1                  | [0x5Ba9aC31D8CDC0a80340D6a3a838738922AF6455](https://etherscan.io/address/0x5Ba9aC31D8CDC0a80340D6a3a838738922AF6455)      |
+| StakerRewards 2                  | [0xB207ef9d520CB6A78a19697E301873e1f02F32A2](https://etherscan.io/address/0xB207ef9d520CB6A78a19697E301873e1f02F32A2)      |
+
+</details>
+
+<details>
+
+<summary>Steakhouse Resteaking Vault (steakLRT)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xBEEF69Ac7870777598A04B2bd4771c71212E6aBc](http://eth.blockscout.com/address/0xBEEF69Ac7870777598A04B2bd4771c71212E6aBc) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xed792a3fdeb9044c70c951260aaae974fb3db38f](http://eth.blockscout.com/address/0xed792a3fdeb9044c70c951260aaae974fb3db38f) |
+| Curator                          | [0x2e93913a796a6c6b2bb76f41690e78a2e206be54](http://eth.blockscout.com/address/0x2e93913a796a6c6b2bb76f41690e78a2e206be54) |
+| Name                             | Steakhouse Resteaking Vault                                                                                                |
+| Symbol                           | steakLRT                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xf7Ce770AbdD1895f2CB0989D7cf2A26705FF37a7](http://eth.blockscout.com/address/0xf7Ce770AbdD1895f2CB0989D7cf2A26705FF37a7) |
+| SymbioticWithdrawalQueue address | [0x85b9636D3b61EC9BAe59D848BDef888Db6c4B447](http://eth.blockscout.com/address/0x85b9636D3b61EC9BAe59D848BDef888Db6c4B447) |
+| Symbiotic Delegator address      | [0x510Bdf01886c7899b39c77012fFd10102A513732](http://eth.blockscout.com/address/0x510Bdf01886c7899b39c77012fFd10102A513732) |
+| Symbiotic Slasher address        | [0x6DD18a9c62F809bbE6b5Cc101e36FD0bce49D0d8](http://eth.blockscout.com/address/0x6DD18a9c62F809bbE6b5Cc101e36FD0bce49D0d8) |
+| Symbiotic Burner address         | [0xA7280514B8C8Ef206dc06d4649344Ec5eCB1f2d3](http://eth.blockscout.com/address/0xA7280514B8C8Ef206dc06d4649344Ec5eCB1f2d3) |
+
+</details>
+
+<details>
+
+<summary>Re7 Labs LRT (Re7LRT)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x84631c0d0081FDe56DeB72F6DE77abBbF6A9f93a](http://eth.blockscout.com/address/0x84631c0d0081FDe56DeB72F6DE77abBbF6A9f93a) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xf076cf343dcfd01bba57dfeb5c74f7b015951fcf](http://eth.blockscout.com/address/0xf076cf343dcfd01bba57dfeb5c74f7b015951fcf) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 Labs LRT                                                                                                               |
+| Symbol                           | Re7LRT                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x3D93b33f5E5fe74D54676720e70EA35210cdD46E](http://eth.blockscout.com/address/0x3D93b33f5E5fe74D54676720e70EA35210cdD46E) |
+| SymbioticWithdrawalQueue address | [0xbAc96113f4F29b622C24fe2aF9ABBcE29909900e](http://eth.blockscout.com/address/0xbAc96113f4F29b622C24fe2aF9ABBcE29909900e) |
+| Symbiotic Delegator address      | [0xdE43dade5D05B31b1e3524A268b32314Dee51DA0](http://eth.blockscout.com/address/0xdE43dade5D05B31b1e3524A268b32314Dee51DA0) |
+| Symbiotic Slasher address        | [0x31Ebe6E0bec2fa2167903D9C4487c9F0F496b64E](http://eth.blockscout.com/address/0x31Ebe6E0bec2fa2167903D9C4487c9F0F496b64E) |
+| Symbiotic Burner address         | [0x3ee393318CeD722CDecf997798437BfB25C9ABD9](http://eth.blockscout.com/address/0x3ee393318CeD722CDecf997798437BfB25C9ABD9) |
+
+</details>
+
+<details>
+
+<summary>Rockmelon ETH (roETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x7b31F008c48EFb65da78eA0f255EE424af855249](http://eth.blockscout.com/address/0x7b31F008c48EFb65da78eA0f255EE424af855249) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x3431224240fd4e6921cec32342470b3a55ec175a](http://eth.blockscout.com/address/0x3431224240fd4e6921cec32342470b3a55ec175a) |
+| Curator                          | [0xf9d20f02ab533ac6f990c9d96b595651d83b4b92](http://eth.blockscout.com/address/0xf9d20f02ab533ac6f990c9d96b595651d83b4b92) |
+| Name                             | Rockmelon ETH                                                                                                              |
+| Symbol                           | roETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x575d6DD4EA8636E08952Bd7f8AF977081754B1B7](http://eth.blockscout.com/address/0x575d6DD4EA8636E08952Bd7f8AF977081754B1B7) |
+| SymbioticWithdrawalQueue address | [0xee907F6f5d08DcED7bbE59A93A8c597e97E1fD4a](http://eth.blockscout.com/address/0xee907F6f5d08DcED7bbE59A93A8c597e97E1fD4a) |
+| Symbiotic Delegator address      | [0xCe12a04884c1466AfCd64A7A14f5f24Fa8aB2Ec8](http://eth.blockscout.com/address/0xCe12a04884c1466AfCd64A7A14f5f24Fa8aB2Ec8) |
+| Symbiotic Slasher address        | [0xcf2c14E178eD99D9F93c8790E6852AA6230D8F10](http://eth.blockscout.com/address/0xcf2c14E178eD99D9F93c8790E6852AA6230D8F10) |
+| Symbiotic Burner address         | [0x3D22d55E46a8682b0B1A6e6379aEa172A3a59Df2](http://eth.blockscout.com/address/0x3D22d55E46a8682b0B1A6e6379aEa172A3a59Df2) |
+
+</details>
+
+<details>
+
+<summary>Luganodes Restaked ETH (LugaETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x82dc3260f599f4fC4307209A1122B6eAa007163b](http://eth.blockscout.com/address/0x82dc3260f599f4fC4307209A1122B6eAa007163b) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x3c1c6a3e94bc607ac947d4520e2e9161a4183d4d](http://eth.blockscout.com/address/0x3c1c6a3e94bc607ac947d4520e2e9161a4183d4d) |
+| Curator                          | [0x5dbb14865609574abe0d701b1e23e11df8312548](http://eth.blockscout.com/address/0x5dbb14865609574abe0d701b1e23e11df8312548) |
+| Name                             | LugaETH                                                                                                                    |
+| Symbol                           | LugaETH                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x48bef6aB76E31737d94cF7b3B1dba52EDDEe1cAd](http://eth.blockscout.com/address/0x48bef6aB76E31737d94cF7b3B1dba52EDDEe1cAd) |
+| SymbioticWithdrawalQueue address | [0x720E4C5014c5fEa1fd7CF0736d3293Fb8EB0F41C](http://eth.blockscout.com/address/0x720E4C5014c5fEa1fd7CF0736d3293Fb8EB0F41C) |
+| Symbiotic Delegator address      | [0xA23F8eCd5DD6DaBc3228720C2a1ad0713007Dcf4](http://eth.blockscout.com/address/0xA23F8eCd5DD6DaBc3228720C2a1ad0713007Dcf4) |
+| Symbiotic Slasher address        | [0x329bdaa9E4C4febF096b48Ead9f686C717E2D7a6](http://eth.blockscout.com/address/0x329bdaa9E4C4febF096b48Ead9f686C717E2D7a6) |
+| Symbiotic Burner address         | [0x173abbdfCC3bcd8636dabA0BE75A78B7Cc74ac44](http://eth.blockscout.com/address/0x173abbdfCC3bcd8636dabA0BE75A78B7Cc74ac44) |
+
+</details>
+
+<details>
+
+<summary>cp0x LRT Conservative Vault (cp0xLRT)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xB908c9FE885369643adB5FBA4407d52bD726c72d](http://eth.blockscout.com/address/0xB908c9FE885369643adB5FBA4407d52bD726c72d) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xe61c32158af00c06fe93a42d578df6ae8d306a4d](http://eth.blockscout.com/address/0xe61c32158af00c06fe93a42d578df6ae8d306a4d) |
+| Curator                          | [0xd1f59ba974e828df68cb2592c16b967b637cb4e4](http://eth.blockscout.com/address/0xd1f59ba974e828df68cb2592c16b967b637cb4e4) |
+| Name                             | cp0x LRT Conservative Vault                                                                                                |
+| Symbol                           | cp0xLRT                                                                                                                    |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x82c304aa105fbbE2aA368A83D7F8945d41f6cA54](http://eth.blockscout.com/address/0x82c304aa105fbbE2aA368A83D7F8945d41f6cA54) |
+| SymbioticWithdrawalQueue address | [0x5126428A099Dc6f6bAfeF494DaC1A3695a159f00](http://eth.blockscout.com/address/0x5126428A099Dc6f6bAfeF494DaC1A3695a159f00) |
+| Symbiotic Delegator address      | [0x682A37ad062793bE1B3277aA114419CB35F5F720](http://eth.blockscout.com/address/0x682A37ad062793bE1B3277aA114419CB35F5F720) |
+| Symbiotic Slasher address        | [0xC38027653F91600809850ccf82616F19a99EaC52](http://eth.blockscout.com/address/0xC38027653F91600809850ccf82616F19a99EaC52) |
+| Symbiotic Burner address         | [0xF448f6973F1007093420399cF4112eE1a41dCFB2](http://eth.blockscout.com/address/0xF448f6973F1007093420399cF4112eE1a41dCFB2) |
+
+</details>
+
+<details>
+
+<summary>MEV Capital restaked ETH (amphrETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x5fD13359Ba15A84B76f7F87568309040176167cd](http://eth.blockscout.com/address/0x5fD13359Ba15A84B76f7F87568309040176167cd) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xc24891b75ef55fedc377c5e6ec59a850b12e23ac](http://eth.blockscout.com/address/0xc24891b75ef55fedc377c5e6ec59a850b12e23ac) |
+| Curator                          | [0xa1e38210b06a05882a7e7bfe167cd67f07fa234a](http://eth.blockscout.com/address/0xa1e38210b06a05882a7e7bfe167cd67f07fa234a) |
+| Name                             | Amphor Restaked ETH                                                                                                        |
+| Symbol                           | amphrETH                                                                                                                   |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x446970400e1787814CA050A4b45AE9d21B3f7EA7](http://eth.blockscout.com/address/0x446970400e1787814CA050A4b45AE9d21B3f7EA7) |
+| SymbioticWithdrawalQueue address | [0x119D7cd4148650C31974FBa1b14C1a4aA9AE9c39](http://eth.blockscout.com/address/0x119D7cd4148650C31974FBa1b14C1a4aA9AE9c39) |
+| Symbiotic Delegator address      | [0xA6851E43FA955753ee90a72c59030e0423F27E41](http://eth.blockscout.com/address/0xA6851E43FA955753ee90a72c59030e0423F27E41) |
+| Symbiotic Slasher address        | [0x04a216411317A334C234C6ABDD589bB94d303d5b](http://eth.blockscout.com/address/0x04a216411317A334C234C6ABDD589bB94d303d5b) |
+| Symbiotic Burner address         | [0x8622EB8A33A5B13D77D4316D31BBeE2BCdCaC247](http://eth.blockscout.com/address/0x8622EB8A33A5B13D77D4316D31BBeE2BCdCaC247) |
+
+</details>
+
+<details>
+
+<summary>Hyve Committee-X pre-deposit (HYVEX)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x24183535a24CF0272841B05047A26e200fFAB696](http://eth.blockscout.com/address/0x24183535a24CF0272841B05047A26e200fFAB696) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x940c396df7970e98c233bfcc1a19575aae83cf21](http://eth.blockscout.com/address/0x940c396df7970e98c233bfcc1a19575aae83cf21) |
+| Curator                          | [0xe3a148b25cca54eccbd3a4ab01e235d154f03efa](http://eth.blockscout.com/address/0xe3a148b25cca54eccbd3a4ab01e235d154f03efa) |
+| Name                             | Hyve Committee-X pre-deposit                                                                                               |
+| Symbol                           | HYVEX                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x7e5307D99532513386bEEaC92f8616cCA76c7034](http://eth.blockscout.com/address/0x7e5307D99532513386bEEaC92f8616cCA76c7034) |
+| SymbioticWithdrawalQueue address | [0x10e3840740eF343Da83F5e4899750e549C3B54EC](http://eth.blockscout.com/address/0x10e3840740eF343Da83F5e4899750e549C3B54EC) |
+| Symbiotic Delegator address      | [0x9FB3b09c4b25B8C704eFf358b8A5Dee2872dD0Ff](http://eth.blockscout.com/address/0x9FB3b09c4b25B8C704eFf358b8A5Dee2872dD0Ff) |
+| Symbiotic Slasher address        | [0x3d591C4821A9A1A728d2799d46070d63B8326f8c](http://eth.blockscout.com/address/0x3d591C4821A9A1A728d2799d46070d63B8326f8c) |
+| Symbiotic Burner address         | [0x82855B3ABFC90724C70341B4E90E5cF49A4419b8](http://eth.blockscout.com/address/0x82855B3ABFC90724C70341B4E90E5cF49A4419b8) |
+
+</details>
+
+<details>
+
+<summary>InfraSingularity Restaked ETH (isETH)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xcC36e5272c422BEE9A8144cD2493Ac472082eBaD](http://eth.blockscout.com/address/0xcC36e5272c422BEE9A8144cD2493Ac472082eBaD) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0xcf4e33ae47fe9c5d6390c1868b6abb068e1e40ec](http://eth.blockscout.com/address/0xcf4e33ae47fe9c5d6390c1868b6abb068e1e40ec) |
+| Curator                          | [0x903d4e20a3b70d6ae54e1cb91fec2e661e2af3a5](http://eth.blockscout.com/address/0x903d4e20a3b70d6ae54e1cb91fec2e661e2af3a5) |
+| Name                             | InfraSingularity Restaked ETH                                                                                              |
+| Symbol                           | isETH                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xbA91473072EBD125C3cB8D251fd02bf21FDea8Df](http://eth.blockscout.com/address/0xbA91473072EBD125C3cB8D251fd02bf21FDea8Df) |
+| SymbioticWithdrawalQueue address | [0xB2EFB0489D0602c310bd5dFDF60Fcc34607718ae](http://eth.blockscout.com/address/0xB2EFB0489D0602c310bd5dFDF60Fcc34607718ae) |
+| Symbiotic Delegator address      | [0x9A6CC2671F836274e265f9772C47cf744eddf8c2](http://eth.blockscout.com/address/0x9A6CC2671F836274e265f9772C47cf744eddf8c2) |
+| Symbiotic Slasher address        | [0x7b9aeEA7CfD883125BAe1C70421cA16019005529](http://eth.blockscout.com/address/0x7b9aeEA7CfD883125BAe1C70421cA16019005529) |
+| Symbiotic Burner address         | [0x585bb48dc0184DF358B697f3f900619E4dc2850C](http://eth.blockscout.com/address/0x585bb48dc0184DF358B697f3f900619E4dc2850C) |
+
+</details>
+
+<details>
+
+<summary>unified restaked LRT (urLRT)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x4f3Cc6359364004b245ad5bE36E6ad4e805dC961](http://eth.blockscout.com/address/0x4f3Cc6359364004b245ad5bE36E6ad4e805dC961) |
+| Asset                            | [0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0](http://eth.blockscout.com/address/0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) |
+| VaultAdmin                       | [0x9437B2a8cF3b69D782a61f9814baAbc172f72003](http://eth.blockscout.com/address/0x9437B2a8cF3b69D782a61f9814baAbc172f72003) |
+| VaultProxyAdmin                  | [0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0](http://eth.blockscout.com/address/0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0) |
+| ProxyAdmin                       | [0x75a7fb388a38e12747d147fd8d38bbc5bb860cf3](http://eth.blockscout.com/address/0x75a7fb388a38e12747d147fd8d38bbc5bb860cf3) |
+| Curator                          | [0x013b33aadae8abdc7c2b1529bb28a37299d6eade](http://eth.blockscout.com/address/0x013b33aadae8abdc7c2b1529bb28a37299d6eade) |
+| Name                             | unified restaked LRT                                                                                                       |
+| Symbol                           | urLRT                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xf890434A395e3978622Ac0ae1412934bEfeB09Ff](http://eth.blockscout.com/address/0xf890434A395e3978622Ac0ae1412934bEfeB09Ff) |
+| SymbioticWithdrawalQueue address | [0x79eb8Fe7E6963fcF542C1F1AbA53f2eF0B96cc05](http://eth.blockscout.com/address/0x79eb8Fe7E6963fcF542C1F1AbA53f2eF0B96cc05) |
+| Symbiotic Delegator address      | [0x456C5aa4578683C0b8A8B5F45571263e2497f81B](http://eth.blockscout.com/address/0x456C5aa4578683C0b8A8B5F45571263e2497f81B) |
+| Symbiotic Slasher address        | [0x8Bf600B837dde8a60eb3405329bd98bC2F6f49aF](http://eth.blockscout.com/address/0x8Bf600B837dde8a60eb3405329bd98bC2F6f49aF) |
+| Symbiotic Burner address         | [0xe96c719BAEA91FDcee7cb40398587Ba93ca24CbD](http://eth.blockscout.com/address/0xe96c719BAEA91FDcee7cb40398587Ba93ca24CbD) |
+
+</details>
+
+### Resolv Restaked wstUSR vault&#x20;
+
+<details>
+
+<summary>Re7 Resolv Restaked wstUSR (rstUSR)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x617895460004821C8DE800d4a644593cAb0aD40c](http://eth.blockscout.com/address/0x617895460004821C8DE800d4a644593cAb0aD40c) |
+| Asset                            | [0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055](http://eth.blockscout.com/address/0x1202F5C7b4B9E47a1A484E8B270be34dbbC75055) |
+| VaultAdmin                       | [0xf1eFa099819ED4288Cf4BAAF0D3fF6c5Cc011F62](http://eth.blockscout.com/address/0xf1eFa099819ED4288Cf4BAAF0D3fF6c5Cc011F62) |
+| VaultProxyAdmin                  | [0x630f0c6372cFE6C915c4C127c328df18bD5Ca981](http://eth.blockscout.com/address/0x630f0c6372cFE6C915c4C127c328df18bD5Ca981) |
+| ProxyAdmin                       | [0x48dbdfef057eec38532ac652ff4fab4ebbd24762](http://eth.blockscout.com/address/0x48dbdfef057eec38532ac652ff4fab4ebbd24762) |
+| Curator                          | [0xe86399fe6d7007fdecb08a2ee1434ee677a04433](http://eth.blockscout.com/address/0xe86399fe6d7007fdecb08a2ee1434ee677a04433) |
+| Name                             | Re7 Resolv Restaked wstUSR                                                                                                 |
+| Symbol                           | rstUSR                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x821C65F4BDaC61F4938d2cf0476F85614178fb72](http://eth.blockscout.com/address/0x821C65F4BDaC61F4938d2cf0476F85614178fb72) |
+| SymbioticWithdrawalQueue address | [0x3B88BDE45EF85ffC8D6Aa9b2Ca8ad9140C13b909](http://eth.blockscout.com/address/0x3B88BDE45EF85ffC8D6Aa9b2Ca8ad9140C13b909) |
+| Symbiotic Delegator address      | [0xb7c049ebc36FB86Ea313eb4f096Cdb09De5F1ECf](http://eth.blockscout.com/address/0xb7c049ebc36FB86Ea313eb4f096Cdb09De5F1ECf) |
+| Symbiotic Slasher address        | [0x9C8725Cb06B89908f81d83c5f78dc164529736E5](http://eth.blockscout.com/address/0x9C8725Cb06B89908f81d83c5f78dc164529736E5) |
+| Symbiotic Burner address         | [0x9F1e027052b8CCF58E4C081Cb3A64819c4b48a2a](http://eth.blockscout.com/address/0x9F1e027052b8CCF58E4C081Cb3A64819c4b48a2a) |
+
+</details>
+
+### BIMA Vault
+
+<details>
+
+<summary>BIMA USBD (rsUSBD)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0x7DD12E437C226018A374Bfa2BdAf48340B9942bC](http://eth.blockscout.com/address/0x7DD12E437C226018A374Bfa2BdAf48340B9942bC) |
+| Asset                            | [0x6bedE1c6009a78c222D9BDb7974bb67847fdB68c](http://eth.blockscout.com/address/0x6bedE1c6009a78c222D9BDb7974bb67847fdB68c) |
+| VaultAdmin                       | [0xf7688aFdf0A90fbfa4F483DDB951D90326caF065](http://eth.blockscout.com/address/0xf7688aFdf0A90fbfa4F483DDB951D90326caF065) |
+| VaultProxyAdmin                  | [0x9C97AE2b1bAACad1240C34BF013225eE4dabEDB4](http://eth.blockscout.com/address/0x9C97AE2b1bAACad1240C34BF013225eE4dabEDB4) |
+| ProxyAdmin                       | [0xbf3d8344e0b5f37db40b9495401b66991d454312](http://eth.blockscout.com/address/0xbf3d8344e0b5f37db40b9495401b66991d454312) |
+| Curator                          | [0x497e9d99d4c5630d1a2e2444e4ef0525ec3092a4](http://eth.blockscout.com/address/0x497e9d99d4c5630d1a2e2444e4ef0525ec3092a4) |
+| Name                             | BIMA USBD                                                                                                                  |
+| Symbol                           | rsUSBD                                                                                                                     |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0x0FDf3B986d62bE6aE1D5228e5DA90ff6f00c15F6](http://eth.blockscout.com/address/0x0FDf3B986d62bE6aE1D5228e5DA90ff6f00c15F6) |
+| SymbioticWithdrawalQueue address | [0x1639f681819b0A79e600AF626A72c9857C70ca99](http://eth.blockscout.com/address/0x1639f681819b0A79e600AF626A72c9857C70ca99) |
+| Symbiotic Delegator address      | [0x3CeF72cd6CA49289aC7976aE144633afF5754e1D](http://eth.blockscout.com/address/0x3CeF72cd6CA49289aC7976aE144633afF5754e1D) |
+| Symbiotic Slasher address        | [0x471D19cf853B93657903b449234a9a202FB14DC1](http://eth.blockscout.com/address/0x471D19cf853B93657903b449234a9a202FB14DC1) |
+| Symbiotic Burner address         | [0x5f7d62c50BFb2737F798358E8ABDeE9011edCC72](http://eth.blockscout.com/address/0x5f7d62c50BFb2737F798358E8ABDeE9011edCC72) |
+
+</details>
+
+### Symbiosis Vault
+
+<details>
+
+<summary>Symbiosis Vault (rsSIS)</summary>
+
+| Parameter                        | Value                                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Type                             | multi-vault                                                                                                                |
+| Vault                            | [0xf08e422d2986FEB7a1d798C92E043d13199EddF2](http://eth.blockscout.com/address/0xf08e422d2986FEB7a1d798C92E043d13199EddF2) |
+| Asset                            | [0xd38BB40815d2B0c2d2c866e0c72c5728ffC76dd9](http://eth.blockscout.com/address/0xd38BB40815d2B0c2d2c866e0c72c5728ffC76dd9) |
+| VaultAdmin                       | [0x372142a666e13784c6f7cf6795a8e5aF4ED2d3B7](http://eth.blockscout.com/address/0x372142a666e13784c6f7cf6795a8e5aF4ED2d3B7) |
+| VaultProxyAdmin                  | [0x843065A71d1D3045c980ee954248FeF23c199f09](http://eth.blockscout.com/address/0x843065A71d1D3045c980ee954248FeF23c199f09) |
+| ProxyAdmin                       | [0xc32cf5ca3b947d3df0a7a57e5801010acfa6d6b9](http://eth.blockscout.com/address/0xc32cf5ca3b947d3df0a7a57e5801010acfa6d6b9) |
+| Curator                          | [0x5112eba9bc2468bb5134cbfbeab9334edae7106a](http://eth.blockscout.com/address/0x5112eba9bc2468bb5134cbfbeab9334edae7106a) |
+| Name                             | Symbiosis Vault                                                                                                            |
+| Symbol                           | rsSIS                                                                                                                      |
+| subvault type                    | symbiotic-subvault                                                                                                         |
+| Symbiotic Vault address          | [0xf344a1025080B0168b014009d0769348c5AD6A2f](http://eth.blockscout.com/address/0xf344a1025080B0168b014009d0769348c5AD6A2f) |
+| SymbioticWithdrawalQueue address | [0x5ba94b007ef93567B9495fcA0F4B4B5F995BF542](http://eth.blockscout.com/address/0x5ba94b007ef93567B9495fcA0F4B4B5F995BF542) |
+| Symbiotic Delegator address      | [0xbcC21e5a2b40A45319335EAae40407f2b0a337f7](http://eth.blockscout.com/address/0xbcC21e5a2b40A45319335EAae40407f2b0a337f7) |
+| Symbiotic Slasher address        | [0x39e894A2F393134195b6b4D24D9fEcc0E389391D](http://eth.blockscout.com/address/0x39e894A2F393134195b6b4D24D9fEcc0E389391D) |
+| Symbiotic Burner address         | [0xe8FD6361a77a1f171577f6d263213F2C4F5d1842](http://eth.blockscout.com/address/0xe8FD6361a77a1f171577f6d263213F2C4F5d1842) |
+
+</details>

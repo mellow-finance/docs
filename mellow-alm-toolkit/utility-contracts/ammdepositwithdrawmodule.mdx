@@ -1,0 +1,38 @@
+---
+title: "AmmDepositWithdrawModule"
+---
+
+This contract aims to streamline liquidity management within AMM pools, providing standardized methods for adding to and removing liquidity. It allows for precise and efficient adjustments to a position's liquidity, accommodating various strategies and operational needs.
+
+#### Functions
+
+#### `deposit(uint256 tokenId, uint256 amount0, uint256 amount1, address from)`
+
+Deposits tokens into the AMM pool, increasing liquidity based on the provided token amounts and the specified AMM position token ID.
+
+* **Parameters**:
+  * `tokenId`: Identifies the specific AMM position token to which liquidity will be added.
+  * `amount0`: The amount of the first token (token0) to deposit into the pool.
+  * `amount1`: The amount of the second token (token1) to deposit into the pool.
+  * `from`: The source address from which the tokens will be transferred.
+* **Returns**:
+  * `actualAmount0`: The actual deposited amount of token0, accounting for any adjustments or transaction fees.
+  * `actualAmount1`: The actual deposited amount of token1, similarly accounting for adjustments or fees.
+* **Logic**:
+  * Increases the liquidity of the specified AMM pool position by depositing the given amounts of token0 and token1. It requires that the contract has been authorized to transfer these amounts on behalf of the user (`from` address).
+* **Notice**:
+  * Callers must ensure this contract is approved to spend the specified token amounts on their behalf before invoking this function.
+
+#### `withdraw(uint256 tokenId, uint256 liquidity, address to)`
+
+Withdraws a specified amount of liquidity from an AMM position and transfers the corresponding token amounts to a specified recipient.
+
+* **Parameters**:
+  * `tokenId`: The identifier of the AMM position token from which liquidity is being withdrawn.
+  * `liquidity`: The amount of liquidity to remove from the position.
+  * `to`: The recipient address for the withdrawn tokens.
+* **Returns**:
+  * `actualAmount0`: The actual amount of token0 collected from the pool and transferred to the recipient.
+  * `actualAmount1`: The actual amount of token1 similarly collected and transferred.
+* **Logic**:
+  * Reduces the liquidity of the associated AMM pool position, collecting and transferring proportional amounts of token0 and token1 to the `to` address.

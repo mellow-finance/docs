@@ -1,0 +1,144 @@
+---
+title: "AMM Adapters"
+---
+
+The `AmmModule` is crucial for integrating with AMM protocols, providing a suite of functions to validate parameters, calculate liquidity amounts, manage positions, and more. Below is a detailed breakdown of its functions:
+
+#### `validateProtocolParams(bytes memory params)`
+
+Validates the protocol parameters to ensure they adhere to the expected format and rules set by the implementation of the AmmModule.
+
+* **Input Parameters**:
+  * `params`: A byte array containing encoded protocol parameters specific to the AmmModule implementation.
+* **Logic**:
+  * The function checks the `params` byte array against the protocol's parameter schema, reverting if the validation fails due to incorrect formatting or values.
+
+#### `validateCallbackParams(bytes memory params)`
+
+Ensures that callback parameters meet the AmmModule requirements for executing callbacks.
+
+* **Input Parameters**:
+  * `params`: A byte array encoding callback parameters as defined by the specific AMM module implementation.
+* **Logic**:
+  * Similar to `validateProtocolParams`, this function verifies the integrity and format of the callback parameters, reverting upon detection of invalid data.
+
+#### `getAmountsForLiquidity(uint128 liquidity, uint160 sqrtPriceX96, int24 tickLower, int24 tickUpper)`
+
+Calculates the amounts of each token in a position given its liquidity and price range.
+
+* **Input Parameters**:
+  * `liquidity`: The liquidity amount of the AMM position, a key value representing the quantity of tokens.
+  * `sqrtPriceX96`: The square root of the current price in a fixed-point format with 96 bits of precision.
+  * `tickLower`: The lower bound of the position's price range.
+  * `tickUpper`: The upper bound of the position's price range.
+* **Logic**:
+  * Returns the amounts of tokens (`amount0` and `amount1`) that correspond to the provided liquidity within the specified price range. This calculation is critical for understanding the composition of a position at current market conditions.
+
+#### `tvl(uint256 tokenId, uint160 sqrtRatioX96, bytes memory callbackParams, bytes memory protocolParams)`
+
+Determines the total value locked (TVL) for a given token position, accounting for current market conditions.
+
+* **Input Parameters**:
+  * `tokenId`: Identifier of the AMM position token.
+  * `sqrtRatioX96`: The square root of the current pool's price ratio, encoded in a fixed-point format.
+  * `callbackParams`: Encoded parameters for callbacks, possibly including details like staking preferences.
+  * `protocolParams`: Encoded protocol parameters relevant to the position's valuation.
+* **Logic**:
+  * Computes and returns the amounts of token0 (`amount0`) and token1 (`amount1`) locked in the position represented by `tokenId`, utilizing current price data and protocol-specific parameters.
+
+#### `getAmmPosition(uint256 tokenId)`
+
+Fetches details about a specific AMM position identified by a token ID.
+
+* **Input Parameters**:
+  * `tokenId`: The unique identifier of the AMM position.
+* **Logic**:
+  * Returns a structured representation (`AmmPosition` memory) of the position, including data like token addresses, liquidity amount, and price range.
+
+#### `getPool(address token0, address token1, uint24 property)`
+
+Retrieves the pool address for a given token pair and property (such as fee or tick spacing).
+
+* **Input Parameters**:
+  * `token0`: Address of the first token in the pair.
+  * `token1`: Address of the second token in the pair.
+  * `property`: A characteristic defining the pool, often related to fees or protocol-specific configurations.
+* **Logic**:
+  * Returns the address of the AMM pool corresponding to the specified token pair and property.
+
+#### `getProperty(address pool)`
+
+Obtains a specific property of a pool, useful for understanding its configuration.
+
+* **Input Parameters**:
+  * `pool`: The address of the AMM pool.
+* **Logic**:
+  * Returns a property value (`uint24`) of the pool, such as tick spacing or fee rate, contributing to its operational characteristics.
+
+#### `beforeRebalance(uint256 tokenId, bytes memory callbackParams, bytes memory protocolParams)`
+
+Executes preliminary steps before a rebalance action, setting up necessary conditions or adjustments.
+
+* **Input Parameters**:
+  * `tokenId`, `callbackParams`, `protocolParams`: Parameters identifying the position and detailing the rebalance context.
+* **Logic**:
+  * Prepares the position and protocol environment for rebalancing, potentially interacting with other contracts or updating internal states.
+
+#### `afterRebalance(uint256 tokenId, bytes memory callbackParams, bytes memory protocolParams)`
+
+Finalizes the rebalancing process with necessary adjustments and updates based on the outcome.
+
+* **Input Parameters**:
+  * `tokenId`: The identifier of the AMM position being rebalanced.
+  * `callbackParams`: Parameters that were possibly modified or utilized during the rebalance.
+  * `protocolParams`: Protocol-specific parameters that could influence final state adjustments.
+* **Logic**:
+  * Completes the rebalancing action by potentially updating position details, recording metrics, or executing protocol-specific final steps.
+
+#### `transferFrom(address from, address to, uint256 tokenId)`
+
+Transfers a specific AMM position (represented by a token ID) from one account to another.
+
+* **Input Parameters**:
+  * `from`: The current owner of the AMM position.
+  * `to`: The new owner to whom the position will be transferred.
+  * `tokenId`: The unique identifier of the AMM position token.
+* **Logic**:
+  * Facilitates the ownership transfer of an AMM position, ensuring that the specified `tokenId` is moved from `from` to `to`.
+
+#### `positionManager() external view returns (address)`
+
+Provides the address of the position manager contract associated with the AMM module.
+
+* **Logic**:
+  * Returns the address of the contract responsible for managing position tokens, offering a centralized point of interaction for position-related operations within the protocol
+
+### Structs Overview
+
+#### AmmPosition:
+
+```solidity
+struct AmmPosition {
+    address token0;
+    address token1;
+    uint24 property;
+    int24 tickLower;
+    int24 tickUpper;
+    uint128 liquidity
+}
+```
+
+#### Component Details
+
+* **token0**:
+  * Description: The address of the first token in the AMM pair.
+* **token1**:
+  * Description: The address of the second token in the AMM pair.
+* **property**:
+  * Description: Represents specific characteristics of the pool, such as fee rates or tick spacing.
+* **tickLower**:
+  * Description: The lower bound tick of the position's price range.
+* **tickUpper**:
+  * Description: The upper bound tick of the position's price range.
+* **liquidity**:
+  * Description: The amount of liquidity provided by the position.

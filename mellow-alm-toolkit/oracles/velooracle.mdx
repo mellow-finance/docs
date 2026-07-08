@@ -1,0 +1,31 @@
+---
+title: "VeloOracle"
+---
+
+`VeloOracle` extends the generic oracle functionalities to cater specifically to the Velo protocol, incorporating advanced mechanisms for detecting and mitigating price manipulation risks. It integrates seamlessly with Velo pools, offering reliable price data and robust MEV protection.
+
+#### Custom Errors
+
+* `InvalidLength()`: Indicates that the length of the input data does not match the expected format, potentially leading to erroneous calculations or validations.
+* `InvalidParams()`: Signals that the provided security parameters fall outside the acceptable or expected range, compromising the integrity of oracle operations.
+* `PriceManipulationDetected()`: Identified when the oracle's analysis suggests a potential attempt to manipulate market prices, triggering safeguards to protect against exploitative MEV strategies.
+* `NotEnoughObservations()`: Occurs when there is insufficient historical data to conduct a reliable analysis, underscoring the need for a comprehensive dataset to support accurate MEV detection.
+
+#### Structs
+
+#### `SecurityParams`
+
+Defines the operational parameters for the oracle's MEV detection mechanism, emphasizing historical data analysis to identify anomalies in price movements.
+
+* **Fields**:
+  * `lookback`: Specifies the number of historical observations (excluding the most recent) to include in the MEV analysis. This parameter sets the depth of the historical review, with the oracle effectively considering `lookback + 1` data points to incorporate the current market state.
+  * `maxAllowedDelta`: Establishes the maximum permissible deviation between the computed average ticks and the current spot tick. This threshold differentiates between normal market fluctuations and potential manipulative actions, serving as a critical filter in the oracle's analysis.
+
+#### Operational Logic
+
+The `VeloOracle` utilizes the `SecurityParams` struct within its `ensureNoMEV` function to conduct a detailed examination of market behavior, relying on a series of historical observations to calculate average ticks and their deviations from the current spot tick. In the `ensureNoMEV` function, these parameters are utilized as follows:
+
+* The function examines the last `lookback + 1` observations, which contain cumulative time-weighted ticks.
+* From these observations, it calculates `lookback` average ticks. Considering the current spot tick, the function then computes `lookback` deltas between them.
+* If any of these deltas is greater in magnitude than `maxAllowedDelta`, the function reverts with the `PriceManipulationDetected` error, indicating a potential MEV manipulation attempt.
+* If there are insufficient observations at any step of the process, the function reverts with the `NotEnoughObservations` error, indicating that the available data is not adequate for a reliable MEV check.

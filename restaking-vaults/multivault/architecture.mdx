@@ -1,0 +1,194 @@
+---
+title: "Architecture"
+---
+
+<Frame>
+  <img src="/images/image-2.png" alt="MultiVault top-level architecture" />
+</Frame>
+
+The **MultiVault** is designed to address the challenges of aggregating and managing various forms of restaking and yield sources. It builds upon the **ERC4626Vault** an extension of ERC4626 enhanced with features such as limits, whitelists, and locks for deposits and withdrawals.
+
+#### Key Characteristics
+
+* The MultiVault operates with a **single specified asset**, which is allocated across a set of **subvaults**.
+* Subvaults leverage different protocols to maximize efficiency and abstraction in managing restaking and yield generation.
+
+#### Protocol Support
+
+To interact with restaking protocols like **Symbiotic** and **EigenLayer**, the following adapters are implemented:
+
+* **SymbioticAdapter**
+* **EigenLayerAdapter**
+* **EigenLayerWstETHAdapter**
+
+These adapters unify the interaction with various restaking protocols, abstracting away protocol-specific complexities. Additionally, a **generic ERC4626Adapter** is provided for compatibility with standard ERC4626 tokens.
+
+#### Withdrawal Queues
+
+The system includes dedicated withdrawal queue implementations for managing protocol-specific withdrawal processes:
+
+* **SymbioticWithdrawalQueue**
+* **EigenLayerWithdrawalQueue**
+
+These queues handle withdrawals while adhering to the unique constraints of the respective protocols.
+
+***
+
+#### MultiVault Operations
+
+#### Subvault Types
+
+Each MultiVault operates a collection of subvaults, currently supporting three types:
+
+1. **SYMBIOTIC**
+2. **EIGEN\_LAYER**
+3. **ERC4626**
+
+To optimize yield, any unused assets during deposits or rebalances are transferred to the **DefaultCollateral** contract in the Symbiotic protocol as a fallback.
+
+#### Asset Management Strategy
+
+The **RatiosStrategy** is the core strategy contract, governing the distribution of assets between subvaults during deposits, withdrawals, and rebalances. It uses two parameters:
+
+* **minRatioD18**: Minimum ratio of assets allocated to a subvault.
+* **maxRatioD18**: Maximum ratio of assets allocated to a subvault.
+
+The target allocation for each subvault is calculated using the following formulas:
+
+* `minAssets = multiVault.totalAssets() * subvaultRatios.minRatioD18 / 1e18`
+* `maxAssets = multiVault.totalAssets() * subvaultRatios.maxRatioD18 / 1e18`
+
+***
+
+#### Detailed Operations
+
+#### Deposits
+
+<Frame>
+  <img src="/images/image-3.png" alt="" />
+</Frame>
+
+When depositing assets into the MultiVault, token distribution across subvaults is performed in two stages:
+
+1. Subvaults are filled to ensure **staked assets ≥ min assets**.
+2. Remaining tokens are distributed to ensure **staked assets ≤ max assets**.
+
+**Deposit Prioritization:**
+
+1. **staked assets < min assets**
+2. **staked assets < max assets**
+
+***
+
+#### Withdrawals
+
+<Frame>
+  <img src="/images/image-4.png" alt="" />
+</Frame>
+
+The withdrawal process is structured into five stages:
+
+1. Withdraw assets where **staked assets > max assets**.
+2. Withdraw assets to ensure **staked assets ≥ min assets**.
+3. Retrieve **pending assets**.
+4. Withdraw **claimable assets**.
+5. Withdraw remaining assets (**0 < staked assets ≤ min assets).**
+
+**Withdrawal Prioritization:**
+
+1. **staked assets > max assets** (Standard protocol withdrawal duration.)
+2. **staked assets > min assets** (Standard protocol withdrawal duration.)
+3. **pending assets > 0** (Standard or shorter protocol withdrawal duration.)
+4. **claimable assets > 0** (Instant withdrawal.)
+5. **staked assets > 0** (Used only in exceptional cases to avoid strategy violations; standard protocol withdrawal duration.)
+
+***
+
+#### Rebalances
+
+<Frame>
+  <img src="/images/image-5.png" alt="" />
+</Frame>
+
+During rebalancing in the **MultiVault**, the process for withdrawing and depositing tokens across subvaults is executed in four stages:
+
+1. **Initial Withdrawals**: Tokens are withdrawn from all subvaults where **staked assets > max assets**, as well as all claimable assets. At the same time, the total shortfall of assets in subvaults required to meet the **min ratios** (i.e., where **staked assets < min assets**) is calculated. This value is referred to as **totalRequired**.
+2.  **Fulfilling Shortfall**: If **totalRequired** is less than the sum of liquid and pending assets, tokens are withdrawn from subvaults to ensure **staked assets > min assets**.
+
+    All liquid assets, calculated as the sum of:
+
+    * **claimable assets**
+    * **assets.balanceOf(multiVault)**
+    * **defaultCollateral.balanceOf(multiVault)**
+
+    are redistributed among subvaults as follows:
+3. **Meeting Minimum Ratios**: Tokens are deposited into subvaults to ensure **staked assets ≥ min assets**.
+4. **Fulfilling Maximum Ratios**: Remaining tokens are deposited into subvaults to ensure **staked assets ≤ max assets**.
+
+**Rebalance Prioritization:**
+
+1. withdraw: claimable assets > 0, staked assets > max assets
+2. withdraw staked assets > min assets && total required assets > pending assets + liquid assets
+3. deposit: staked assets < min assets && liquid assets > 0
+4. deposit: staked assets < max assets
+
+***
+
+#### Protocol Integrations
+
+#### Symbiotic Integration
+
+The **SymbioticAdapter** is the main contract for interacting with the Symbiotic protocol. It handles:
+
+* Token accounting and limits.
+* Interaction with standard reward farms.
+* Deposits and withdrawals.
+
+When a SYMBIOTIC-type subvault is added (Symbiotic Vault), a corresponding **SymbioticWithdrawalQueue** is created (if not already present in adapter’s cache). This queue manages withdrawals using an **epoch-based logic**, allowing users to claim and transfer pending assets.
+
+***
+
+#### EigenLayer Integration
+
+<Frame>
+  <img src="/images/image-6.png" alt="" />
+</Frame>
+
+The integration with the **EigenLayer protocol** is currently limited to strategy-based operations, as **EigenPods** are not yet supported. Despite the lack of a slashing mechanism, there remains a **delay** between a withdrawal request and the actual withdrawal of token.
+
+The **EigenLayerWithdrawalQueue** is specifically designed to handle the complexities of the EigenLayer withdrawal process. Its key features include:
+
+1.  **Pending Withdrawal Management**:
+
+    Each withdrawal request in EigenLayer requires manual handling and adherence to the protocol's delay. The queue ensures that:
+
+    * Pending requests are processed sequentially.
+    * Users cannot exceed the predefined limit of pending requests, preventing congestion.
+2. **Batch Claiming**:
+   * The queue allows batch claiming of completed withdrawal requests, but only up to a specified maximum per call. This feature balances protocol interaction efficiency and security, preventing abuse or OOG.
+3. **User-Focused Optimization**:
+   * Withdrawal requests are tracked per user, ensuring fairness and enabling claim prioritization based on request order.
+
+#### Handling of wstETH and stETH
+
+Since EigenLayer strategies utilize **stETH** (a rebasing token), a **wstETH ↔ stETH conversion layer** has been implemented to enable compatibility within the Symbiotic protocol. The use of **wstETH** ensures the following:
+
+* Unlike stETH, which periodically adjusts balances through rebasing, wstETH represents a wrapped, non-rebasing version of stETH, making it more stable for vault operations.
+* MultiVaults leveraging EigenLayer strategies operate with **wstETH**, while the conversion layer handles the rebase adjustments internally, maintaining protocol compatibility.
+
+***
+
+#### IsolatedEigenLayerVault
+
+A significant challenge in EigenLayer is the **operator limitation**, which restricts the number of operators an address can interact with. To address this, **IsolatedEigenLayerVaults** were developed:
+
+1. **Operator-Strategy Pairing**:
+   * Each isolated vault is linked to a specific **(strategy, operator)** pair. This decoupling ensures scalability by avoiding operator limitations for a single address.
+2. **Factory-Based Creation**:
+   * Isolated vaults are created using dedicated factory contracts, such as:
+     * **IsolatedEigenLayerVault**
+     * **IsolatedEigenLayerWstETHVault**
+3. **Adapter-Driven Operations**:
+   * The **EigenLayerAdapter** interacts with these isolated vaults instead of directly managing EigenLayer strategies. This abstraction simplifies MultiVault operations while ensuring protocol compliance.
+4. **Validation on Addition**:
+   * When an EIGEN\_LAYER-type subvault is added to a MultiVault, the system verifies that the corresponding isolated vault was created through the appropriate factory contract. This validation step ensures consistency and security across all interactions.

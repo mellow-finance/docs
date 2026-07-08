@@ -1,0 +1,42 @@
+---
+title: "Overview"
+description: "Wrapped liquid staking token powered by Lido wstETH with DVT incentive layer. Covers Obol and SSV incentive calculation, claiming process, withdrawal mechanics, and FAQ."
+---
+
+DVstETH is a wrapped Liquid Staking Token powered by the Lido protocol’s wstETH, allowing vault depositors to reuse their staking receipts across the DeFi ecosystem. Distributed Validator Technology (DVT) enables splitting of a validator's private key into multiple key shards, which are distributed among an independent cluster of nodes. This means no single node has access to the entire key, greatly enhancing validator key security.
+
+&#x20;DVstETH users receive token incentives from the DVT providers whose validators are active in the Lido Protocol via the Simple DVT and Community Staking modules. As more DVT based validators are activated via Lido, the vault will accrue an increasing amount of incentives.&#x20;
+
+### FAQ
+
+**How is the total number of incentives for Obol and SSV Network calculated?**
+
+Users will receive incentives by depositing (W)ETH into the Vault, with the number of incentives calculated based on how much stake they have in the Vault in relation to total stake in the Vault and taking into account how long the user’s stake has been in the Vault. Incentives calculations also take into account the Distribution Rules mentioned below.
+
+Incentives for both Obol and SSV are calculated based on the validator performance for their respective validators within the Lido protocol on a daily basis. Vault stakers that follow the Distribution Rules explained above will receive an allocation of incentives based on the amount of ETH staked via the Vault and time ETH remains staked within the Vault.
+
+More info on SSV and Obol incentives [here](../points/overview).
+
+**How do I claim the incentives accrued to my vault position?**
+
+SSV incentives are claimable monthly, in line with their existing [Incentivized Mainnet Program](https://ssv.network/incentivized-mainnet/). Users will be able to claim their incentives via [SSV Rewards](https://www.ssvrewards.com/) following the distribution of incentives as noted on the [SSV Governance Forum](https://forum.ssv.network/t/incentivized-mainnet-program-distributions/1256/30).&#x20;
+
+Obol launched a community airdrop in January 2025 that provided a 7.5% community allocation. Recently, Obol has launched their [Incentives Program](https://obol.org/incentives), with 2.5% of the Obol token supply eligible each year. Obol incentives are currently being accrued to users, however are not yet claimable. Additional information will be provided when users can claim incentives.&#x20;
+
+<iframe
+  width="100%"
+  height="400"
+  src="https://www.youtube.com/embed/NErLuMVTny8"
+  title="DVstETH overview video"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
+
+**Does the Decentralized Validator Vault allow access to restaking?**
+
+Currently, no, the Vault does not provide access to restaking or Symbiotic incentives. In the future, a secondary vault may be created that could allow users access to staking alongside the other options available within the Decentralized Validator Vault.
+
+**How are withdrawals handled?**
+
+Stakers in the Vault may place a withdrawal request at any time. All withdrawals will be processed and claimable to Vault stakers in the form of wstETH.

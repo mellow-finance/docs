@@ -1,0 +1,19 @@
+---
+title: "Domain objects"
+---
+
+**AMM position:** A ERC-721 position in the underlying AMM like Uniswap v3, velodrome, etc.
+
+**Managed position:** Represents a Position in the Core. This is a position that is automatically managed by Mellow-ALM-toolkit
+
+**LP token:** ERC-20 token that represent a share of Managed Position
+
+**Strategy:** A program that determines the target state of Managed Position depending on market conditions
+
+**Rebalancer:** An external actor that facilitates bringing Managed position from current state to target state according to Strategy
+
+**Owner:** An external actor who opens, closes and owns Managed position.
+
+**Position Manager**: an external actor who handles parameters of the corresponding position parameters etc.
+
+**Liquidity provider (LP):** An external actor who owns a part of Managed position by contributing liquidity into the underlying Positions

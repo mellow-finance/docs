@@ -1,0 +1,2371 @@
+---
+title: "Contracts specs"
+---
+
+## ContractRegistry
+
+### constructor
+
+### addresses
+
+### names
+
+### versions
+
+### versionAddress
+
+### latestVersion
+
+### registerContract
+
+* ✅ registers IContractMeta compatible contract and updates respective view methods - #addresses - #versions - #names - #latestVersion - #versionAddress
+
+_Access control_
+
+* ✅ allowed: operator (deployer)
+* ✅ denied with FRB: random address
+* ✅ allowed: protocol admin
+
+_Edge cases_
+
+* ✅ when new contract major version differs more, than on one reverts with INVA
+* ✅ when new contract version lower or equal existing one reverts with INVA
+* ✅ when contract has invalid version reverts with INVA
+* ✅ when contract name is not alphanumeric reverts with INV
+* ✅ when address is already registered reverts with DUP
+
+## ProtocolGovernance
+
+### constructor
+
+* ✅ deploys a new contract
+
+### stagedParams
+
+* ✅ imestamp timestamp equals #stageParams's block.timestamp + governanceDelay
+* ✅ imestamp clears by #commitParams
+* ✅ imestamp edge cases when nothing is set returns zero
+* ✅ imestamp access control allowed: any address
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ updates by #stageParams
+* ✅ clears by #commitParams
+
+### params
+
+### stagedValidatorsAddresses
+
+### validatorsAddresses
+
+### validatorsAddress
+
+* ✅ returns correct value
+* ✅ s properties @property: updates when committed validator grant for a new address
+* ✅ s properties @property: doesn't update when committed validator grant for an existing address
+* ✅ s access control allowed: any address
+
+### permissionAddresses
+
+### stagedPermissionGrantsAddresses
+
+### addressesByPermission
+
+* ✅ returns addresses that has the given permission set to true
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ updates by #stagePermissionGrants + #commitPermissionGrants or #revokePermissions
+* ✅ is not affected by forceAllowMask
+* ✅ returns empty array on unknown permissionId
+
+### hasPermission
+
+### hasAllPermissions
+
+* ✅ checks if an address has all permissions set to true
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ returns false on random address
+* ✅ is not affected by staged permissions
+* ✅ is affected by committed permissions
+* ✅ returns true for any address when forceAllowMask is set to true
+
+_Edge cases_
+
+* ✅ on unknown permission id returns false
+
+### maxTokensPerVault
+
+* ✅ returns correct value
+
+### governanceDelay
+
+* ✅ returns correct value
+
+### protocolTreasury
+
+* ✅ returns correct value
+
+### forceAllowMask
+
+* ✅ returns correct value
+
+### withdrawLimit
+
+* ✅ returns correct value
+
+### supportsInterface
+
+* ✅ returns true for IProtocolGovernance interface (0xca11fe03)
+* ✅ access control: allowed: any address
+* ✅ edge cases: when contract does not support the given interface returns false
+
+### stageValidator
+
+* ✅ emits ValidatorStaged event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when attempting to stage grant to zero address reverts with AZ when target has zero address
+* ✅ when attempting to stage grant to zero address reverts with AZ when validator has zero address
+
+### rollbackStagedValidators
+
+* ✅ rolls back all staged validators
+* ✅ emits AllStagedValidatorsRolledBack event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+### commitValidator
+
+* ✅ commits staged validators
+* ✅ emits ValidatorCommitted event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when attempting to commit validator for zero address reverts with NULL
+* ✅ when nothing is staged for the given address reverts with NULL
+* ✅ when attempting to commit validator too early reverts with TS
+
+### commitAllValidatorsSurpassedDelay
+
+* ✅ emits ValidatorCommitted event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ commits all staged validators
+* ✅ commits all staged validators after delay
+
+_Edge cases_
+
+* ✅ when attempting to commit a single validator too early does not commit validator
+* ✅ when attempting to commit multiple validators too early does not commit these validators
+
+### revokeValidator
+
+* ✅ emits ValidatorRevoked event
+
+_Edge cases_
+
+* ✅ when attempting to revoke from zero address reverts with NULL
+
+### rollbackStagedPermissionGrants
+
+* ✅ rolls back all staged permission grants
+* ✅ emits AllStagedPermissionGrantsRolledBack event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+### commitPermissionGrants
+
+* ✅ commits staged permission grants
+* ✅ emits PermissionGrantsCommitted event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when attempting to commit permissions for zero address reverts with NULL
+* ✅ when nothing is staged for the given address reverts with NULL
+* ✅ when attempting to commit permissions too early reverts with TS
+
+### commitAllPermissionGrantsSurpassedDelay
+
+* ✅ emits PermissionGrantsCommitted event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ commits all staged permission grants
+* ✅ commits all staged permission grants after delay
+
+_Edge cases_
+
+* ✅ when attempting to commit a single permission too early does not commit permission
+* ✅ when attempting to commit multiple permissions too early does not commit these permissions
+
+### revokePermissions
+
+* ✅ emits PermissionRevoked event
+
+_Edge cases_
+
+* ✅ when attempting to revoke from zero address reverts with NULL
+
+### commitParams
+
+* ✅ emits ParamsCommitted event
+
+_Access control_
+
+* ✅ allowed: protocol admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when attempting to commit params too early reverts with TS
+* ✅ when attempting to commit params without setting pending params reverts with NULL
+
+### stagePermissionGrants
+
+* ✅ emits PermissionGrantsStaged event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when attempting to stage grant to zero address reverts with NULL
+
+### stageParams
+
+* ✅ emits ParamsStaged event
+
+_Access control_
+
+* ✅ allowed: admin
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when given invalid params when maxTokensPerVault is zero reverts with NULL
+* ✅ when given invalid params when governanceDelay is zero reverts with NULL
+* ✅ when given invalid params when governanceDelay exceeds MAX\_GOVERNANCE\_DELAY reverts with LIMO
+* ✅ when given invalid params when withdrawLimit less than MIN\_WITHDRAW\_LIMIT reverts with LIMO
+
+## UnitPricesGovernance
+
+### constructor
+
+### supportsInterface
+
+### stageUnitPrice
+
+### rollbackUnitPrice
+
+### commitUnitPrice
+
+## VaultRegistry
+
+### constructor
+
+* ✅ creates VaultRegistry
+* ✅ initializes ProtocolGovernance address
+* ✅ initializes ERC721 token name
+* ✅ initializes ERC721 token symbol
+
+### vaults
+
+* ✅ returns all registered vaults
+* ✅ access control: allowed: any address
+* ✅ ount returns the number of registered vaults
+* ✅ ount access control: allowed: any address
+* ✅ ount properties @property: when N new vaults have been registered, vaults count will be increased by N
+
+### vaultForNft
+
+* ✅ resolves Vault address by VaultRegistry NFT
+* ✅ access control: allowed: any address
+
+_Edge cases_
+
+* ✅ when Vault NFT is not registered in VaultRegistry returns zero address
+
+### nftForVault
+
+* ✅ resolves VaultRegistry NFT by Vault address
+* ✅ access control: allowed: any address
+
+_Edge cases_
+
+* ✅ when Vault is not registered in VaultRegistry returns zero
+
+### isLocked
+
+* ✅ checks if token is locked (not transferable)
+* ✅ access control: allowed: any address
+
+_Edge cases_
+
+* ✅ when VaultRegistry NFT is not registered in VaultRegistry returns false
+
+### protocolGovernance
+
+* ✅ returns ProtocolGovernance address
+* ✅ access control: allowed: any address
+
+### stagedProtocolGovernance
+
+* ✅ returns ProtocolGovernance address staged for commit
+* ✅ access control: allowed: any address
+* ✅ imestamp returns timestamp after which #commitStagedProtocolGovernance can be called
+* ✅ imestamp access control: allowed: any address
+* ✅ imestamp edge cases when nothing is staged returns 0
+* ✅ imestamp edge cases right after #commitStagedProtocolGovernance was called returns 0
+
+_Edge cases_
+
+* ✅ when nothing is staged returns zero address
+* ✅ right after #commitStagedProtocolGovernance was called returns zero address
+
+### stagedProtocolGovernanceTimestamp
+
+* ✅ returns timestamp after which #commitStagedProtocolGovernance can be called
+* ✅ access control: allowed: any address
+
+_Edge cases_
+
+* ✅ when nothing is staged returns 0
+* ✅ right after #commitStagedProtocolGovernance was called returns 0
+
+### vaultsCount
+
+* ✅ returns the number of registered vaults
+* ✅ access control: allowed: any address
+
+_Properties_
+
+* ✅ when N new vaults have been registered, vaults count will be increased by N
+
+### supportsInterface
+
+* ✅ returns true if this contract supports a certain interface
+* ✅ access control: allowed: any address
+* ✅ edge cases: when contract does not support the given interface returns false
+
+### registerVault
+
+* ✅ binds minted ERC721 NFT to Vault address and transfers minted NFT to owner specified in args
+* ✅ emits VaultRegistered event
+* ✅ access control: allowed: any account with Register Vault permissions
+* ✅ access control: denied: any other address
+* ✅ access control: denied: protocol governance admin
+
+_Properties_
+
+* ✅ minted NFT equals to vaultRegistry#vaultsCount
+
+_Edge cases_
+
+* ✅ when address doesn't conform to IVault interface (IERC165) reverts with INVI
+* ✅ when vault has already been registered reverts with DUP
+* ✅ when owner address is zero reverts with AZ
+
+### stageProtocolGovernance
+
+* ✅ stages new ProtocolGovernance for commit
+* ✅ sets the stagedProtocolGovernanceTimestamp after which #commitStagedProtocolGovernance can be called
+* ✅ access control: allowed: ProtocolGovernance Admin
+* ✅ access control: denied: any other address
+* ✅ access control: denied: deployer
+
+_Edge cases_
+
+* ✅ when new ProtocolGovernance is a zero address reverts with AZ
+
+### commitStagedProtocolGovernance
+
+* ✅ commits staged ProtocolGovernance
+* ✅ resets staged ProtocolGovernanceTimestamp
+* ✅ resets staged ProtocolGovernance
+* ✅ access control: allowed: ProtocolGovernance Admin
+* ✅ access control: denied: any other address
+
+_Edge cases_
+
+* ✅ when nothing is staged reverts with INIT
+* ✅ when called before stagedProtocolGovernanceTimestamp reverts with TS
+* ✅ when called before stagedProtocolGovernanceTimestamp reverts with TS
+
+### lockNft
+
+* ✅ locks NFT (disables any transfer)
+* ✅ emits TokenLocked event
+* ✅ access control: allowed: NFT owner
+* ✅ access control: denied: any other address
+* ✅ access control: denied: protocol admin
+
+_Edge cases_
+
+* ✅ when NFT has already been locked succeeds
+
+## CommonLibrary
+
+## ExceptionsLibrary
+
+## PermissionIdsLibrary
+
+## SemverLibrary
+
+## ChainlinkOracle
+
+### constructor
+
+### hasOracle
+
+* ✅ returns true if oracle is supported
+* ✅ edge cases: when oracle is not supported returns false
+
+### supportedTokens
+
+* ✅ returns list of supported tokens
+
+### priceX96
+
+### supportsInterface
+
+* ✅ returns true for ChainlinkOracle interface (0x8e3bd5d7)
+* ✅ edge cases: when contract does not support the given interface returns false
+
+### addChainlinkOracles
+
+* ✅ emits OraclesAdded event
+* ✅ when oracles have set by addChainLinkOracles function returns prices
+* ✅ edge cases: when arrays have different lengths reverts with INV
+* ✅ edge cases: when sender has no admin righs reverts with FRB
+
+## MellowOracle
+
+### constructor
+
+### priceX96
+
+### supportsInterface
+
+* ✅ returns true for IUniV3Oracle interface (0x6d80125b)
+* ✅ edge cases: when contract does not support the given interface returns false
+
+## UniV2Oracle
+
+### constructor
+
+### priceX96
+
+### supportsInterface
+
+* ✅ returns true for IUniV2Oracle interface (0x2748645e)
+* ✅ edge cases: when contract does not support the given interface returns false
+
+## UniV3Oracle
+
+### constructor
+
+### priceX96
+
+### supportsInterface
+
+* ✅ returns true for IUniV3Oracle interface (0x2a3602d6)
+* ✅ when contract does not support the given interface returns false
+
+### addUniV3Pools
+
+* ✅ when adding \[weth, usdc] pools with fee = 500 adds pools
+* ✅ when adding \[weth, usdc] pools with fee = 3000 adds pools
+* ✅ when adding \[weth, usdc] pools with fee = 10000 does not return prices
+
+## HStrategy
+
+### constructor
+
+* ✅ deploys a new contract
+
+### initialize
+
+### createStrategy
+
+* ✅ creates a new strategy and initializes it
+
+### updateStrategyParams
+
+### updateMintingParams
+
+### updateOracleParams
+
+### updateRatioParams
+
+### updateSwapFees
+
+### manualPull
+
+* ✅ pulls token amounts from fromVault to toVault
+
+### rebalance
+
+* ✅ performs a rebalance according to strategy params
+
+## LStrategy
+
+### constructor
+
+### getTargetPriceX96
+
+### targetUniV3LiquidityRatio
+
+### rebalanceERC20UniV3Vaults
+
+### rebalanceUniV3Vaults
+
+### postPreOrder
+
+### signOrder
+
+### resetCowswapAllowance
+
+### collectUniFees
+
+### manualPull
+
+### updateTradingParams
+
+### updateRatioParams
+
+### updateOtherParams
+
+## MStrategy
+
+### constructor
+
+* ✅ deploys a new contract
+
+_Edge cases_
+
+* ✅ when positionManager\_ address is zero reverts with AZ
+* ✅ when router\_ address is zero passes
+
+### getAverageTick
+
+* ✅ returns average UniswapV3Pool price tick
+
+### initialize
+
+### createStrategy
+
+* ✅ creates a new strategy and initializes it
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Edge cases_
+
+* ✅ when tokens.length is not equal 2 reverts with INVL
+* ✅ when erc20Vault vaultTokens do not match tokens\_ reverts with INVA
+* ✅ when moneyVault vaultTokens do not match tokens\_ reverts with INVA
+* ✅ when UniSwapV3 pool for tokens does not exist reverts with AZ
+
+### rebalance
+
+* ✅ performs a rebalance according to target ratios when token0/token1 ratio is greater than required
+* ✅ performs a rebalance according to target ratios when token0/token1 ratio is less than required
+
+_Access control_
+
+* ✅ allowed: MStrategy admin
+* ✅ allowed: MStrategy operator
+* ✅ denied: any other address
+
+_Edge cases_
+
+* ✅ when absolute tick deviation >= oracle.maxTickDeviation reverts with INVA
+* ✅ when tick is greater than tickMax - tickNeiborhood the upper bound of the interval is expanded by tickIncrease amount
+* ✅ when tick is less than tickMin + tickNeiborhood the lower bound of the interval is expanded by tickIncrease amount
+* ✅ when current tick has not deviated from the previous rebalance tick reverts with LIMU
+
+### manualPull
+
+* ✅ pulls token amounts from fromVault to toVault
+
+_Access control_
+
+* ✅ allowed: MStrategy admin
+* ✅ denied: any other address
+
+_Edge cases_
+
+* ✅ when token pull amounts are 0 passes
+
+### setOracleParams
+
+* ✅ sets new params for oracle
+* ✅ edge cases: when maxSlippageD is more than DENOMINATOR reverts with INVA
+
+_Access control_
+
+* ✅ allowed: MStrategy admin
+* ✅ denied: any other address
+
+### setRatioParams
+
+* ✅ sets new ratio params
+* ✅ edge cases: tickMin is greater than tickMax reverts with INVA
+* ✅ edge cases: when erc20MoneyRatioD is more than DENOMINATOR reverts with INVA
+* ✅ edge cases: when minErc20MoneyRatioDeviationD is more than DENOMINATOR reverts with INVA
+
+_Access control_
+
+* ✅ allowed: MStrategy admin
+* ✅ denied: any other address
+
+## MultiPoolHStrategy
+
+### constructor
+
+### initialize
+
+### createStrategy
+
+### updateMutableParams
+
+### rebalance
+
+* ✅ works correctly
+
+### checkMutableParams
+
+## PulseRouteStrategy
+
+### constructor
+
+### initialize
+
+### updateMutableParams
+
+### rebalance
+
+### calculateNewInterval
+
+### checkMutableParams
+
+### checkImmutableParams
+
+### checkTickDeviations
+
+### calculateTargetRatioOfToken1
+
+### calculateAmountsForSwap
+
+### depositCallback
+
+### withdrawCallback
+
+## PulseStrategy
+
+### constructor
+
+### initialize
+
+### updateMutableParams
+
+### rebalance
+
+### checkMutableParams
+
+### checkImmutableParams
+
+### checkTickDeviation
+
+### calculateNewPosition
+
+### calculateTargetRatioOfToken1
+
+### calculateAmountsForSwap
+
+### depositCallback
+
+### withdrawCallback
+
+## PulseStrategyV2
+
+### constructor
+
+### initialize
+
+### setForceRebalanceFlag
+
+### updateDesiredAmounts
+
+### updateMutableParams
+
+### rebalance
+
+### checkMutableParams
+
+### checkImmutableParams
+
+### checkTickDeviation
+
+### formPositionWithSpotTickInCenter
+
+### calculateNewPosition
+
+### calculateTargetRatioOfToken1
+
+### calculateAmountsForSwap
+
+### depositCallback
+
+### withdrawCallback
+
+## QuickPulseStrategy
+
+### constructor
+
+### initialize
+
+### updateMutableParams
+
+### rebalance
+
+### checkMutableParams
+
+### checkImmutableParams
+
+### checkTickDeviation
+
+### calculateNewPosition
+
+### calculateTargetRatioOfToken1
+
+### calculateAmountsForSwap
+
+### depositCallback
+
+### withdrawCallback
+
+### onERC721Received
+
+## SinglePositionQuickSwapStrategy
+
+### constructor
+
+### initialize
+
+### updateMutableParams
+
+### rebalance
+
+### calculateNewInterval
+
+### checkMutableParams
+
+### checkImmutableParams
+
+### checkTickDeviations
+
+### calculateTargetRatioOfToken1
+
+### calculateAmountsForSwap
+
+### depositCallback
+
+### withdrawCallback
+
+## SinglePositionStrategy
+
+### constructor
+
+* ✅ creates contract
+
+### initialize
+
+### updateMutableParams
+
+### rebalance
+
+* ✅ works correctly
+
+### calculateNewInterval
+
+### checkMutableParams
+
+### checkImmutableParams
+
+### checkTickDeviations
+
+### calculateTargetRatioOfToken1
+
+### calculateAmountsForSwap
+
+### depositCallback
+
+### withdrawCallback
+
+## BatchCall
+
+### batchcall
+
+* ✅ returns results
+* ✅ edge cases: when arrays have different lengths reverts with INVL
+* ✅ edge cases: when targets arrays not only of contracts reverts with "Address: delegate call to non-contract"
+
+## ContractMeta
+
+### contractName
+
+### contractNameBytes
+
+### contractVersion
+
+### contractVersionBytes
+
+## DefaultAccessControl
+
+### constructor
+
+### isAdmin
+
+### isOperator
+
+## DefaultAccessControlLateInit
+
+### isAdmin
+
+* ✅ returns `true` if sender is an admin, `false` otherwise
+
+### isOperator
+
+* ✅ returns `true` if sender is an operator, `false` otherwise
+
+### init
+
+## DefaultProxy
+
+### constructor
+
+## DefaultProxyAdmin
+
+## ERC20RootVaultHelper
+
+### getTvlToken0
+
+## ERC20Token
+
+### approve
+
+* ✅ allows `sender` to transfer `spender` an `amount` and emits Approval
+
+### transfer
+
+* ✅ transfers `amount` from `msg.sender` to `to`
+* ✅ rom transfers `amount` from `from` to `to` if allowed
+
+### transferFrom
+
+* ✅ transfers `amount` from `from` to `to` if allowed
+
+### permit
+
+* ✅ emits Approval
+* ✅ edge cases: when deadline less than current timestamp reverts with TS
+* ✅ edge cases: when incorrect signature reverts with FRB
+
+## GearboxHelper
+
+### setParameters
+
+### verifyInstances
+
+### calculateEarnedCvxAmountByEarnedCrvAmount
+
+### calculateClaimableRewards
+
+### calculateDesiredTotalValue
+
+### calcConvexTokensToWithdraw
+
+### calcRateRAY
+
+### calculateAmountInMaximum
+
+### createUniswapMulticall
+
+### checkNecessaryDepositExchange
+
+### claimRewards
+
+### withdrawFromConvex
+
+### depositToConvex
+
+### adjustPosition
+
+### swapExactOutput
+
+### pullFromAddress
+
+### openCreditAccount
+
+## HStrategyHelper
+
+### calculateExpectedRatios
+
+### calculateMissingTokenAmounts
+
+### calculateExtraTokenAmountsForUniV3Vault
+
+### calculateExtraTokenAmountsForMoneyVault
+
+### calculateExpectedTokenAmountsByExpectedRatios
+
+### calculateCurrentTokenAmounts
+
+### calculateCurrentCapitalInToken0
+
+### calculateExpectedTokenAmountsInToken0
+
+### swapNeeded
+
+### tokenRebalanceNeeded
+
+### calculateAndCheckDomainPositionParams
+
+### checkSpotTickDeviationFromAverage
+
+### calculateNewPositionTicks
+
+### calculateExpectedTokenAmounts
+
+## LStrategyHelper
+
+### constructor
+
+### checkOrder
+
+### tickFromPriceX96
+
+## MultiPoolHStrategyRebalancer
+
+### constructor
+
+### initialize
+
+### createRebalancer
+
+### getTvls
+
+### processRebalance
+
+### calculateExpectedAmounts
+
+### calculateNewPosition
+
+## PulseStrategyHelper
+
+### getStrategyParams
+
+### calculateAmountForSwap
+
+## PulseStrategyV2Helper
+
+### getStrategyParams
+
+### calculateAmountForSwap
+
+## QuickPulseStrategyHelper
+
+### getStrategyParams
+
+### calculateAmountForSwap
+
+## QuickSwapHelper
+
+### constructor
+
+### calculateTvl
+
+### liquidityToTokenAmounts
+
+### tokenAmountsToLiquidity
+
+### tokenAmountsToMaxLiquidity
+
+### calculateLiquidityToPull
+
+### increaseCumulative
+
+### calculateInnerFeesGrow
+
+### calculateCollectableRewards
+
+### convertTokenToUnderlying
+
+## SinglePositionStrategyHelper
+
+### checkUniV3PoolState
+
+### checkAlgebraPoolState
+
+## UniV3Helper
+
+### constructor
+
+### liquidityToTokenAmounts
+
+* ✅ returns correct vaulues for type(uint128).max
+
+### tokenAmountsToLiquidity
+
+### tokenAmountsToMaximalLiquidity
+
+### getPoolByNft
+
+### getFeesByNft
+
+### calculateTvlBySqrtPriceX96
+
+### calculateTvlByMinMaxPrices
+
+### getTickDeviationForTimeSpan
+
+* ✅ returns withFail=true if there is no observation in the pool that was not made before secondsAgo
+
+### getPositionTokenAmountsByCapitalOfToken0
+
+* ✅ test uniV3Helper, borders: -600 0
+* ✅ test uniV3Helper, borders: 600 1200
+* ✅ test uniV3Helper, borders: -600 600
+
+## WhiteList
+
+### constructor
+
+### deposit
+
+* ✅ works correctly
+* ✅ reverts on wrong address
+
+### updateRoot
+
+## AllowAllValidator
+
+### constructor
+
+* ✅ deploys a new contract
+
+### validate
+
+* ✅ successful validate
+
+## BaseValidator
+
+### constructor
+
+### stagedValidatorParams
+
+### stagedValidatorParamsTimestamp
+
+### validatorParams
+
+### stageValidatorParams
+
+### commitValidatorParams
+
+## CowswapValidator
+
+### constructor
+
+* ✅ deploys a new contract
+
+### validate
+
+* ✅ successful validate
+* ✅ edge cases: when selector is not 0xec6cb13f reverts with INVS
+
+## CurveValidator
+
+### constructor
+
+* ✅ deploys a new contract
+
+### validate
+
+* ✅ successful validate
+* ✅ edge cases: when selector is not 0x3df02124 reverts with INVS
+* ✅ edge cases: when token ids are equal reverts with INV
+* ✅ edge cases: when not a vault token reverts with INVTO
+* ✅ edge cases: when pool has no approve permission reverts with FRB
+
+## ERC20Validator
+
+### constructor
+
+* ✅ deploys a new contract
+
+### validate
+
+* ✅ successful validate, spender can approve
+* ✅ successful validate, sender is trusted strategy
+* ✅ edge cases: when value is not zero reverts with INV
+* ✅ edge cases: when selector is not 0x095ea7b3 reverts with INVS
+* ✅ edge cases: when no transfer permission reverts with FRB
+* ✅ edge cases: when no approve permission reverts with FRB
+
+## QuickSwapValidator
+
+### constructor
+
+### validate
+
+## UniV2Validator
+
+### constructor
+
+* ✅ deploys a new contract
+
+### validate
+
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 successful validate
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when addr is not swap reverts with INVTR
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when selector is wrong reverts with INVS
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when path is too small reverts with INVL
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when not a vault token reverts with INVTO
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when tokens are the same reverts with INVTO
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when pool has no approve permission reverts with FRB
+* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when sender is not a reciever reverts
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee successful validate
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when value is not zero reverts with INV
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when sender is not reciever reverts
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when path too small reverts with INVL
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when not a vault token reverts with INVTO
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when tokens are the same reverts with INVTO
+* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when pool has no approve permission reverts with FRB
+
+## UniV3Validator
+
+### constructor
+
+* ✅ deploys a new contract
+
+### validate
+
+* ✅ edge cases: if addr is not swap reverts with INVTR
+* ✅ edge cases: if value is not zero reverts with INV
+* ✅ edge cases: if selector is wrong reverts with INVS
+* ✅ selector is 0x414bf389 successful validate
+* ✅ selector is 0x414bf389 edge cases: if recipient is not sender reverts with INVTR
+* ✅ selector is 0x414bf389 edge cases: if not a vault token reverts with INVTO
+* ✅ selector is 0x414bf389 edge cases: if tokens are the same reverts with INVTO
+* ✅ selector is 0x414bf389 edge cases: if pool has no permisson reverts with FRB
+* ✅ selector is 0xdb3e2198 successfull validate
+* ✅ selector is 0xdb3e2198 edge cases: if recipient is not sender reverts with INVTR
+* ✅ selector is 0xdb3e2198 edge cases: if not a vault token reverts with INVTO
+* ✅ selector is 0xdb3e2198 edge cases: if tokens are the same reverts with INVTO
+* ✅ selector is 0xdb3e2198 edge cases: if pool has no permisson reverts with FRB
+* ✅ selector is 0xc04b8d59 successfull validate
+* ✅ selector is 0xc04b8d59 edge cases: if recipient is not sender reverts with INVTR
+* ✅ selector is 0xc04b8d59 edge cases: if tokens are the same reverts with INVTO
+* ✅ selector is 0xc04b8d59 edge cases: if pool has no approve permission reverts with FRB
+* ✅ selector is 0xc04b8d59 edge cases: if not a vault token reverts with INVTO
+* ✅ selector is 0xf28c0498 successfull validate
+* ✅ selector is 0xf28c0498 edge cases: if recipient is not sender reverts with INVTR
+* ✅ selector is 0xf28c0498 edge cases: if tokens are the same reverts with INVTO
+* ✅ selector is 0xf28c0498 edge cases: if pool has no approve permission reverts with FRB
+* ✅ selector is 0xf28c0498 edge cases: if not a vault token reverts with INVTO
+
+## Validator
+
+### supportsInterface
+
+## AaveVault
+
+### tvl
+
+* ✅ returns total value locked
+* ✅ returns total value locked, no time passed from initialization
+* ✅ edge cases: when there are no initial funds returns zeroes
+
+### lendingPool
+
+* ✅ returns ILendingPool
+* ✅ access control: allowed: any address
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x18026500 interface
+* ✅ access control: allowed: any address
+* ✅ returns true if this contract supports 0x7a63aa3a interface
+* ✅ access control: allowed: any address
+* ✅ edge cases: when contract does not support the given interface returns false
+
+### updateTvls
+
+* ✅ updates total value locked
+
+### initialize
+
+* ✅ emits Initialized event
+* ✅ initializes contract successfully
+* ✅ edge cases: when vault's nft is not 0 reverts with INIT
+* ✅ edge cases: when tokens are not sorted reverts with INVA
+* ✅ edge cases: when tokens are not unique reverts with INVA
+* ✅ edge cases: when setting zero nft reverts with VZ
+* ✅ edge cases: when setting token with address zero reverts with AZ
+* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+
+## AaveVaultGovernance
+
+### constructor
+
+* ✅ deploys a new contract
+* ✅ initializes internalParams
+
+_Edge cases_
+
+* ✅ when lendingPool address is 0 reverts
+* ✅ when estimatedAaveAPY is 0 reverts
+* ✅ when estimatedAaaveAPY is larger than limit reverts
+* ✅ when protocolGovernance address is 0 reverts
+* ✅ when vaultRegistry address is 0 reverts
+
+### delayedProtocolParams
+
+* ✅ returns current DelayedProtocolParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+
+_Edge cases_
+
+* ✅ when no params were committed returns non-zero params initialized in constructor
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x2f8c3ff3 interface
+* ✅ access control: allowed: any address
+
+### stagedDelayedProtocolParams
+
+* ✅ returns DelayedProtocolParams staged for commit
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ always equals to params that were just staged
+
+_Edge cases_
+
+* ✅ when no params are staged for commit returns zero struct
+* ✅ when params were just committed returns zero struct
+
+### stageDelayedProtocolParams
+
+* ✅ stages DelayedProtocolParams for commit
+* ✅ sets delay for commit
+* ✅ emits StageDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+
+_Edge cases_
+
+* ✅ when estimated Aave APY is larger than limit reverts
+* ✅ when called twice succeeds with the last value
+* ✅ when called with zero params reverts with zero params
+
+### commitDelayedProtocolParams
+
+* ✅ commits staged DelayedProtocolParams
+* ✅ resets delay for commit
+* ✅ emits CommitDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+* ✅ reverts if called before the delay has elapsed
+* ✅ succeeds if called after the delay has elapsed
+
+_Edge cases_
+
+* ✅ when called twice reverts
+* ✅ when nothing is staged reverts
+* ✅ when delay has not elapsed reverts
+
+### createVault
+
+* ✅ deploys a new vault
+* ✅ registers vault with vault registry and issues nft
+* ✅ the nft is owned by the owner from #createVault arguments
+* ✅ vault is initialized with nft
+
+_Access control_
+
+* ✅ when permissionless allowed: any address
+* ✅ when not permissionless allowed: protocol governance admin
+* ✅ when not permissionless denied: any address
+
+## AggregateVault
+
+### subvaultNfts
+
+### subvaultOneBasedIndex
+
+### hasSubvault
+
+### subvaultAt
+
+### tvl
+
+### supportsInterface
+
+## ERC20RootVault
+
+### depositorsAllowlist
+
+* ✅ returns non zero length of depositorsAllowlist
+* ✅ access control: allowed: any address
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x23040f0a interface
+* ✅ edge cases: when contract does not support the given interface returns false
+* ✅ access control: allowed: any address
+
+### addDepositorsToAllowlist
+
+* ✅ adds depositor to allow list
+* ✅ access control: allowed: admin
+* ✅ access control: not allowed: deployer
+* ✅ access control: not allowed: any address
+
+### removeDepositorsFromAllowlist
+
+* ✅ removes depositor to allow list
+* ✅ access control: allowed: admin
+* ✅ access control: not allowed: deployer
+* ✅ access control: not allowed: any address
+
+### initialize
+
+* ✅ edge cases: when root vault is not owner of subvault nft reverts with FRB
+* ✅ edge cases: when subVault index is 0 (rootVault has itself as subVaul) reverts with DUP
+* ✅ edge cases: when subVault index index is 0 reverts with DUP
+
+### deposit
+
+* ✅ rsAllowlist returns non zero length of depositorsAllowlist
+* ✅ rsAllowlist access control: allowed: any address
+* ✅ emits Deposit event
+* ✅ checking protocol fees charges fees
+* ✅ edge cases: when performance fee is zero do not charge performance fees
+* ✅ edge cases: when management fee is zero not charges management fees
+* ✅ edge cases: when deposit is disabled reverts with FRB
+* ✅ edge cases: when there is no depositor in allow list reverts with FRB
+* ✅ edge cases: when there is a private vault in delayedStrategyParams reverts with FRB
+* ✅ edge cases: when minLpTokens is greater than lpAmount reverts with LIMU
+* ✅ edge cases: when tokenAmounts is less than or equal to FIRST\_DEPOSIT\_LIMIT reverts with LIMU
+* ✅ edge cases: when depositCallback Address is set emits deposits callback called
+* ✅ edge cases: when lpAmount is zero reverts with VZ
+* ✅ edge cases: when sum of lpAmount and sender balance is greater than tokenLimitPerAddress reverts with LIMO
+* ✅ edge cases: when sum of lpAmount and totalSupply is greater than tokenLimit reverts with LIMO
+* ✅ access control: allowed: any address
+
+### withdraw
+
+* ✅ emits Withdraw event
+* ✅ edge cases: when total supply is 0 reverts with VZ
+* ✅ edge cases: when length of vaultsOptions and length of \_subvaultNfts are different reverts with INVL
+* ✅ edge cases: when withdrawn is larger than protocol governance withdraw limit for vault token reverts with LIMO
+* ✅ edge cases: When address of lpCallback is not null emits withdrawCallback
+* ✅ edge cases: When address of lpCallback is not null and lpCallback throws empty error emits WithdrawCallbackLog
+* ✅ edge cases: When address of lpCallback is not null and lpCallback throws non empty error emits WithdrawCallbackLog
+* ✅ access control: allowed: any address
+
+## ERC20RootVaultGovernance
+
+### constructor
+
+* ✅ deploys a new contract
+* ✅ initializes internalParams
+
+_Edge cases_
+
+* ✅ when protocolGovernance address is 0 reverts
+* ✅ when vaultRegistry address is 0 reverts
+
+### delayedProtocolParams
+
+* ✅ returns current DelayedProtocolParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+
+_Edge cases_
+
+* ✅ when no params were committed returns non-zero params initialized in constructor
+
+### stagedDelayedProtocolParams
+
+* ✅ returns DelayedProtocolParams staged for commit
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ always equals to params that were just staged
+
+_Edge cases_
+
+* ✅ when no params are staged for commit returns zero struct
+* ✅ when params were just committed returns zero struct
+
+### delayedProtocolPerVaultParams
+
+* ✅ returns current DelayedProtocolPerVaultParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ staging DelayedProtocolPerVaultParams doesn't change delayedProtocolPerVaultParams
+
+_Edge cases_
+
+* ✅ when no params were committed returns zero params
+
+### stagedDelayedProtocolPerVaultParams
+
+* ✅ returns DelayedProtocolPerVaultParams staged for commit
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ always equals to params that were just staged
+
+_Edge cases_
+
+* ✅ when no params are staged for commit returns zero struct
+* ✅ when params were just committed returns zero struct
+
+### stagedDelayedStrategyParams
+
+* ✅ returns DelayedStrategyParams staged for commit
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ always equals to params that were just staged
+
+_Edge cases_
+
+* ✅ when no params are staged for commit returns zero struct
+* ✅ when params were just committed returns zero struct
+
+### operatorParams
+
+* ✅ returns operatorParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Edge cases_
+
+* ✅ when operatorParams have not been set returns zero params
+
+### delayedStrategyParams
+
+* ✅ returns current DelayedStrategyParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ staging DelayedStrategyParams doesn't change delayedStrategyParams
+
+_Edge cases_
+
+* ✅ when no params were committed returns zero params
+
+### strategyParams
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x6a2c3330 interface
+* ✅ access control: allowed: any address
+
+### stageDelayedStrategyParams
+
+* ✅ stages DelayedStrategyParams for commit
+* ✅ sets zero delay for commit when #commitDelayedStrategyParams was called 0 times (init)
+* ✅ sets governance delay for commit after #commitDelayedStrategyParams was called at least once
+* ✅ emits StageDelayedStrategyParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ allowed: Vault NFT Approved (aka strategy)
+* ✅ allowed: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+
+_Edge cases_
+
+* ✅ when managementFee is exceeds MAX\_MANAGEMENT\_FEE reverts with LIMO
+* ✅ when performnaceFee is exceeds MAX\_PERFORMANCE\_FEE reverts with LIMO
+* ✅ when called twice succeeds with the last value
+* ✅ when called with zero params succeeds with zero params
+
+### commitDelayedStrategyParams
+
+* ✅ commits staged DelayedStrategyParams
+* ✅ resets delay for commit
+* ✅ emits CommitDelayedStrategyParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ allowed: Vault NFT Owner (aka liquidity provider)
+* ✅ allowed: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+* ✅ reverts if called before the delay has elapsed (after commit was called initally)
+* ✅ succeeds if called after the delay has elapsed
+
+_Edge cases_
+
+* ✅ when called twice reverts
+* ✅ when nothing is staged reverts
+* ✅ when delay has not elapsed (after initial commit call) reverts
+
+### stageDelayedProtocolPerVaultParams
+
+* ✅ stages DelayedProtocolPerVaultParams for commit
+* ✅ sets delay for commit
+* ✅ emits StageDelayedProtocolPerVaultParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+
+_Edge cases_
+
+* ✅ when called twice succeeds with the last value
+* ✅ when called with zero params succeeds with zero params
+* ✅ when protocol fee is greater than MAX\_PROTOCOL\_FEE reverts
+
+### commitDelayedProtocolPerVaultParams
+
+* ✅ commits staged DelayedProtocolPerVaultParams
+* ✅ resets delay for commit
+* ✅ emits CommitDelayedProtocolPerVaultParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+* ✅ reverts if called before the delay has elapsed only if params have already been commited
+* ✅ succeeds if called after the delay has elapsed
+
+_Edge cases_
+
+* ✅ when called twice reverts
+* ✅ when nothing is staged reverts
+* ✅ when delay has not elapsed and params have not been commited reverts
+* ✅ when params have already been set and delay has not elapsed reverts
+
+### setStrategyParams
+
+### setOperatorParams
+
+* ✅ sets new operatorParams
+* ✅ access constrol allowed: ProtocolGovernance admin or Operator
+* ✅ access constrol denied: any other address
+
+_Properties_
+
+* ✅ setting new oprator params overwrites old params immediately
+
+### stageDelayedProtocolParams
+
+* ✅ stages DelayedProtocolParams for commit
+* ✅ sets delay for commit
+* ✅ emits StageDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+
+_Edge cases_
+
+* ✅ when called twice succeeds with the last value
+* ✅ when called with zero params reverts with zero params
+
+### commitDelayedProtocolParams
+
+* ✅ commits staged DelayedProtocolParams
+* ✅ resets delay for commit
+* ✅ emits CommitDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+* ✅ reverts if called before the delay has elapsed
+* ✅ succeeds if called after the delay has elapsed
+
+_Edge cases_
+
+* ✅ when called twice reverts
+* ✅ when nothing is staged reverts
+* ✅ when delay has not elapsed reverts
+
+### createVault
+
+* ✅ deploys a new vault
+* ✅ registers vault with vault registry and issues nft
+* ✅ the nft is owned by the owner from #createVault arguments
+* ✅ vault is initialized with nft
+
+_Access control_
+
+* ✅ when permissionless allowed: any address
+* ✅ when not permissionless allowed: protocol governance admin
+* ✅ when not permissionless denied: any address
+
+## ERC20Vault
+
+### tvl
+
+* ✅ returns total value locked
+* ✅ edge cases: when there are no initial funds returns zeroes
+
+### initialize
+
+* ✅ emits Initialized event
+* ✅ initializes contract successfully
+* ✅ edge cases: when vault's nft is not 0 reverts with INIT
+* ✅ edge cases: not initialized when vault's nft is 0 returns false
+* ✅ edge cases: when tokens are not sorted reverts with INVA
+* ✅ edge cases: when tokens are not unique reverts with INVA
+* ✅ edge cases: when setting zero nft reverts with VZ
+* ✅ edge cases: when setting empty tokens array reverts with INV
+* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x7a63aa3a interface
+* ✅ access control: allowed: any address
+* ✅ edge cases: when contract does not support the given interface returns false
+
+## ERC20VaultGovernance
+
+### constructor
+
+* ✅ deploys a new contract
+* ✅ initializes internalParams
+
+_Edge cases_
+
+* ✅ when protocolGovernance address is 0 reverts
+* ✅ when vaultRegistry address is 0 reverts
+
+### createVault
+
+* ✅ deploys a new vault
+* ✅ registers vault with vault registry and issues nft
+* ✅ the nft is owned by the owner from #createVault arguments
+* ✅ vault is initialized with nft
+
+_Access control_
+
+* ✅ when permissionless allowed: any address
+* ✅ when not permissionless allowed: protocol governance admin
+* ✅ when not permissionless denied: any address
+
+## GearboxRootVault
+
+### depositorsAllowlist
+
+### supportsInterface
+
+### addDepositorsToAllowlist
+
+### removeDepositorsFromAllowlist
+
+### initialize
+
+### deposit
+
+### registerWithdrawal
+
+### cancelWithdrawal
+
+### invokeExecution
+
+### withdraw
+
+### shutdown
+
+### reopen
+
+## GearboxVault
+
+### tvl
+
+### supportsInterface
+
+### getCreditAccount
+
+### getAllAssetsOnCreditAccountValue
+
+### getClaimableRewardsValue
+
+### getMerkleProof
+
+### initialize
+
+### openCreditAccount
+
+### adjustPosition
+
+### setMerkleParameters
+
+### updateTargetMarginalFactor
+
+### multicall
+
+### swap
+
+### openCreditAccountInManager
+
+## GearboxVaultGovernance
+
+### constructor
+
+### delayedProtocolParams
+
+### supportsInterface
+
+### stagedDelayedProtocolParams
+
+### stagedDelayedProtocolPerVaultParams
+
+### strategyParams
+
+### delayedProtocolPerVaultParams
+
+### stageDelayedProtocolParams
+
+### commitDelayedProtocolParams
+
+### stageDelayedProtocolPerVaultParams
+
+### commitDelayedProtocolPerVaultParams
+
+### setStrategyParams
+
+### createVault
+
+## IntegrationVault
+
+### supportsInterface
+
+### push
+
+### transferAndPush
+
+### pull
+
+### reclaimTokens
+
+### isValidSignature
+
+### externalCall
+
+## MellowVault
+
+### tvl
+
+### initialize
+
+## MellowVaultGovernance
+
+### constructor
+
+### createVault
+
+## QuickSwapVault
+
+### constructor
+
+### initialize
+
+### onERC721Received
+
+### openFarmingPosition
+
+### burnFarmingPosition
+
+### collectEarnings
+
+### collectRewards
+
+### tvl
+
+### supportsInterface
+
+### strategyParams
+
+## QuickSwapVaultGovernance
+
+### constructor
+
+### strategyParams
+
+### supportsInterface
+
+### setStrategyParams
+
+### createVault
+
+## UniV3Vault
+
+### tvl
+
+* ✅ returns total value locked
+* ✅ edge cases: when there are no initial funds returns zeroes
+* ✅ edge cases: when push was made but there was no minted position returns zeroes
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x88878d28 interface
+* ✅ access control: allowed: any address
+* ✅ returns true if this contract supports 0x7a63aa3a interface
+* ✅ access control: allowed: any address
+* ✅ edge cases: when contract does not support the given interface returns false
+
+### positionManager
+
+* ✅ returns INonfungiblePositionManager
+* ✅ access control: allowed: any address
+
+### liquidityToTokenAmounts
+
+* ✅ returns tokenAmounts corresponding to liquidity
+
+### tokenAmountsToLiquidity
+
+* ✅ returns zero in case of zero amounts
+* ✅ returns more than zero in case of non-zero amounts
+* ✅ returns proportionally correct
+* ✅ returns correctly in case of tick being out of position by the left
+* ✅ returns correctly in case of tick being out of position by the right
+
+### initialize
+
+* ✅ emits Initialized event
+* ✅ initializes contract successfully
+* ✅ edge cases: when vault's nft is not 0 reverts with INIT
+* ✅ edge cases: when tokens are not sorted reverts with INVA
+* ✅ edge cases: when tokens are not unique reverts with INVA
+* ✅ edge cases: when tokens length is not equal to 2 reverts with INV
+* ✅ edge cases: when setting zero nft reverts with VZ
+* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+
+### onERC721Received
+
+* ✅ updates vault's uniV3Nft
+* ✅ edge cases: when msg.sender is not a position manager reverts
+* ✅ edge cases: when operator is not a strategy reverts
+* ✅ edge cases: when UniV3 token is not valid reverts
+* ✅ edge cases: prevent from adding nft while liquidity is not empty reverts
+* ✅ access control: position manager: allowed
+* ✅ access control: any other address: not allowed
+
+### collectEarnings
+
+* ✅ emits CollectedEarnings event
+* ✅ collecting fees
+* ✅ edge cases: when there is no minted position reverts
+* ✅ access control: allowed: all addresses
+
+## UniV3VaultGovernance
+
+### constructor
+
+* ✅ deploys a new contract
+* ✅ initializes internalParams
+
+_Edge cases_
+
+* ✅ when positionManager address is 0 reverts
+* ✅ when oracle address is 0 reverts
+* ✅ when protocolGovernance address is 0 reverts
+* ✅ when vaultRegistry address is 0 reverts
+
+### delayedProtocolParams
+
+* ✅ returns current DelayedProtocolParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+
+_Edge cases_
+
+* ✅ when no params were committed returns non-zero params initialized in constructor
+
+### stagedDelayedProtocolParams
+
+* ✅ returns DelayedProtocolParams staged for commit
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ always equals to params that were just staged
+
+_Edge cases_
+
+* ✅ when no params are staged for commit returns zero struct
+* ✅ when params were just committed returns zero struct
+
+### stagedDelayedStrategyParams
+
+### delayedStrategyParams
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0xa2e9c513 interface
+* ✅ access control: allowed: any address
+
+### stageDelayedProtocolParams
+
+* ✅ stages DelayedProtocolParams for commit
+* ✅ sets delay for commit
+* ✅ emits StageDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+
+_Edge cases_
+
+* ✅ when called twice succeeds with the last value
+* ✅ when called with zero params reverts with zero params
+
+### commitDelayedProtocolParams
+
+* ✅ commits staged DelayedProtocolParams
+* ✅ resets delay for commit
+* ✅ emits CommitDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+* ✅ reverts if called before the delay has elapsed
+* ✅ succeeds if called after the delay has elapsed
+
+_Edge cases_
+
+* ✅ when called twice reverts
+* ✅ when nothing is staged reverts
+* ✅ when delay has not elapsed reverts
+
+### stageDelayedStrategyParams
+
+### commitDelayedStrategyParams
+
+### createVault
+
+* ✅ deploys a new vault
+* ✅ registers vault with vault registry and issues nft
+* ✅ the nft is owned by the owner from #createVault arguments
+* ✅ vault is initialized with nft
+
+_Access control_
+
+* ✅ when permissionless allowed: any address
+* ✅ when not permissionless allowed: protocol governance admin
+* ✅ when not permissionless denied: any address
+
+_Edge cases_
+
+* ✅ when fee is not supported by uni v3 reverts
+
+## Vault
+
+### initialized
+
+### isVaultToken
+
+### vaultGovernance
+
+### vaultTokens
+
+### nft
+
+### tvl
+
+### pullExistentials
+
+### supportsInterface
+
+## VaultGovernance
+
+### delayedStrategyParamsTimestamp
+
+### delayedProtocolPerVaultParamsTimestamp
+
+### delayedProtocolParamsTimestamp
+
+### internalParamsTimestamp
+
+### internalParams
+
+### stagedInternalParams
+
+### supportsInterface
+
+### stageInternalParams
+
+### commitInternalParams
+
+## YearnVault
+
+### yTokens
+
+* ✅ returns list of yTokens
+
+### tvl
+
+* ✅ returns total value locked
+* ✅ edge cases: when there are no initial funds returns zeroes
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x073ab565 interface
+* ✅ access control: allowed: any address
+* ✅ returns true if this contract supports 0x7a63aa3a interface
+* ✅ access control: allowed: any address
+* ✅ edge cases: when contract does not support the given interface returns false
+
+### initialize
+
+* ✅ emits Initialized event
+* ✅ initializes contract successfully
+* ✅ edge cases: when vault's nft is not 0 reverts with INIT
+* ✅ edge cases: when tokens are not sorted reverts with INVA
+* ✅ edge cases: when tokens are not unique reverts with INVA
+* ✅ edge cases: when setting zero nft reverts with VZ
+* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+
+## YearnVaultGovernance
+
+### constructor
+
+* ✅ deploys a new contract
+* ✅ initializes internalParams
+
+_Edge cases_
+
+* ✅ when YearnVaultRegistry address is 0 reverts
+* ✅ when protocolGovernance address is 0 reverts
+* ✅ when vaultRegistry address is 0 reverts
+
+### yTokenForToken
+
+* ✅ returns yToken (yVault) in yToken overrides (set by #setYTokenForToken) or corresponding to ERC20 token in YearnVaultRegistry
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Edge cases_
+
+* ✅ when yToken doesn't exist in overrides or YearnVaultRegistry returns 0
+* ✅ when yToken was not overridden by #setYTokenForToken returns token from YearnVaultRegistry
+* ✅ when yToken was overridden by #setYTokenForToken returns overridden token
+
+### stagedDelayedProtocolParams
+
+* ✅ returns DelayedProtocolParams staged for commit
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ always equals to params that were just staged
+
+_Edge cases_
+
+* ✅ when no params are staged for commit returns zero struct
+* ✅ when params were just committed returns zero struct
+
+### delayedProtocolParams
+
+* ✅ returns current DelayedProtocolParams
+
+_Access control_
+
+* ✅ allowed: any address
+
+_Properties_
+
+* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+
+_Edge cases_
+
+* ✅ when no params were committed returns non-zero params initialized in constructor
+
+### supportsInterface
+
+* ✅ returns true if this contract supports 0x15482137 interface
+* ✅ access control: allowed: any address
+
+### stageDelayedProtocolParams
+
+* ✅ stages DelayedProtocolParams for commit
+* ✅ sets delay for commit
+* ✅ emits StageDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+
+_Edge cases_
+
+* ✅ when called twice succeeds with the last value
+* ✅ when called with zero params reverts with zero params
+
+### commitDelayedProtocolParams
+
+* ✅ commits staged DelayedProtocolParams
+* ✅ resets delay for commit
+* ✅ emits CommitDelayedProtocolParams event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Properties_
+
+* ✅ cannot be called by random address
+* ✅ reverts if called before the delay has elapsed
+* ✅ succeeds if called after the delay has elapsed
+
+_Edge cases_
+
+* ✅ when called twice reverts
+* ✅ when nothing is staged reverts
+* ✅ when delay has not elapsed reverts
+
+### setYTokenForToken
+
+* ✅ sets a yToken override for a ERC20 token
+* ✅ emits SetYToken event
+
+_Access control_
+
+* ✅ allowed: ProtocolGovernance admin
+* ✅ denied: Vault NFT Owner (aka liquidity provider)
+* ✅ denied: Vault NFT Approved (aka strategy)
+* ✅ denied: deployer
+* ✅ denied: random address
+
+_Edge cases_
+
+* ✅ when yToken is 0 succeeds
+* ✅ when called twice succeeds
+
+### createVault
+
+* ✅ deploys a new vault
+* ✅ registers vault with vault registry and issues nft
+* ✅ the nft is owned by the owner from #createVault arguments
+* ✅ vault is initialized with nft
+
+_Access control_
+
+* ✅ when permissionless allowed: any address
+* ✅ when not permissionless allowed: protocol governance admin
+* ✅ when not permissionless denied: any address

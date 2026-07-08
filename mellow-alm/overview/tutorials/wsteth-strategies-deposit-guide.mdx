@@ -1,0 +1,113 @@
+---
+title: "wstETH strategies deposit guide"
+---
+
+1\) Go to [https://app.mellow.finance/products](https://app.mellow.finance/products). Connect your wallet, and be sure you're connected to Mainnet. In the list of strategies, choose any strategy working with wstETH (Tamper or Pulse, you can filter assets).
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-52-00.png" alt="" />
+</Frame>
+
+2\) Choose the "Deposit" option in the page of the strategy
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-14-22.png" alt="" />
+</Frame>
+
+3\) You'll see the following page here. The most convenient way is to choose the "Deposit and stake" option so that you'll stake your Mellow LP tokens automatically (you'll start getting the additional APR from LIDO rewards) after the deposit and you don't have to stake them manually.
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-15-24.png" alt="" />
+</Frame>
+
+4\) The deposit has 4 steps. The first three steps are simply approving your tokens (WETH and WSTETH for the deposit and future Mellow LP tokens for staking). Then, after you approve your tokens, you'll have to choose the amount of WSTETH or WETH you want to deposit. The strategy will automatically determine the amount of another token you also have to deposit. For example, depositing 1 WSTETH at the moment of writing this, one should also deposit about 2.038 WETH (as you see, the proportion is not necessarily 50:50)
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-20-48.png" alt="" />
+</Frame>
+
+5\) After you have determined the amounts of tokens you want to deposit, if you already have these tokens, you simply go the 4th step and enjoy your tokens deposited & getting APR. Here's a guide on how to obtain WETH and WSTETH if you don't have them at once:
+
+## Getting WETH and WSTETH from ETH
+
+### ETH -> WETH
+
+For getting WETH, you may go to Uniswap V3 ([https://app.uniswap.org/#/swap](https://app.uniswap.org/#/swap)) and choose the wrap option (tokens are wrapped 1:1)
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-27-26.png" alt="" />
+</Frame>
+
+### ETH -> WSTETH
+
+For getting WSTETH, there are two general ways (at some moments, each of them might be cheaper)
+
+### ETH -> WSTETH (option 1)
+
+Go to Lido ([https://stake.lido.fi/wrap](https://stake.lido.fi/wrap)) and choose to convert your ETH directly into WSTETH
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-57-54.png" alt="" />
+</Frame>
+
+### ETH -> WSTETH (option 2)
+
+#### ETH -> STETH
+
+For getting WSTETH, you first go to Curve ([https://curve.fi/#/ethereum/pools/steth/swap/](https://curve.fi/#/ethereum/pools/steth/swap/)) and swap ETH to STETH
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-29-47.png" alt="" />
+</Frame>
+
+#### STETH -> WSTETH
+
+Then, after getting some amount of STETH, you go to Lido ([https://stake.lido.fi/wrap](https://stake.lido.fi/wrap)) and wrap your STETH into WSTETH
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-31-13.png" alt="" />
+</Frame>
+
+Take into account that STETH:ETH and WSTETH:STETH rates are not exactly 1:1, so you have to have about 1.11 ETH initially to get 1 WSTETH this way
+
+## Getting WSTETH from WETH
+
+First, you have to unwrap your WETH into ETH using Uniswap V3 ([https://app.uniswap.org/#/swap](https://app.uniswap.org/#/swap))&#x20;
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-35-22.png" alt="" />
+</Frame>
+
+After that, you have to get WSTETH from ETH as described [here](wsteth-strategies-deposit-guide#eth-greater-than-wsteth).
+
+## Getting WETH and WSTETH from STETH
+
+First, to get WSTETH from STETH, you have to do [this](wsteth-strategies-deposit-guide#steth-greater-than-wsteth).
+
+### STETH -> WETH
+
+#### STETH -> ETH
+
+For getting WETH, you first go to Curve ([https://curve.fi/#/ethereum/pools/steth/swap/](https://curve.fi/#/ethereum/pools/steth/swap/)) and swap STETH to ETH
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-42-39.png" alt="" />
+</Frame>
+
+Then, for going ETH -> WETH, use [this](wsteth-strategies-deposit-guide#eth-greater-than-weth).
+
+After you get your WETH and WSTETH, simply deposit them into the strategy and enjoy your APR!
+
+<Frame>
+  <img src="/images/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202023-02-27%2014-46-16.png" alt="" />
+</Frame>
+
+## Links
+
+Here is the common list of links where you may do conversions described above:
+
+| Action                         | Link                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| ETH -> STETH, STETH -> ETH     | [https://curve.fi/#/ethereum/pools/steth/swap/](https://curve.fi/#/ethereum/pools/steth/swap/) |
+| ETH -> WSTETH, STETH -> WSTETH | [https://stake.lido.fi/wrap](https://stake.lido.fi/wrap)                                       |
+| ETH -> WETH, WETH -> ETH       | [https://app.uniswap.org/#/swap](https://app.uniswap.org/#/swap)                               |

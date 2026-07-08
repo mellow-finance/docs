@@ -1,0 +1,47 @@
+---
+title: "ERC20SwapValidator"
+---
+
+### Overview
+
+`ERC20SwapValidator` ensures that only authorized routers and tokens are used for ERC20 token swaps. It provides validation methods, mappings to track supported routers/tokens, and emits relevant events to keep track of changes.
+
+### Key Features
+
+* **Router and Token Support**: Controls which routers and tokens are authorized for swap operations.
+* **Swap Validation**: Enforces rules for swap operations, ensuring compliance with authorized routers and tokens.
+* **Error Reporting**: Raises specific errors when a swap operation fails validation.
+
+### Error Definitions
+
+* **InvalidLength**: Raised when the data length for a swap operation is incorrect.
+* **InvalidSelector**: The function selector provided is not recognized.
+* **UnsupportedToken**: The token used is not on the supported list.
+* **UnsupportedRouter**: The router used is not on the supported list.
+
+### Core Methods
+
+1. **View Functions**
+   * `isSupportedRouter(address)`: Checks if a router is supported for swaps.
+   * `isSupportedToken(address)`: Checks if a token is supported for swaps.
+2. **Configuration Functions**
+   * `setSupportedRouter(address, bool)`: Sets a router's supported status.
+   * `setSupportedToken(address, bool)`: Sets a token's supported status.
+3. **Validation Function**
+   * `validate(address, address, bytes)`: Validates that the swap operation complies with the rules:
+     * Checks function signatures.
+     * Verifies swap parameters.
+     * Ensures routers and tokens are authorized.
+
+### Events
+
+1. **Router Updates:**
+   * `ERC20SwapValidatorSetSupportedRouter(address, bool, uint256)`: Emitted when a router's support status is updated.
+     * **router**: Address of the router.
+     * **flag**: Boolean indicating support status.
+     * **timestamp**: Timestamp of the action.
+2. **Token Updates:**
+   * `ERC20SwapValidatorSetSupportedToken(address, bool, uint256)`: Emitted when a token's support status is updated.
+     * **token**: Address of the token.
+     * **flag**: Boolean indicating support status.
+     * **timestamp**: Timestamp of the action.

@@ -1,0 +1,29 @@
+---
+title: "Architecture"
+---
+
+#### Overview
+
+This vault type is designed to allow users to delegate stake without direct liquidity transfers across various Layer 2 (source chain) networks to Layer 1 (target chain) with a following steps happening under the hood:
+
+1. A user on an L2 deposits an asset into the vault.
+2. The user receives a corresponding receipt token on L2.
+3. The deposited liquidity is locked in the vault on L2.
+4. An OFT ( LayerZero Omnichain Fungible Token Standard) counterpart is minted on the target chain — Ethereum mainnet, where Mellow restaking vaults are deployed.
+5. That OFT is then used as the restaking asset within Symbiotic/EigenLayer vaults to provide shared security. Symbiotic has already whitelisted the OFT to have the same rewards rate as native L1 assets.
+6. The user earns rewards in two ways: first, through L2 incentives—some of the vault’s accumulated liquidity is staked directly, and some is used in DeFi strategies on the L2 via the receipt tokens; second, through direct restaking rewards (both tokens and points) from various networks.
+
+If a slashing event occurs, the OFT itself can be slashed. Any non-burned OFT can still be redeemed to unlock the original L2 liquidity.
+
+Visually, the system is divided into:
+
+* **Source Chain (L2):** Users deposit their assets and receive vault shares on L2.
+* **Target Chain (L1):** Stake delegation occurs here after cross-chain transfer. The delegated stake is distributed among various yield protocols supported by Mellow MultiVault.
+
+LayerZero's OFT is used for cross-chain interaction with one key modification: deposits into the `OFTAdapter` can only be made via `SourceCore`.
+
+Gas parameters are defined using enforced options in the OFTs.
+
+<Frame>
+  <img src="/images/image%20%287%29.png" alt="" />
+</Frame>

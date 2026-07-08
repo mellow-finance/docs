@@ -1,0 +1,33 @@
+---
+title: "ManagedTvlModule"
+---
+
+### Overview
+
+`ManagedTvlModule` contract provides a mechanism to artificially reduce or increase tvl using regular or debt tokens in the vault to reduce possible losses due to slashing events.
+
+### Key Features
+
+* **Parameter Management**: Enables setting of asset parameters used for calculating TVL.
+* **TVL Calculation**: Computes the TVL for the vault according to the predefined asset parameters.
+* **Access Control**: Ensures only authorized administrators can modify vault parameters.
+
+### Methods
+
+1. **Parameter Management**
+   * `setParams(address, Data[])`: Sets asset parameters for a given vault.
+     * **vault**: The address of the vault.
+     * **data**: An array of `Data` structures containing asset details.
+     * **Event**:
+       * `ManagedTvlModuleSetParams(address, Data[], uint256)`: Emitted after asset parameters are set for a vault.
+         * **vault**: Address of the vault.
+         * **data**: An array of `Data` structures.
+         * **timestamp**: Timestamp of the parameter update.
+2. **TVL Calculation**
+   * `tvl(address)`: Computes the total value locked for the vault based on predefined asset parameters.
+     * **vault**: The address of the vault.
+     * **Returns**: An array of `Data` structures with details about each asset:
+       * **token**: Address of the ERC20 token.
+       * **underlyingToken**: Address of the base asset.
+       * **amount**: The amount of the token held by the vault.
+       * **underlyingAmount**: Amount translated to the base asset.

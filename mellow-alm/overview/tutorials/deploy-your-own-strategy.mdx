@@ -1,0 +1,50 @@
+---
+title: "Deploy your own strategy"
+---
+
+This guide is showing how to deploy your strategy.
+
+### Introduction
+
+Now, our vault system has permissions, some of which will be described later. Permissions are given for addresses by the protocol admin or admin delegate (see [Management section](../architecture#system-management)). In the future, some of those permissions may be granted to everybody, and hence will be removed from the guide.
+
+In order to deploy your own strategy, you are typically to deploy:
+
+* An AggregateVault instance, which may be our ERC20RootVault or your own contract. This contract is to accept users' deposits/withdraws and manage LP tokens of a strategy
+* An ERC20Vault instance, which is an interlayer for exchanging liquidity between the vaults and for holding auxiliary liquidity which can be needed in a strategy
+* Several vaults, each of them representing a vault over a DeFi protocol you want to put the money into. Each vault has to be of IntegrationVault type. These vaults are to be governed by the strategy. You must have `CREATE_VAULT` permission for your address to do that
+
+For the purposes of your strategy, you might use our existing AggregateVault or IntegrationVault contracts or create your own. In the second case, for adding them, you have to deploy the Vault contract itself and its VaultGovernance contract. Then, you have to get `REGISTER_VAULT` permission onto this VaultGovernance contract address, after that, you can register your vaults in our VaultRegistry and use them in a strategy.
+
+To find out if an `address` has certain permission, you may first find the index `x` of this permission in our system in the[ ](../architecture#protocol-governance)[list of permissions](../architecture#permissions). Then, take the [address](../mellow-contracts-addresses/) of our deployed ProtocolGovernance, and get `mask = stagedPermissionGrantsMasks(address)`. If the `x`-th bit of `mask` is 1, the address has the permission, otherwise it doesn't.
+
+### Step-by-step deployment
+
+The concrete steps of your deployment are:
+
+1. If you want to use your own vaults (vaults with a different logic than ours, for example, on top of other protocols, which are typically IntegrationVault instances), you have first to deploy the code of its governances (which should inherit [VaultGovernance](../api#vaultgovernance)) and get us to add `REGISTER_VAULT`permission for its address
+2. You have to create several vaults, one of them should be an ERC20Vault and the remainings should be vaults over protocols your strategy puts money into. Each of that vaults is to be created through the `createVault` (or other named if this is your own Governance) method calling the common `_createVault` method of VaultGovernance (see the example of this method [here](../api#createvault)). You'll get NFTs of your vaults in our [VaultRegistry](../architecture#vaultregistry) from that method (as VaultRegistry is an ERC721 contract)
+3. Deploy your strategy&#x20;
+4. If you want to use your own AggregateVault instance, deploy the code of its governance and get us to add `REGISTER_VAULT`permission for its address (we call this instance RootVault)
+5. Deploy a RootVault (either your own or of our ERC20RootVault) using the `createVault` method of the corresponding Vault Governance (either from our deployed, see the method [here](../api#createvault-1), or deployed by you from p.4). Pass the NFTs of ordinary vaults you got in p.2 into this method as `subvaultNfts_`, where the first NFT is the NFT of the ERC20Vault, and pass the address of your deployed strategy as `strategy_`. The Governance will register the vault in our VaultRegistry, and you will get an NFT of your vault from our VaultRegistry
+6. You might typically want to keep the NFTs of the vaults on one of your addresses (in such a way you may govern the parameters of vaults) and make your strategy an approved address for those NFTs (to operate liquidity in vaults). You may call the [`lockNft(nft)`](../api#locknft) method in our VaultRegistry from the address of the owner of an NFT to prevent a strategy from transferring NFTs themselves.
+
+**Note**. It's supposed that the RootVault tokens array should be the same as the ERC20Vault tokens array.
+
+The NFT owner and the approved address for it are allowed to change strategy parameters([setStrategyParams](../api#setstrategyparams)) and delayed strategy parameters([stageDelayedStrategyParams](../api#stagedelayedstrategyparams), [commitDelayedStrategyParams](../api#commitdelayedstrategyparams)) in the governance contract for the type of vault referred to this NFT. If you made your vault private you can add or remove depositors at your RootVault via [addDepositorsToAllowlist](../api#adddepositorstoallowlist) and [removeDepositorsFromAllowlist](../api#removedepositorsfromallowlist) methods.
+
+### An example of the deployment
+
+Let's break down the deployment of the [UniV3 Boosted strategy](../strategies/uni-v3-boosted-strategy) with [WETH](https://etherscan.io/address/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) and [USDC](https://etherscan.io/address/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48) to the mainnet network.&#x20;
+
+We need to deploy three vaults: ERC20Vault, YearnVault and UniV3Vault.
+
+We have to call [createVault](../api#createvault-6) in YearnVaultGovernance, [createVault](../api#createvault-2) in ERC20VaultGovernance and [createVault](../api#createvault-4) in UniV3VaultGovernance and pass the array consisting of [WETH](https://etherscan.io/address/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) and [USDC](https://etherscan.io/address/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48) addresses as a `vaultTokens_,` the address of the vault's owner as an `owner_` . For UniV3Governance you'll have to add fee of the UniswapV3Pool as a `fee_` and address of [UniV3Helper](../api#univ3helper) as an `uniV3Helper_`&#x20;
+
+At this point, we got an address and an NFT token for each vault.
+
+In the next step, we are going to deploy the strategy and set the necessary parameters there.
+
+Finally, we have to deploy ERC20RootVault.
+
+We need to call [createVault](../api#createvault-3) in ERC20RootVaultGovernance and pass the array consisting of [WETH](https://etherscan.io/address/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) and [USDC](https://etherscan.io/address/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48) addresses as a `vaultTokens_`, strategy address as a `strategy_`, array consisting of NFTs of your vaults as a `subvaultNfts_` and a vault's owner address as a `owner_`. You'll receive a root vault address and an NFT for this vault.&#x20;

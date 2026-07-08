@@ -1,0 +1,50 @@
+---
+title: "Pulse strategy V2"
+---
+
+### Strategy
+
+#### Abstract
+
+The strategy maintains the interval within the pool of the corresponding Automated Market Maker (AMM) protocol in an active state. When the price approaches the current interval margin, the strategy automatically rebalances the liquidity to a new interval by swapping funds and providing liquidity to a new interval. The strategy utilizes integration with 1inch, which leads to reduced swap fees for rebalances.
+
+The primary distinction from the previous version lies in a more efficient rebalancing process:
+
+When the price (spot tick) in the pool approaches the interval's boundary, the strategy does not mint a new position centered on the current tick. Instead, it expands the existing position uniformly in both directions. This approach reduces the amount of tokens to be swapped and significantly decreases the impact of Impermanent Loss (IL) on profitability.
+
+As the position's width increases gradually, its depth decreases. This process results in reduced fees from pool swaps and increased slippage when swapping within this pool. To counteract these effects, the strategy introduces the concept of position limit width. If the width reaches this limit, it resets to the default width size, and a position centered on the spot tick is minted, similar to the approach employed in the strategy's first version.
+
+For the exchange of tokens, 1inch AggregationRouterV5 is used, the data for which is received by the bot off-chain and transferred to the rebalance function. After the swap, the received number of tokens is compared with the expected one. The swap price should not deviate by more than swapSlippageD, and the number of swapped tokens should not deviate more than by swappingAmountsCoefficientD.
+
+### Parameters
+
+ImmutableParams
+
+| Name       | Description                                      | Value in strategy                                                                         |
+| ---------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| router     | address of 1inch AggregationRouterV5             | 0x1111111254EEB25477B68fb85Ed929f73A960582                                                |
+| erc20Vault | address of buffer vault of the root vault system | 0x06E16D36Ed1A99A46c0Cb771Ce927808d96132C2                                                |
+| uniV3Vault | address of vault that holds Uniswap V3 position  | 0xe04DC6F116A85508cD6299229218Ed4719E43F2a                                                |
+| tokens     | arrays of strategy tokens                        | \[0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0, 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48] |
+
+MutableParams
+
+| Name                        | Description                                                                                                                                                          | Value in strategy                                 |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| priceImpactD6               | Additional coefficient for expected price impact of swap of tokens                                                                                                   | 0                                                 |
+| defaultIntervalWidth        | Default width of UniswapV3 position                                                                                                                                  | 4200                                              |
+| maxPositionLengthInTicks    | Width limit after which position will be minted with defaultIntervalWidth                                                                                            | 10000                                             |
+| maxDeviationForVaultPool    | If the spot tick in UniswapV3Pool deviates from the average tick by a larger value, then rebalance reverts with LIMIT\_OVERFLOW error                                | 50                                                |
+| timespanForAverageTick      | The time interval in seconds used to determine the average tick values and prices in UniswapV3Pool                                                                   | 60                                                |
+| neighborhoodFactorD         | The multiplier of the current interval width, showing the minimum required difference between the tick and the border of the current position to trigger a rebalance | 150000000 (15% of interval width)                 |
+| extensionFactorD            | The multiplier of the current tickNeigborhood, showing how much the position will be expanded in case of rebalance                                                   | 2000000000 (2 times the current tickNeighborhood) |
+| swapSlippageD               | Permissible slippage level during swap                                                                                                                               | 1000000000 (1.0%)                                 |
+| swappingAmountsCoefficientD | Permissible level of difference between the amount of expected tokens for swap and the exchanged ones during swap                                                    | 1000000000 (1.0%)                                 |
+| minSwapAmounts              | Thresholds that cut off swap of an insignificant amount of tokens (in weis)                                                                                          | \[10000000000000,10000]                           |
+
+DesiredAmounts:
+
+| Name           | Description                                                                                                                                             | Value in strategy |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| amount0Desired | Required number of tokens (wstETH in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance | 1000000000        |
+| amount1Desired | Required number of tokens (USDC in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance   | 100000            |

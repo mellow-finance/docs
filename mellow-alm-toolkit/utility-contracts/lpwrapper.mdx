@@ -1,0 +1,89 @@
+---
+title: "LpWrapper"
+---
+
+The `LpWrapper` contract encapsulates a single managed position from the `Core`contract of the DeFi protocol, providing a tokenized interface to interact with it. By depositing into or withdrawing from this wrapper, users indirectly manage their stake in the underlying AMM position, with LP tokens representing their share of the pooled resources.
+
+#### Custom Errors
+
+* `InsufficientAmounts()`: Occurs when the amounts provided for a deposit operation do not meet the minimum requirements for successful execution.
+* `InsufficientLpAmount()`: Triggered during withdrawal attempts when the available LP token balance is insufficient for the operation.
+* `AlreadyInitialized()`: Indicates an attempt to reinitialize an LP wrapper that has already been set up.
+* `DepositCallFailed()`: Signals a failure in executing a deposit operation, typically due to issues with underlying AMM module interactions.
+* `WithdrawCallFailed()`: Points to an unsuccessful withdrawal operation, often resulting from complications in delegate calls to the AmmDepositWithdrawModule.
+
+#### Core Functions
+
+#### `initialize(uint256 positionId_, uint256 initialTotalSupply)`
+
+* **Purpose**: Sets up the LP wrapper by associating it with a specific ManagedPosition and defining an initial total supply of LP tokens.
+* **Parameters**:
+  * `positionId_`: Identifier of the ManagedPosition to which the LP wrapper is linked.
+  * `initialTotalSupply`: The initial total supply of LP tokens for the wrapper.
+* **Logic**: Ensures the LP wrapper is correctly configured to represent a specific ManagedPosition, facilitating user interactions and liquidity management.
+
+#### `deposit(uint256 amount0, uint256 amount1, uint256 minLpAmount, address to)`
+
+This function allows users to deposit tokens into a ManagedPosition managed by the `Core` contract and receive LP (liquidity provider) tokens in return. The LP tokens represent the user's share of the liquidity pool.
+
+* Parameters:
+  * `amount0`: The amount of the first token in the AMM pair to be deposited.
+  * `amount1`: The amount of the second token in the AMM pair to be deposited.
+  * `minLpAmount`: The minimum amount of LP tokens the user is willing to accept for their deposit. This protects the user from receiving too few LP tokens if the pool's liquidity changes unfavorably before the transaction is executed.
+  * `to`: The address that will receive the minted LP tokens.
+* Returns:
+  * `actualAmount0`: The actual amount of the first token that was deposited into the pool.
+  * `actualAmount1`: The actual amount of the second token that was deposited into the pool.
+  * `lpAmount`: The amount of LP tokens minted and transferred to the `to` address as a result of the deposit.
+* Logic Flow:
+  1. Retrieves the `ManagedPositionInfo` for the specified `positionId` from the `Core` contract, ensuring the caller has the authority to deposit into this position.
+  2. Withdraws the current AMM position tokens from the `Core` contract to the `LpWrapper` to allow for liquidity adjustments.
+  3. Calculates how the deposit will be distributed across the existing positions within the `ManagedPosition`, based on the current liquidity ratios.
+  4. Deposits the calculated token amounts into the corresponding AMM positions via the `IAmmDepositWithdrawModule`, adjusting the positions' liquidity.
+  5. Mints LP tokens to the `to` address based on the proportion of the liquidity added to the pool, ensuring the minted amount is not less than `minLpAmount`.
+  6. Updates the `ManagedPosition` with the new AMM position tokens resulting from the deposits.
+  7. Ensures the total amounts of tokens deposited match or exceed the user's specified minimums to protect against unfavorable slippage.
+
+#### `withdraw(uint256 lpAmount, uint256 minAmount0, uint256 minAmount1, address to)`
+
+This function enables users to withdraw their liquidity from the ManagedPosition by burning their LP (liquidity provider) tokens and receiving the underlying assets in return.
+
+* Parameters:
+  * `lpAmount`: The amount of LP tokens the user wishes to burn in exchange for underlying assets.
+  * `minAmount0`: The minimum amount of the first token in the AMM pair that the user expects to receive. This protects against slippage.
+  * `minAmount1`: The minimum amount of the second token in the AMM pair that the user expects to receive.
+  * `to`: The address where the withdrawn assets will be sent.
+* Returns:
+  * `amount0`: The actual amount of the first token that was withdrawn from the pool.
+  * `amount1`: The actual amount of the second token that was withdrawn from the pool.
+  * `actualLpAmount`: The actual amount of LP tokens burned from the user's balance.
+* Logic Flow:
+  1. Retrieves the `ManagedPositionInfo` for the specified `positionId` from the `Core` contract.
+  2. Burns `min(lpAmount, balanceOf(msg.sender))` of LP tokens from the caller's balance, reducing their share in the liquidity pool.
+  3. Calculates the proportion of liquidity each LP token represents and determines the amount of underlying assets the user is entitled to receive based on their LP token amount.
+  4. Withdraws the corresponding amount of underlying assets from the AMM positions in the ManagedPosition and sends them to the specified `to` address.
+  5. Checks if the actual amounts of `amount0` and `amount1` received meet or exceed the user's minimum expectations (`minAmount0` and `minAmount1`) to protect against unfavorable slippage.
+  6. Re-deposits AMM position tokens back into the `Core` contract.
+
+#### `setPositionParams(uint16 slippageD4, bytes memory callbackParams, bytes memory strategyParams,bytes memory securityParams)`
+
+This function updates the parameters of a specific managed position represented by the LP wrapper contract. It allows the admin to adjust slippage, callback behavior, strategy decisions, and security mechanisms associated with the position.
+
+* Parameters:
+  * `slippageD4`: A parameter defining the maximum allowable slippage during rebalancing, scaled by $`10^4`$. This controls the risk of loss due to price movements during the execution of trades.
+  * `callbackParams`: Custom data used by the AmmModule for operations like staking, rewards collection, or other protocol-specific interactions that occur during rebalancing or other contract-driven processes.
+  * `strategyParams`: Custom data that outlines the strategy parameters for managing the liquidity within the pool, including how and when to rebalance.
+  * `securityParams`: Custom data that contains security parameters used by the oracle for price fetching and protection against Miner Extractable Value (MEV) attacks.
+* Logic Flow:
+  1. Validates that the caller has the necessary admin role to update the position parameters. This ensures that only authorized users can make changes to the position's configuration.
+  2. Calls the `Core` contract to update the specified managed position's parameters with the provided values. This includes updating the slippage tolerance, the strategy for managing the position, and any security measures to protect the position.
+  3. The `Core` contract validates the new parameters for compatibility and correctness with the underlying AMM and strategy modules, ensuring the integrity and effectiveness of the position's management.
+
+#### `emptyRebalance()`
+
+Executes an "empty" rebalance operation for the associated managed position, represented by the LP wrapper contract. This function triggers pre-defined rebalance hooks without altering the position's liquidity. It is primarily used to perform operations such as updating reward entitlements or other state changes that require a rebalance trigger but do not necessitate liquidity adjustment.
+
+* Logic Flow:
+  1. Validates that the caller has the operator role, ensuring that only authorized entities can initiate an empty rebalance.
+  2. Calls the `Core` contract to perform an empty rebalance on the managed position identified by `positionId`. This process involves invoking `beforeRebalance` and `afterRebalance` hooks of the AMM module for each NFT associated with the managed position.
+  3. The rebalance operation executes without changing the liquidity in the position, effectively serving as a mechanism to trigger any related rebalance logic such as reward accrual or strategy updates.

@@ -1,0 +1,55 @@
+---
+title: "AdminProxy"
+---
+
+The `AdminProxy` contract manages upgrade proposals and administrative changes for a smart contract system using a transparent upgradeable proxy pattern. It handles role assignments and modifications, such as proposer, acceptor, and emergency operator roles, and enables controlled upgrading of contract implementations.
+
+### Key Features
+
+* **Role-Based Access Control**: Uses roles like proposer, acceptor, and emergency operator to manage different levels of access and control.
+* **Proposal Management**: Facilitates the proposing and acceptance of new contract implementations.
+* **Emergency Controls**: Allows the emergency operator to reset the contract to a known stable implementation in case of issues.
+
+### Constructor
+
+* Initializes the contract with roles and the initial base implementation.
+  * **Parameters**:
+    * **proxy\_**: Address of the transparent upgradeable proxy.
+    * **proxyAdmin\_**: Address of the proxy admin.
+    * **acceptor\_**: Initial acceptor's address.
+    * **proposer\_**: Initial proposer's address.
+    * **emergencyOperator\_**: Initial emergency operator's address.
+    * **baseImplementation\_**: Initial base implementation.
+
+### Core Methods
+
+1. **Role Management**
+   * `upgradeEmergencyOperator(address)`: Updates the emergency operator.
+   * `upgradeProposer(address)`: Updates the proposer.
+   * `upgradeAcceptor(address)`: Updates the acceptor.
+2. **Proposal Functions**
+   * `proposeBaseImplementation(address, bytes)`: Proposes a new base implementation.
+   * `propose(address, bytes)`: Proposes a new contract implementation.
+   * `acceptBaseImplementation()`: Accepts the proposed base implementation.
+   * `acceptProposal(uint256)`: Accepts a specified proposal.
+   * `rejectAllProposals()`: Rejects all outstanding proposals.
+3. **Emergency Functions**
+   * `resetToBaseImplementation()`: Resets the contract to the base implementation in case of an emergency.
+
+### Modifiers
+
+* **requireProposerOrAcceptor**: Ensures the caller is either the proposer or the acceptor.
+* **onlyAcceptor**: Ensures the caller is the acceptor.
+* **onlyEmergencyOperator**: Ensures the caller is the emergency operator.
+
+### Events
+
+* **EmergencyOperatorUpgraded**: Emitted when the emergency operator is upgraded.
+* **ProposerUpgraded**: Emitted when the proposer is upgraded.
+* **AcceptorUpgraded**: Emitted when the acceptor is upgraded.
+* **BaseImplementationProposed**: Emitted when a new base implementation is proposed.
+* **ImplementationProposed**: Emitted when a new implementation is proposed.
+* **BaseImplementationAccepted**: Emitted when the base implementation is accepted.
+* **ProposalAccepted**: Emitted when a proposal is accepted.
+* **AllProposalsRejected**: Emitted when all proposals are rejected.
+* **ResetToBaseImplementation**: Emitted when the contract is reset to the base implementation.

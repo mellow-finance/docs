@@ -1,20 +1,366 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Mellow",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1D8DFF",
+    "light": "#5CACFF",
+    "dark": "#0B6FD1"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "pages": [
       {
-        "group": "Getting Started",
+        "group": "Overview",
         "pages": [
           "index",
-          "quickstart"
+          "mellow-vaults-overview",
+          "vault-infrastructure-for-fintech-earn-products",
+          "security"
+        ]
+      },
+      {
+        "group": "Core Vaults",
+        "pages": [
+          "core-vaults/overview",
+          "core-vaults-for-stablecoins",
+          "core-vaults-for-rwa-allocation",
+          "core-vaults-and-other-approaches",
+          "core-vaults-integration-guide",
+          {
+            "group": "Architecture",
+            "pages": [
+              "core-vaults/architecture/index",
+              {
+                "group": "Modules",
+                "pages": [
+                  "core-vaults/architecture/modules/index",
+                  "core-vaults/architecture/modules/basemodule",
+                  "core-vaults/architecture/modules/verifiermodule",
+                  "core-vaults/architecture/modules/aclmodule",
+                  "core-vaults/architecture/modules/callmodule",
+                  "core-vaults/architecture/modules/sharemodule",
+                  "core-vaults/architecture/modules/vaultmodule",
+                  "core-vaults/architecture/modules/subvaultmodule"
+                ]
+              },
+              {
+                "group": "Permissions",
+                "pages": [
+                  "core-vaults/architecture/permissions/index",
+                  "core-vaults/architecture/permissions/mellowacl",
+                  "core-vaults/architecture/permissions/verifier",
+                  "core-vaults/architecture/permissions/bitmaskverifier",
+                  "core-vaults/architecture/permissions/consensus",
+                  {
+                    "group": "Protocols",
+                    "pages": [
+                      "core-vaults/architecture/permissions/protocols/index",
+                      "core-vaults/architecture/permissions/protocols/ownedcustomverifier",
+                      "core-vaults/architecture/permissions/protocols/erc20verifier",
+                      "core-vaults/architecture/permissions/protocols/symbioticverifier",
+                      "core-vaults/architecture/permissions/protocols/eigenlayerverifier"
+                    ]
+                  }
+                ]
+              },
+              "core-vaults/architecture/oracle",
+              {
+                "group": "Queues",
+                "pages": [
+                  "core-vaults/architecture/queues/index",
+                  "core-vaults/architecture/queues/queue",
+                  "core-vaults/architecture/queues/depositqueue",
+                  "core-vaults/architecture/queues/redeemqueue",
+                  "core-vaults/architecture/queues/signaturequeue",
+                  "core-vaults/architecture/queues/signaturedepositqueue",
+                  "core-vaults/architecture/queues/signatureredeemqueue"
+                ]
+              },
+              "core-vaults/architecture/factory",
+              {
+                "group": "Hooks",
+                "pages": [
+                  "core-vaults/architecture/hooks/index",
+                  "core-vaults/architecture/hooks/basicredeemhook",
+                  "core-vaults/architecture/hooks/lidodeposithook",
+                  "core-vaults/architecture/hooks/redirectingdeposithook"
+                ]
+              },
+              {
+                "group": "Libraries",
+                "pages": [
+                  "core-vaults/architecture/libraries/index",
+                  "core-vaults/architecture/libraries/fenwicktreelibrary",
+                  "core-vaults/architecture/libraries/sharemanagerlibrary",
+                  "core-vaults/architecture/libraries/slotlibrary",
+                  "core-vaults/architecture/libraries/transferlibrary"
+                ]
+              },
+              {
+                "group": "Managers",
+                "pages": [
+                  "core-vaults/architecture/managers/index",
+                  "core-vaults/architecture/managers/feemanager",
+                  "core-vaults/architecture/managers/riskmanager",
+                  "core-vaults/architecture/managers/sharemanager",
+                  "core-vaults/architecture/managers/basicsharemanager",
+                  "core-vaults/architecture/managers/tokenizedsharemanager"
+                ]
+              },
+              {
+                "group": "Vaults",
+                "pages": [
+                  "core-vaults/architecture/vaults/index",
+                  "core-vaults/architecture/vaults/vault",
+                  "core-vaults/architecture/vaults/subvault",
+                  "core-vaults/architecture/vaults/vaultconfigurator"
+                ]
+              }
+            ]
+          },
+          "core-vaults/core-deployments"
+        ]
+      },
+      {
+        "group": "stRATEGY Vault",
+        "pages": [
+          "strategy-vault/overview",
+          "strategy-vault/rewards",
+          "strategy-vault/streth-deployment"
+        ]
+      },
+      {
+        "group": "DVstETH Vault",
+        "pages": [
+          "dvsteth-vault/overview",
+          "dvsteth-vault/dvv-deployment"
+        ]
+      },
+      {
+        "group": "Restaking Vaults",
+        "pages": [
+          {
+            "group": "Multivault",
+            "pages": [
+              "restaking-vaults/multivault/index",
+              "restaking-vaults/multivault/overview",
+              "restaking-vaults/multivault/architecture",
+              "restaking-vaults/multivault/multi-deployments"
+            ]
+          },
+          {
+            "group": "Interoperable Vaults",
+            "pages": [
+              "restaking-vaults/interoperable-vaults/index",
+              "restaking-vaults/interoperable-vaults/overview",
+              "restaking-vaults/interoperable-vaults/architecture",
+              "restaking-vaults/interoperable-vaults/interop-deployments"
+            ]
+          },
+          {
+            "group": "Simple LRT",
+            "pages": [
+              "restaking-vaults/simple-lrt/index",
+              "restaking-vaults/simple-lrt/overview",
+              "restaking-vaults/simple-lrt/architecture",
+              "restaking-vaults/simple-lrt/simple-deployments"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "Mellow ALM",
+        "pages": [
+          {
+            "group": "Overview",
+            "pages": [
+              "mellow-alm/overview/index",
+              "mellow-alm/overview/architecture",
+              "mellow-alm/overview/api",
+              {
+                "group": "Strategies",
+                "pages": [
+                  "mellow-alm/overview/strategies/index",
+                  "mellow-alm/overview/strategies/gearbox-strategy",
+                  "mellow-alm/overview/strategies/lstrategy",
+                  "mellow-alm/overview/strategies/uni-v3-boosted-strategy",
+                  "mellow-alm/overview/strategies/pulse-strategy",
+                  "mellow-alm/overview/strategies/pulse-strategy-v2",
+                  "mellow-alm/overview/strategies/lstrategy-1"
+                ]
+              },
+              "mellow-alm/overview/governance-parameters",
+              "mellow-alm/overview/contracts-specs",
+              {
+                "group": "Tutorials",
+                "pages": [
+                  "mellow-alm/overview/tutorials/index",
+                  "mellow-alm/overview/tutorials/contracts-deployments",
+                  "mellow-alm/overview/tutorials/deploy-your-own-strategy",
+                  "mellow-alm/overview/tutorials/wsteth-strategies-deposit-guide"
+                ]
+              },
+              {
+                "group": "Mellow contracts addresses",
+                "pages": [
+                  "mellow-alm/overview/mellow-contracts-addresses/index",
+                  "mellow-alm/overview/mellow-contracts-addresses/mellow-protocol-addresses-polygon",
+                  "mellow-alm/overview/mellow-contracts-addresses/mellow-protocol-addresses-mainnet",
+                  "mellow-alm/overview/mellow-contracts-addresses/gearbox-fearless-strategy",
+                  "mellow-alm/overview/mellow-contracts-addresses/lstrategy",
+                  "mellow-alm/overview/mellow-contracts-addresses/univ3-pulse-wsteth-usdc",
+                  "mellow-alm/overview/mellow-contracts-addresses/univ3-pulse-v2-wsteth-usdc",
+                  "mellow-alm/overview/mellow-contracts-addresses/velodrome-cl-strategies",
+                  "mellow-alm/overview/mellow-contracts-addresses/aerodrome-cl-strategies"
+                ]
+              },
+              "mellow-alm/overview/definitions",
+              "mellow-alm/overview/faq"
+            ]
+          },
+          {
+            "group": "Mellow ALM Toolkit",
+            "pages": [
+              "mellow-alm/mellow-alm-toolkit/index",
+              "mellow-alm-toolkit/domain-objects",
+              "mellow-alm-toolkit/components",
+              "mellow-alm-toolkit/processes",
+              "mellow-alm-toolkit/core",
+              {
+                "group": "Oracles",
+                "pages": [
+                  "mellow-alm-toolkit/oracles/index",
+                  "mellow-alm-toolkit/oracles/velooracle"
+                ]
+              },
+              {
+                "group": "Strategy",
+                "pages": [
+                  "mellow-alm-toolkit/strategy/index",
+                  "mellow-alm-toolkit/strategy/pulsestrategymodule"
+                ]
+              },
+              {
+                "group": "AMM Adapters",
+                "pages": [
+                  "mellow-alm-toolkit/amm-adapters/index",
+                  "mellow-alm-toolkit/amm-adapters/veloammmodule"
+                ]
+              },
+              {
+                "group": "Utility contracts",
+                "pages": [
+                  "mellow-alm-toolkit/utility-contracts/index",
+                  "mellow-alm-toolkit/utility-contracts/ammdepositwithdrawmodule",
+                  "mellow-alm-toolkit/utility-contracts/counter",
+                  "mellow-alm-toolkit/utility-contracts/lpwrapper",
+                  "mellow-alm-toolkit/utility-contracts/velodeployfactory"
+                ]
+              }
+            ]
+          },
+          "mellow-alm/mellow-backtesting-sdk"
+        ]
+      },
+      {
+        "group": "Points",
+        "pages": [
+          "points/overview",
+          "points/points-in-symbiotic-pre-deposit-contracts",
+          "points/defi-points-integration-instructions"
+        ]
+      },
+      {
+        "group": "Resources",
+        "pages": [
+          "resources/api",
+          {
+            "group": "Legacy: Mellow-LRT (Deprecated)",
+            "pages": [
+              "resources/mellow-lrt-depreciated/index",
+              "resources/mellow-lrt-depreciated/vault",
+              "resources/mellow-lrt-depreciated/vaultconfigurator",
+              {
+                "group": "Validators",
+                "pages": [
+                  "resources/mellow-lrt-depreciated/validators/index",
+                  "resources/mellow-lrt-depreciated/validators/managedvalidator",
+                  "resources/mellow-lrt-depreciated/validators/erc20swapvalidator",
+                  "resources/mellow-lrt-depreciated/validators/defaultbondvalidator",
+                  "resources/mellow-lrt-depreciated/validators/allowallvalidator"
+                ]
+              },
+              {
+                "group": "Strategies",
+                "pages": [
+                  "resources/mellow-lrt-depreciated/strategies/index",
+                  "resources/mellow-lrt-depreciated/strategies/defaultbondstrategy",
+                  "resources/mellow-lrt-depreciated/strategies/simpledvtstakingstrategy"
+                ]
+              },
+              {
+                "group": "Oracles",
+                "pages": [
+                  "resources/mellow-lrt-depreciated/oracles/index",
+                  "resources/mellow-lrt-depreciated/oracles/chainlinkoracle",
+                  "resources/mellow-lrt-depreciated/oracles/managedratiosoracle"
+                ]
+              },
+              {
+                "group": "Modules",
+                "pages": [
+                  "resources/mellow-lrt-depreciated/modules/index",
+                  {
+                    "group": "DelegateModules",
+                    "pages": [
+                      "resources/mellow-lrt-depreciated/modules/delegatemodules/index",
+                      "resources/mellow-lrt-depreciated/modules/delegatemodules/erc20swapmodule",
+                      "resources/mellow-lrt-depreciated/modules/delegatemodules/defaultbondmodule",
+                      "resources/mellow-lrt-depreciated/modules/delegatemodules/stakingmodule"
+                    ]
+                  },
+                  "resources/mellow-lrt-depreciated/modules/externalmodules",
+                  {
+                    "group": "TvlModules",
+                    "pages": [
+                      "resources/mellow-lrt-depreciated/modules/tvlmodules/index",
+                      "resources/mellow-lrt-depreciated/modules/tvlmodules/defaultbondtvlmodule",
+                      "resources/mellow-lrt-depreciated/modules/tvlmodules/erc20tvlmodule",
+                      "resources/mellow-lrt-depreciated/modules/tvlmodules/managedtvlmodule"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Utils",
+                "pages": [
+                  "resources/mellow-lrt-depreciated/utils/index",
+                  "resources/mellow-lrt-depreciated/utils/depositwrapper",
+                  "resources/mellow-lrt-depreciated/utils/defaultaccesscontrol"
+                ]
+              },
+              {
+                "group": "Security",
+                "pages": [
+                  "resources/mellow-lrt-depreciated/security/index",
+                  "resources/mellow-lrt-depreciated/security/adminproxy"
+                ]
+              },
+              "resources/mellow-lrt-depreciated/emergency-withdrawal-guide-advanced",
+              "resources/mellow-lrt-depreciated/dvv-legacy-architecture"
+            ]
+          },
+          "resources/brand-assets"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "pages": [
+          "api-reference/get-vaults",
+          "api-reference/get-defi-protocols",
+          "api-reference/get-user-positions",
+          "api-reference/get-user-defi-positions"
         ]
       }
     ],
@@ -64,9 +410,11 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://twitter.com/mellowprotocol",
+      "discord": "https://discord.gg/mellow"
     }
+  },
+  "api": {
+    "openapi": "api-reference/openapi.yaml"
   }
 }

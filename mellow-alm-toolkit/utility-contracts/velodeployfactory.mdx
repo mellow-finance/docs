@@ -1,0 +1,81 @@
+---
+title: "VeloDeployFactory"
+---
+
+Facilitates the dynamic creation and management of strategies and LP wrappers tailored to Velo pools, allowing for customizable liquidity management solutions that adapt to evolving market conditions and strategic objectives.
+
+#### Custom Errors
+
+* `LpWrapperAlreadyCreated()`: Indicates an attempt to initialize an LP wrapper that has already been set up, preventing duplicate configurations.
+* `InvalidStrategyParams()`: Signifies that provided strategy parameters do not meet the validation criteria, ensuring the integrity of strategy configurations.
+* `InvalidState()`: Signals an inappropriate operation due to the current state of the contract, safeguarding against unintended actions.
+* `PriceManipulationDetected()`: Alerts to potential price manipulation within the market, highlighting security measures in place.
+* `PoolNotFound()`: Indicates an operation targeting a non-existent or unregistered pool, ensuring actions are directed toward valid entities.
+
+#### Data Structures
+
+#### `ImmutableParams`
+
+Contains references to core contracts and modules essential for the factory's operation, establishing a stable foundation for strategy and LP wrapper interactions.
+
+#### `MutableParams`
+
+Holds modifiable settings that govern the factory's behavior, including administrative roles and operational parameters, offering flexibility in managing the ecosystem's dynamics.
+
+#### `Storage`
+
+Encapsulates both immutable and mutable parameters, providing a comprehensive view of the factory's configuration and enabling cohesive management of its components.
+
+#### `StrategyParams`
+
+Defines the specifications for liquidity strategies, including execution intervals, liquidity thresholds, and strategic behavior, facilitating tailored strategy deployment.
+
+#### `PoolAddresses`
+
+Associates specific pools with their operational contracts, such as LP wrappers and strategy modules, streamlining interactions and management within the Velo ecosystem.
+
+#### Functionalities
+
+#### Strategy and LP Wrapper Creation
+
+Enables the instantiation of strategies and LP wrappers based on predefined or custom parameters, supporting diverse liquidity management approaches tailored to specific pool dynamics.
+
+#### Parameter Management
+
+Facilitates the update of strategy, deposit, and mutable parameters, ensuring that the ecosystem can adapt to new insights, market conditions, and governance decisions.
+
+#### Pool Association Management
+
+Allows for the mapping and removal of pool associations, providing clarity on the relationships between pools and their corresponding strategies or LP wrappers within the factory's framework.
+
+#### Functions
+
+#### `tickSpacingToStrategyParams(int24 tickSpacing)`
+
+* **Purpose**: Maps a specific tick spacing to predefined strategy parameters.
+* **Impact**: Enhances the adaptability of strategies to pool specifics, ensuring that strategies can be fine-tuned to achieve optimal performance and risk management.
+
+#### `tickSpacingToDepositParams(int24 tickSpacing)`
+
+* **Purpose**: Converts tick spacing into deposit parameters suitable for initiating or adjusting liquidity positions. This ensures that deposits are aligned with the pool's tick structure, facilitating efficient and effective liquidity provisioning.
+* **Impact**: Streamlines the liquidity addition process, allowing liquidity providers to adjust their contributions in harmony with the pool's tick spacing, thereby optimizing their potential returns and exposure.
+
+#### `updateStrategyParams(...) and updateDepositParams(...)`
+
+* **Purpose**: These functions allow for the dynamic adjustment of strategy and deposit parameters, reflecting the evolving market conditions, strategic insights, or governance decisions. They are crucial for maintaining the relevance and efficacy of deployed strategies and liquidity management approaches.
+* **Impact**: Provides a mechanism for continuous improvement and adaptation of strategies and liquidity provisions, ensuring that the ecosystem remains competitive, responsive, and aligned with users' interests.
+
+#### `createStrategy(...)`
+
+* **Purpose**: Facilitates the creation of new strategies for given token pairs and tick spacings, encapsulating the strategic logic in deployable entities. This function is the cornerstone of strategy proliferation within the Velo ecosystem, allowing for innovative and diverse strategic approaches.
+* **Impact**: Encourages the development and deployment of a wide range of strategies, fostering innovation and strategic diversity within the Velo ecosystem. It enables liquidity providers and strategists to experiment with and refine approaches for maximizing returns and managing risks.
+
+#### `poolToAddresses(...)` and `removeAddressesForPool(...)`
+
+* **Purpose**: Manages the association between pools and their operational entities, such as LP wrappers and strategy modules. These functions ensure clarity and organization within the factory's operational scope, allowing for efficient management and oversight of pool-related strategies and entities.
+* **Impact**: Enhances the governance and administrative capabilities within the Velo ecosystem, ensuring that pool strategies and operational entities can be effectively managed, updated, or decommissioned in response to the ecosystem's needs or strategic shifts.
+
+#### `getStorage()`
+
+* **Purpose**: Provides access to the factory's storage, including both immutable and mutable parameters. This function offers transparency and accessibility, allowing stakeholders to review the factory's current configuration and operational parameters.
+* **Impact**: Supports informed decision-making and governance within the Velo ecosystem by providing stakeholders with comprehensive insights into the factory's operational setup and configuration parameters.

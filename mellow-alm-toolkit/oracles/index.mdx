@@ -1,0 +1,150 @@
+---
+title: "Oracles"
+---
+
+Spot oracles are specialized types of oracles, primarily focused on estimating the value of tokens based on onchain data from DEXes such as UniSwap, SushiSwap, and PancakeSwap. They estimate the value of various tokens like `UNI`, `LINK`, and newly minted governance tokens. Typically, these valuations are made against widely recognized and popular tokens like `ETH` or `USDC`.
+
+Unlike derivative oracles, which estimate the value of tokens such as `aUSDC` or `cETH`, spot oracles do not rely on underlying tokens for their estimations.
+
+### Tokens Scope
+
+As mentioned above, spot oracles provide price estimations for tokens that are tradable on DEXes (e.g. governance tokens like `UNI`), which _have no underlying tokens_. For example, Wrapped Staked Ether (`wstETH`), despite being traded on UniSwap, would not be estimated by a Spot Oracle, as it’s value is based on Staked Ether.
+
+We estimate token values using oracles that leverage historical data, like the UniSwap TWAP oracle. Instead of a simple average, these oracles utilize historical data for more accurate price estimations (see below for details).
+
+The **Listing Criteria** for a token by the Spot Oracle are:
+
+1. Existence in a pool with historical price data (for example Uniswap v3 or protocols based on Uniswap v3)
+2. A minimum liquidity equivalent to `$100 000` (a tunable protocol parameter), in a widely acknowledged liquid token such as `ETH`, `USDC`, or `MATIC`.
+3. The presence of at least five Liquidity Providers (LPs), each contributing a minimum liquidity of `$20 000`.
+
+Although these criteria do not completely negate the risk of price manipulation, they do suggest a satisfactory level of trader and arbitrager activity. Such activity is crucial for adjusting the price back to a 'fair value' in the event of significant deviations. Furthermore, the LPs structure ensures (to the extent possible within the limits of a Sybil attack) that there won't be an accidental drop in liquidity.
+
+When a token is listed, occasionally the pool used for token estimations requires an update due to the emergence of a superior pool. The criteria for updating the pool (the **Updating Criteria**) are:
+
+1. The new pool meets the Listing Criteria.
+2.  The liquidity in the new pool surpasses that of the old pool by at least `30%` over the past `14` days.
+
+    **or**
+3. The old pool no longer meets the Listing Criteria.
+
+There’s also a **Delisting Criteria** for the token:
+
+1. Liquidity equivalent less than `$100 000`.
+2. No more than three LPs, each contributing a minimum liquidity of `$20 000`.
+
+### Registry
+
+The token registry is managed by the protocol, essentially serving as a mapping between the token and the DEX pool used for estimation.
+
+The **Ranking Algorithm** is an offchain algorithm, assisted by onchain components, that evaluates the pool liquidity and LP structure, and ranks the pools as follows:
+
+1. Any pool not meeting the **Listing Criteria** is excluded from the ranking.
+2. Pools are ranked higher if they have greater liquidity.
+
+There are four offchain processes, utilizing the Ranking Algorithm:
+
+1. **Listing Process**: An on-demand process that recommends the optimal pool for a token
+2. **Updating Process**: A continuous process that oversees tokens in the Registry, suggesting a superior pool if one emerges
+3. **Delisting Process**: An ongoing process that monitors tokens in the Registry and delists a token if no pool meets the Listing Criteria and the current pool fulfills the Delisting Criteria
+4. **Warning Process**: This process keeps track of whether the current pool fails to meet either the Listing Criteria or the Delisting Criteria
+
+The outcomes of the Listing and Updating processes are the initiation of a multisig transaction, which is then reviewed by the protocol.
+
+In contrast, the Delisting process automatically removes a token from the list.
+
+Meanwhile, the Warning process alerts protocol members about potential upcoming delistings of certain oracles, allowing them to take appropriate actions in advance.
+
+\<aside> 💡 When utilizing the Spot Oracle, it's important to always be aware that the token in question could potentially be delisted.
+
+\</aside>
+
+### Market anomaly detection
+
+When executing smart contract code, recognizing an anomaly in the current market state is crucial. 'Market Anomaly' is a general term; however, in the context of oracles, it specifically refers to an abnormal market price for a specific pool utilized by the oracle. This implies that the price significantly deviates from regular market values, indicating that the current transaction might be subject to an attack such as a sandwich attack.
+
+The algorithm designed to detect anomalies relies on historical data stored on the blockchain. Specifically, on Uniswap V3 and similar DEXes, a mechanism exists for calculating the Time Weighted Average Price (TWAP). Uniswap V3 achieves this by maintaining an onchain accumulator, which is structured in the following form:
+
+```
+a\_t=\sum\_{i=0}^{t}\log\_{1.0001}p\_i,
+```
+
+where `$p\_i$` is a price at the end of block `$i$`, limited to blocks that recorded at least one swap transaction. For each block with timestamp `$t\_i$` where the swap happened, the accumulator value `$a\_{t\_i}$` (pre-swap) is stored as an onchain observation.
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/e02c5cd1-8dc4-4ad4-8f20-210637b9efdd/c2c02c7a-b170-43b9-bf50-22264d870649/Untitled.png)
+
+For each block with a timestamp `$t\_i$` corresponding to a swap event, the accumulator value `$a\_{t\_i}$` is recorded as an onchain observation. These observations are stored in a cyclical buffer with a capacity of `$k$`, a size that can be increased by any user. Consequently, we have access to a sequence of observations `$a\_{t\_0}, ... ,a\_{t\_{k-1\}}$` with `$t\_0>t\_1>...>t\_{k-1}$`. It's important to note that `$t\_i$`represents the timestamp of a block, and `$t\_1$` is the timestamp of the most recent block in which a swap occurred, including the current block if it witnessed any swaps.
+
+Hence, we are able to calculate `$k-1$` average block prices (or more precisely - the average swap price between the last swap in block with timestamp `$t\_i$` and last swap in block with timestamp `$t\_{i+1}$`:
+
+```
+\overline{p}_i=1.0001^{(a_{t\_{i\}}-{a\_{t\_{i+1\}}})/(t\_{i}-t\_{i+1})}, i \in\[0, k-1)
+```
+
+Subsequently, we compute `$k-2$` differences between these consecutive average block prices:
+
+```
+d\_i=|\overline{p}_i/\overline{p}_{i+1}-1|, i \in \[0, k-2)
+```
+
+Now we fix some parameters, managed by protocol:
+
+| Math notation | Variable Notation | Description                                                                                                                   | Comments |
+| ------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- |
+| n             | anomalyLookback   | The number of d\_i under consideration                                                                                        | n ≤ k-2  |
+| q             | anomalyOrder      | The zero-based number of deviation d\_i in the sorted (asc) list of deviations that will represent maximal possible deviation | q ≤ n-1  |
+| f             | anomalyFactor     | The multiplier for q in D9 format (that is anomalyFactor = f \* 10^9)                                                         |          |
+
+To detect Market Anomaly we sort `$d\_0, ..., d\_{n-1}$` in ascending order. If `$\exists i:0\leq i < n,d\_i> f\cdot d\_q,$` we say we detected a Market Anomaly.
+
+The protocol parameters are determined on the basis of historical assessment.
+
+\<aside> 💡 This mechanism, while effective, still permits a degree of price manipulation, which varies across different pools. It is crucial for the protocol to explicitly indicate the expected maximum extent of manipulation. Users of this oracle should be aware of this factor when using it as price provider.
+
+\</aside>
+
+### Oracle price
+
+The oracle's price determination follows two scenarios:
+
+1. **No Prior Swaps in Current Block:** If the oracle's latest observation timestamp differs from the current block's timestamp, it implies that no swaps occurred prior to the current transaction in this block. In such a scenario, where a flashloan or sandwich attack is unlikely (or absent), the current spot price is deemed the most accurate and is returned.
+2. **Existence of Prior Swaps in Current Block:** Conversely, if swaps have occurred earlier in the current block (latest observation timestamp doens’t match current block timestamp), a more cautious approach is adopted. In this case, the oracle returns the last observed price `$\overline{p}\_0$` (see section above). While this price may not account for the very latest swaps within the current block, it's a fair choice given the arbitrary nature of transaction ordering within a block.
+
+\<aside> 💡 If the risk of cross-block sandwich attacks is negligible, relying solely on this oracle is sufficient. However, for enhanced security against such scenarios, integrating Market Anomaly Detection offers an additional layer of protection.
+
+\</aside>
+
+### Oracle contract
+
+This interface aims to standardize the way contracts obtain price data and assess market conditions, particularly focusing on minimizing exposure to Miner Extractable Value (MEV) and ensuring the security of transaction parameters.
+
+#### Functions
+
+#### `getOraclePrice(address pool)`
+
+Fetches the current price information for a specified liquidity pool from the oracle.
+
+* **Parameters**:
+  * `pool`: The contract address of the liquidity pool for which price information is being requested.
+* **Returns**:
+  * `sqrtPriceX96`: The square root of the pool's current price, represented as a 96-bit fixed-point number. This format facilitates precision and efficiency in mathematical operations.
+  * `tick`: The current tick of the pool, an integer that quantifies the price level within the range used by the liquidity pool.
+
+#### `ensureNoMEV(address pool, bytes memory params)`
+
+Verifies the absence of exploitable MEV opportunities for transactions involving a specified pool.
+
+* **Parameters**:
+  * `pool`: The address of the liquidity pool being analyzed for potential MEV vulnerabilities.
+  * `params`: Additional information that may affect the analysis.
+* **Logic**:
+  * A preventative check designed to identify and mitigate risks related to MEV, such as front-running or sandwich attacks, by analyzing the current transaction context and market conditions. Ensuring the integrity of transactions and protecting users from potential exploitation.
+
+#### `validateSecurityParams(bytes memory params)`
+
+Confirms that the security parameters provided for oracle interactions adhere to the oracle's requirements for safe operation.
+
+* **Parameters**:
+  * `params`: A byte array containing the security parameters to be validated by the oracle.
+* **Logic**:
+  * Performs a thorough review of the provided parameters, ensuring they meet the oracle's criteria for format, range, and validity. This function aims to preemptively identify and rectify any issues with the parameters that could compromise the accuracy or reliability of the oracle's responses.

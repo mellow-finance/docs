@@ -1,0 +1,37 @@
+---
+title: "Overview"
+description: "ow the stRATEGY Vault works: deposits (ETH, WETH, wstETH), withdrawals to wstETH, fee structure, and strETH token mechanics."
+---
+
+The stRATEGY Vault amplifies staking rewards by allocating deposited tokens across highly liquid and diverse DeFi opportunities, while strengthening the stETH ecosystem. All curator actions follow a pre-defined but continuously evolving set of controls, enabling flexible asset management with a high degree of transparency and integrity. To learn more about the underlying technology, refer to [Core Vaults documentation](../core-vaults/overview).
+
+
+
+
+
+**Deposit**
+
+You can deposit ETH, WETH, or wstETH to receive strETH share tokens of the stRATEGY vault. Once submitted, your deposit request will appear as pending in the Lido UI. When your funds enter the vault strETH tokens are generated and can be claimed in the Lido UI. Not claiming your tokens won’t affect the rewards accrual.
+
+Deposits are typically fulfilled within \~24 hours under normal conditions. If your deposit request has not yet been fulfilled, you can cancel it in the UI.
+
+
+
+\
+**Withdrawals**
+
+The withdrawal process has two steps:
+
+* Request withdrawal by issuing a withdrawal request from strETH to wstETH tokens. Withdrawals are typically fulfilled within \~72 hours under normal conditions.
+* Claim: Claim your wstETH after the withdrawal request has been processed.
+
+Typically, it takes up to 3 days to finalize the withdrawal request, though it may be faster. You can check progress in the Requests section of the UI. Payouts are made in wstETH. You can have multiple withdrawal requests, but they can't be cancelled.&#x20;
+
+
+
+**Fees**
+
+When you deposit your tokens, you receive strETH tokens that represent your portion of the vault. Your strETH token balance never decreases to cover fees; instead, fees are reflected in the value of each strETH token:
+
+* Platform fee: 1% annually, pro-rated for the time your deposited tokens stay in the vault, is built into the strETH token’s price.
+* Performance fee: 10% of the rewards accrued is deducted from gains before it's reflected in the strETH token’s price.

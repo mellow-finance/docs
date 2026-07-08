@@ -1,0 +1,43 @@
+---
+title: "DepositWrapper"
+---
+
+### Overview
+
+`DepositWrapper` contract is a utility that wraps deposits of various tokens into a specific vault asset. It allows for deposits in ETH, WETH, stETH and wstETH.
+
+### Key Features
+
+* **Token Conversion**: Converts between ETH, WETH, stETH, and wstETH for deposits.
+* **Direct Deposit**: Supports direct deposits into the vault with security checks.
+* **Allowance Management**: Adjusts ERC20 allowances securely before deposit.
+
+### Core Methods
+
+1. **Deposit Function**
+   * `deposit(address, address, uint256, uint256, uint256)`: Facilitates deposits into the vault after converting tokens.
+     * **to**: The address receiving LP tokens after the deposit.
+     * **token**: The address of the input token (WETH, stETH, wstETH, or native ETH).
+     * **amount**: The amount of the input token.
+     * **minLpAmount**: Minimum acceptable amount of LP tokens to be minted.
+     * **deadline**: Time before which the deposit must be completed.
+     * **Returns**: The amount of LP tokens minted.
+     * **Errors**:
+       * `InvalidTokenList`: If the vault does not exclusively accept wstETH.
+       * `InvalidAmount`: If the input amount is zero or doesn't match `msg.value` for ETH.
+       * `InvalidToken`: If the input token is not recognized.
+     * **Event**:
+       * `DepositWrapperDeposit(address, address, uint256, uint256, uint256)`: Emitted after a successful deposit.
+         * **sender**: Address of the sender.
+         * **token**: Address of the input token.
+         * **amount**: Amount deposited.
+         * **lpAmount**: Amount of LP tokens minted.
+         * **deadline**: Deadline of the deposit operation.
+2. **Conversion Helpers**
+   * `_wethToWsteth(uint256)`: Converts WETH to wstETH through stETH.
+   * `_ethToSteth(uint256)`: Converts native ETH to stETH.
+   * `_stethToWsteth(uint256)`: Converts stETH to wstETH.
+3. **Fallback Method**
+   * `receive()`: Allows receiving ETH only from the WETH contract.
+     * **Error**:
+       * `InvalidSender`: Raised if ETH is received from an address other than WETH.

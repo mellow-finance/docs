@@ -1,0 +1,48 @@
+---
+title: "StakingModule"
+---
+
+The `StakingModule` contract facilitates the conversion and staking of Ethereum-based tokens, specifically WETH, stETH, and wstETH. It leverages the `DefaultModule` structure whilintegrating closely with security and withdrawal management systems of Lido protocol.
+
+### Key Features
+
+* **Token Conversion**: Supports the conversion of WETH to stETH and subsequently to wstETH.
+* **Secure Staking**: Interfaces with a `DepositSecurityModule` for secure staking operations.
+* **Withdrawal Management**: Coordinates with a `WithdrawalQueue` to manage staking withdrawals.
+
+### Constructor
+
+* Initializes the contract with the relevant Ethereum-based token addresses and modules.
+  * **Parameters**:
+    * **weth\_**: Address of the WETH token.
+    * **steth\_**: Address of the stETH token.
+    * **wsteth\_**: Address of the wstETH token.
+    * **depositSecurityModule\_**: The deposit security module for additional security during deposits.
+    * **withdrawalQueue\_**: The withdrawal queue module to manage withdrawals.
+    * **stakingModuleId\_**: A unique identifier for the staking module.
+
+### Core Methods
+
+1. **Token Conversion**
+   * `convert(uint256)`: Converts a specified amount of WETH to wstETH.
+     * **amount**: The amount of WETH to convert.
+   * `convertAndDeposit(uint256, uint256, bytes32, bytes32, uint256, bytes, IDepositSecurityModule.Signature[])`: Converts WETH to wstETH and deposits it using the provided security parameters.
+     * **amount**: The amount of WETH to convert and deposit.
+     * **blockNumber**: The block number to reference for the deposit.
+     * **blockHash**: The hash of the block.
+     * **depositRoot**: The root of the deposit.
+     * **nonce**: A nonce to ensure the uniqueness of the deposit.
+     * **depositCalldata**: Additional calldata required for the deposit.
+     * **sortedGuardianSignatures**: Signatures from guardians to validate the deposit.
+2. **Private Helper Functions**
+   * `_wethToWSteth(uint256)`: Internal function to convert WETH directly to wstETH, handling intermediate steps.
+     * **amount**: The amount of WETH to convert.
+
+### Modifiers
+
+* **onlyDelegateCall**: Ensures that certain functions are only callable through delegate calls to prevent direct interaction that might bypass security checks.
+
+### Error Handling
+
+* **NotEnoughWeth**: Triggered if there is insufficient WETH for the requested operation.
+* **InvalidWithdrawalQueueState**: Indicates a mismatch in the expected state of withdrawals, potentially blocking operations if the conditions are unsafe.

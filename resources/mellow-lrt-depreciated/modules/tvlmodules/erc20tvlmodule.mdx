@@ -1,0 +1,24 @@
+---
+title: "ERC20TvlModule"
+---
+
+### Overview
+
+`ERC20TvlModule` contract handles the calculation of TVL for ERC20 tokens within a vault. It provides a standardized mechanism to assess the value of a vault's ERC20 assets.
+
+### Key Features
+
+* **TVL Calculation**: Computes the total value locked for each ERC20 token held in a vault.
+* **Direct Balance Access**: Uses the ERC20 `balanceOf` function to assess token balances.
+* **Accurate Accounting**: Returns detailed data structures containing token information and their amounts.
+
+### Core Method
+
+1. **TVL Calculation**
+   * `tvl(address)`: Computes the total value locked for all ERC20 tokens in a given vault.
+     * **vault**: The address of the vault.
+     * **Returns**: An array of `Data` structures containing information on each ERC20 token:
+       * **token**: Address of the ERC20 token.
+       * **underlyingToken**: Same as `token` because it's an ERC20 token.
+       * **amount**: The balance of the token held by the vault.
+       * **underlyingAmount**: Identical to `amount`.

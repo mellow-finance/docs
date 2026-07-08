@@ -1,0 +1,50 @@
+---
+title: "DefaultAccessControl"
+---
+
+### Overview
+
+`DefaultAccessControl` contract provides a flexible role-based access control mechanism. It leverages the OpenZeppelin `AccessControlEnumerable`. The contract defines three roles —`OPERATOR`, `ADMIN_ROLE`, and `ADMIN_DELEGATE_ROLE` — each with specific permissions to control various aspects of the system.
+
+### Key Features
+
+* **Role Hierarchy**: Establishes a clear hierarchy of permissions through three primary roles:
+  * **Admin Role**: Has the highest privileges.
+  * **Admin Delegate Role**: Can manage operators.
+  * **Operator Role**: Executes regular tasks but with limited authority.
+* **Access Verification**: Provides methods to verify if a user meets certain permission requirements.
+
+### Roles
+
+* **`OPERATOR`**: A hashed identifier for the operator role.
+* **`ADMIN_ROLE`**: A hashed identifier for the admin role.
+* **`ADMIN_DELEGATE_ROLE`**: A hashed identifier for the admin delegate role.
+
+### Constructor
+
+* **`constructor(address)`**: Initializes the contract with an admin address.
+  * **admin**: Address of the initial admin.
+  * **Errors**:
+    * `AddressZero`: Raised if the admin address is zero.
+
+### Core Methods
+
+1. **Role Verification**
+   * `isAdmin(address)`: Checks if the sender has an admin or admin delegate role.
+     * **sender**: Address to verify.
+     * **Returns**: `true` if the sender is an admin or delegate, `false` otherwise.
+   * `isOperator(address)`: Checks if the sender has an operator role.
+     * **sender**: Address to verify.
+     * **Returns**: `true` if the sender is an operator, `false` otherwise.
+2. **Access Enforcement**
+   * `requireAdmin(address)`: Requires the sender to be an admin or delegate.
+     * **sender**: Address of the user.
+     * **Errors**:
+       * `Forbidden`: Raised if the sender does not have the required role.
+   * `requireAtLeastOperator(address)`: Requires the sender to be at least an operator or higher.
+     * **sender**: Address of the user.
+     * **Errors**:
+       * `Forbidden`: Raised if the sender does not have the required role.
+3. **Internal Methods**
+   * `_requireAdmin(address)`: Internal method for admin verification.
+   * `_requireAtLeastOperator(address)`: Internal method for operator or higher verification.

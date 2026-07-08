@@ -1,0 +1,45 @@
+---
+title: "RedirectingDepositHook"
+---
+
+### Overview
+
+`RedirectingDepositHook` is a deposit-time liquidity allocation hook implementing the `IHook` interface. It is designed to **redirect newly deposited assets** from a vault into its underlying **subvaults**, based on per-subvault risk and capacity constraints defined by a `RiskManager`.
+
+This hook helps distribute liquidity optimally during deposit flows.
+
+### Purpose
+
+* Automatically **forwards newly deposited assets** from the main vault into eligible subvaults.
+* Delegates decision-making to the vault’s configured `RiskManager`, which determines per-subvault deposit limits.
+* Ensures that **subvaults do not exceed their capacity constraints**.
+
+### Key Function
+
+### `callHook(address asset, uint256 assets)`
+
+Distributes a given amount of `asset` across available subvaults based on their individual deposit capacity.
+
+**Execution Logic:**
+
+1. Retrieves:
+   * Active `vault` context via `IVaultModule(address(this))`
+   * Configured `RiskManager` via `vault.riskManager()`
+   * Number of subvaults via `vault.subvaults()`
+2. Iterates over each subvault:
+   * Fetches max allowed deposit via `riskManager.maxDeposit(subvault, asset)`
+   * If allowed amount is zero → skip
+   * Otherwise:
+     * Pushes `min(assets, allowed)` via `vault.hookPushAssets()`
+     * Decrements `assets` accordingly
+     * Stops early if full amount has been distributed
+
+### Components and Assumptions
+
+* **Vault:** Must implement `IVaultModule`:
+  * `subvaults()` → number of subvaults
+  * `subvaultAt(index)` → returns subvault address
+  * `hookPushAssets(subvault, asset, amount)` → transfers tokens to subvault
+  * `riskManager()` → returns associated `IRiskManager`
+* **Risk Manager:** Must implement:
+  * `maxDeposit(subvault, asset)` → returns max allowed deposit into that subvault

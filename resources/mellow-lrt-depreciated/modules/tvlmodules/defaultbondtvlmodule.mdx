@@ -1,0 +1,32 @@
+---
+title: "DefaultBondTvlModule"
+---
+
+### Overview
+
+`DefaultBondTvlModule` contract computes the total value locked (TVL) for bond-based assets in a vault.
+
+### Key Features
+
+* **Parameter Management**: Allows the configuration of bonds associated with a vault.
+* **TVL Calculation**: Computes the TVL for each bond in the vault, returning detailed data structures.
+* **Access Control**: Ensures only authorized admins can modify bond parameters.
+
+### Methods
+
+1. **Parameter Management**
+   * `setParams(address, address[])`: Sets bond parameters for a given vault.
+     * **vault**: Address of the vault.
+     * **bonds**: An array of bond addresses to associate with the vault.
+     * **Event**:
+       * `DefaultBondTvlModuleSetParams(address, address[])`: Emitted after bond parameters are set for a vault.
+         * **vault**: Address of the vault.
+         * **bonds**: Array of bond addresses.
+2. **TVL Calculation**
+   * `tvl(address)`: Computes the total value locked for all bonds in the vault.
+     * **vault**: Address of the vault.
+     * **Returns**: An array of `Data` structures with the following details:
+       * **token**: Address of the bond.
+       * **underlyingToken**: Address of the asset used by the bond.
+       * **amount**: Balance of the bond in the vault.
+       * **underlyingAmount**: Identical to `amount`.

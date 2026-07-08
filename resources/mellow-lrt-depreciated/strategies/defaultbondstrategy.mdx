@@ -1,0 +1,48 @@
+---
+title: "DefaultBondStrategy"
+---
+
+### Overview
+
+`DefaultBondStrategy` defines the logic for managing bond-based strategies only focused on deposits and withdrawals. It allocates funds to different bonds in specified ratios and facilitates user withdrawals efficiently.
+
+### Key Features
+
+* **Bond Allocation**: Deposits into various bonds based on predefined ratios.
+* **Withdrawal Management**: Supports instant user withdrawals by processing them through the `processWithdrawals` function.
+
+### Error Definition
+
+* **InvalidCumulativeRatio**: Raised in `setData` function when the cumulative ratio for bond allocations does not sum up correctly.
+
+### Core Methods
+
+1. **View Functions**
+   * `Q96()`: Returns the constant `Q96` (2^96) for precise ratio calculations.
+   * `vault()`: Returns the address of the associated vault.
+   * `erc20TvlModule()`: Returns the address of the `ERC20TvlModule`.
+   * `bondModule()`: Returns the address of the bond module managing transactions.
+   * `tokenToData(address)`: Retrieves bond data associated with a specific token.
+2. **Configuration Functions**
+   * `setData(address, Data[])`: Sets bond allocation data for a given token. The cumulative ratio of all bonds must sum up to `Q96`.
+3. **Withdrawal Functions**
+   * `processAll()`: Processes all pending withdrawals for all users by withdrawing from bonds and through the vault, executing corresponding `Vault` function and depositing all tokens back into bonds according to ratios.
+   * `processWithdrawals(address[])`: Processes withdrawals for a specific list of users.
+
+### Data Structure
+
+1. **Data**
+   * **bond** (`address`): Address of the bond receiving the allocated funds.
+   * **ratioX96** (`uint256`): Ratio of funds to allocate to this bond, with 96-bit precision.
+
+### Events
+
+1. **Bond Allocation Events:**
+   * `DefaultBondStrategySetData(address, IDefaultBondStrategy.Data[], uint256)`: Emitted when bond allocation data is set for a specific token.
+     * **token**: Address of the token associated with the bond data.
+     * **data**: Array of `Data` structures representing the bond allocation.
+     * **timestamp**: Timestamp when the data was set.
+2. **Withdrawal Processing Events:**
+   * `DefaultBondStrategyProcessWithdrawals(address[], uint256)`: Emitted when user withdrawals are processed.
+     * **users**: Array of user addresses.
+     * **timestamp**: Timestamp of the withdrawal processing.

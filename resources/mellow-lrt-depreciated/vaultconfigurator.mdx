@@ -1,0 +1,154 @@
+---
+title: "🔧 VaultConfigurator"
+---
+
+### Overview
+
+`VaultConfigurator` is contract that manages the configuration and access control for a vault system. This contract specifies parameters for the main `Vault` contract, enabling secure updates through a two-stage process: staging and committing. Each parameter update is subjected to a specified delay to ensure stability and secure updates.
+
+### Key Features:
+
+* **Two-Stage Parameter Updates**: Parameters are first staged (proposed) and then committed (finalized) after a delay.
+* **Access Control**: Admin-exclusive functions, except for the `isDepositsLocked` parameter, which is accessible by both the admin and operator.
+* **Delay Specification**: Parameters each have their own delay values before an update can be committed.
+
+### Function Access Control
+
+* **Admin-Only Functions**: All parameter changes except `isDepositsLocked` are restricted to the admin.
+* **Operator and Admin**: `isDepositsLocked` can be updated by either the operator or the admin for rapid response.
+
+### Two-Stage Process
+
+Each parameter update involves two steps:
+
+1. **Staging**: The parameter value and a timestamp are set, initiating a delay period.
+2. **Committing**: After the delay period, the staged value can be committed as the new active parameter.
+
+### Delay Parameters
+
+Each configurable parameter has a specific delay to ensure stability:
+
+* **Base Delay**: General delay for staging/committing.
+* **Callback Delays**: Separate delays for deposit and withdrawal callback changes.
+* **Withdrawal Fee Delay**: Delay for modifying the withdrawal fee.
+* **Delegate Module Approval Delay**: Delay for approving delegated modules.
+* **Maximal Total Supply Delay**: Delay for changing the maximum LP token supply.
+* **Oracle and Validator Delays**: Delays for updating oracles and validators.
+* **Emergency Withdrawal Delay**: Minimum wait after `registerWithdrawal` before an emergency withdrawal.
+
+### Error Definitions
+
+* **AddressZero**: Raised if a zero address is passed for a required address.
+* **InvalidDelay**: Delay value exceeds the permissible limits.
+* **InvalidTimestamp**: Timestamp doesn't match the staging process.
+* **InvalidWithdrawalFee**: Withdrawal fee is out of the acceptable range.
+
+### Data Structures
+
+1. **Data**
+   * **value** (`uint256`): Current parameter value.
+   * **stagedValue** (`uint256`): The proposed new value awaiting commitment.
+   * **stageTimestamp** (`uint256`): Timestamp indicating when the value was staged.
+
+### Methods
+
+1. **View Functions**
+   * `MAX_DELAY()`: Returns the maximum permissible delay (365 days).
+   * `MAX_WITHDRAWAL_FEE()`: Maximum withdrawal fee allowed (5%).
+   * `vault()`: Address of the vault associated with this configurator.
+   * `baseDelay()`: Base delay in seconds for staging operations.
+   * `isDelegateModuleApproved(address)`: Checks if a delegate module is approved.
+   * `isDepositsLocked()`: Returns if deposits are currently locked.
+   * `maximalTotalSupply()`: Returns the maximum total LP token supply.
+   * `depositCallback()`: Address of the current deposit callback contract.
+   * `withdrawalCallback()`: Address of the current withdrawal callback contract.
+   * `withdrawalFeeD9()`: Returns the withdrawal fee with 9 decimal places.
+   * `depositCallbackDelay()`: Delay for deposit callback changes.
+   * `withdrawalCallbackDelay()`: Delay for withdrawal callback changes.
+   * `withdrawalFeeD9Delay()`: Delay for changing the withdrawal fee.
+   * `isDepositsLockedDelay()`: Delay for locking deposits.
+   * `delegateModuleApprovalDelay()`: Delay for delegate module approvals.
+   * `maximalTotalSupplyDelay()`: Delay for modifying the maximum LP token supply.
+   * `ratiosOracle()`: Address of the ratios oracle.
+   * `priceOracle()`: Address of the price oracle.
+   * `validator()`: Address of the validator.
+   * `validatorDelay()`: Delay for validator changes.
+   * `priceOracleDelay()`: Delay for price oracle changes.
+   * `ratiosOracleDelay()`: Delay for ratios oracle changes.
+   * `emergencyWithdrawalDelay()`: Minimum delay before an emergency withdrawal is allowed.
+2. **Staging and Committing Functions**
+   * **Delegate Module Approval:**
+     * `stageDelegateModuleApproval(address)`: Stages approval for a module.
+     * `commitDelegateModuleApproval(address)`: Commits a staged approval.
+     * `rollbackStagedDelegateModuleApproval(address)`: Rolls back staged approval.
+     * `revokeDelegateModuleApproval(address)`: Revokes existing approval.
+   * **Deposits Lock:**
+     * `stageDepositsLock()`: Stages the deposits lock.
+     * `commitDepositsLock()`: Commits the staged deposits lock.
+     * `rollbackStagedDepositsLock()`: Rolls back staged deposits lock.
+     * `revokeDepositsLock()`: Unlocks deposits.
+   * **Maximal Total Supply:**
+     * `stageMaximalTotalSupply(uint256)`: Stages a new total supply.
+     * `commitMaximalTotalSupply()`: Commits the staged supply change.
+     * `rollbackStagedMaximalTotalSupply()`: Rolls back staged supply changes.
+   * **Callbacks:**
+     * `stageDepositCallback(address)`: Stages a new deposit callback.
+     * `commitDepositCallback()`: Commits the staged deposit callback.
+     * `rollbackStagedDepositCallback()`: Rolls back staged deposit callback.
+     * `stageWithdrawalCallback(address)`: Stages a new withdrawal callback.
+     * `commitWithdrawalCallback()`: Commits the staged withdrawal callback.
+     * `rollbackStagedWithdrawalCallback()`: Rolls back staged withdrawal callback.
+   * **Withdrawal Fee:**
+     * `stageWithdrawalFeeD9(uint256)`: Stages a new withdrawal fee.
+     * `commitWithdrawalFeeD9()`: Commits the staged withdrawal fee.
+     * `rollbackStagedWithdrawalFeeD9()`: Rolls back staged withdrawal fee.
+   * **Delays:**
+     * `stageBaseDelay(uint256)`: Stages a base delay.
+     * `commitBaseDelay()`: Commits the staged base delay.
+     * `rollbackStagedBaseDelay()`: Rolls back staged base delay.
+     * `stageDepositCallbackDelay(uint256)`: Stages a delay for deposit callback.
+     * `commitDepositCallbackDelay()`: Commits the staged deposit callback delay.
+     * `rollbackStagedDepositCallbackDelay()`: Rolls back deposit callback delay.
+     * `stageWithdrawalCallbackDelay(uint256)`: Stages a delay for withdrawal callback.
+     * `commitWithdrawalCallbackDelay()`: Commits the staged withdrawal callback delay.
+     * `rollbackStagedWithdrawalCallbackDelay()`: Rolls back withdrawal callback delay.
+     * `stageWithdrawalFeeD9Delay(uint256)`: Stages a delay for the withdrawal fee.
+     * `commitWithdrawalFeeD9Delay()`: Commits the staged withdrawal fee delay.
+     * `rollbackStagedWithdrawalFeeD9Delay()`: Rolls back withdrawal fee delay.
+     * `stageDepositsLockedDelay(uint256)`: Stages a delay for deposit locking.
+     * `commitDepositsLockedDelay()`: Commits the staged deposits locked delay.
+     * `rollbackStagedDepositsLockedDelay()`: Rolls back deposits locked delay.
+     * `stageDelegateModuleApprovalDelay(uint256)`: Stages a delay for delegate module approval.
+     * `commitDelegateModuleApprovalDelay()`: Commits the staged delegate module delay.
+     * `rollbackStagedDelegateModuleApprovalDelay()`: Rolls back delegate module delay.
+     * `stageMaximalTotalSupplyDelay(uint256)`: Stages a delay for maximal total supply.
+     * `commitMaximalTotalSupplyDelay()`: Commits the staged supply delay.
+     * `rollbackStagedMaximalTotalSupplyDelay()`: Rolls back supply delay.
+     * `stageRatiosOracleDelay(uint256)`: Stages a delay for ratios oracle.
+     * `commitRatiosOracleDelay()`: Commits the staged ratios oracle delay.
+     * `rollbackStagedRatiosOracleDelay()`: Rolls back ratios oracle delay.
+     * `stagePriceOracleDelay(uint256)`: Stages a delay for price oracle.
+     * `commitPriceOracleDelay()`: Commits the staged price oracle delay.
+     * `rollbackStagedPriceOracleDelay()`: Rolls back price oracle delay.
+     * `stageValidatorDelay(uint256)`: Stages a delay for validator.
+     * `commitValidatorDelay()`: Commits the staged validator delay.
+     * `rollbackStagedValidatorDelay()`: Rolls back validator delay.
+     * `stageEmergencyWithdrawalDelay(uint256)`: Stages a delay for emergency withdrawal.
+     * `commitEmergencyWithdrawalDelay()`: Commits the staged emergency withdrawal delay.
+     * `rollbackStagedEmergencyWithdrawalDelay()`: Rolls back emergency withdrawal delay.
+
+### Events
+
+* **Stage**: Emitted when a value is staged for commitment.
+  * **slot** (`bytes32`): Slot identifier of the staged parameter.
+  * **data** (`Data`): Data structure holding the values.
+  * **value** (`uint256`): Staged value.
+  * **timestamp** (`uint256`): Staging timestamp.
+* **Commit**: Emitted when a staged value is committed.
+  * **slot** (`bytes32`): Slot identifier of the parameter.
+  * **data** (`Data`): Data structure holding the committed values.
+  * **timestamp** (`uint256`): Commitment timestamp.
+* **Rollback**: Emitted when a staged value is rolled back without commitment.
+  * **slot** (`bytes32`): Slot identifier of the parameter.
+  * **data** (`Data`): Data structure holding the original values.
+  * **timestamp** (`uint256`): Rollback timestamp.

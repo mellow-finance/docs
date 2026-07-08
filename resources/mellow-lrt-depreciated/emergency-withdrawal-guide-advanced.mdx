@@ -1,0 +1,26 @@
+---
+title: "Emergency withdrawal guide (advanced)"
+---
+
+If a user's request is not processed within the emergencyWithdrawalDelay period, the user can perform an emergency withdrawal.
+
+Note! In this case, the user may receive less funds than entitled by the system, as this function only handles ERC20 tokens in the system.
+
+Therefore, if the system has a base asset that is not represented as an ERC20 token, the corresponding portion of the funds will be lost by the user.
+
+User instructions:
+
+1. Determine smart contract address of the asset user is eligible to withdraw.
+2.  Call `emergencyWithdraw` method using abi. Connect wallet to either of [https://etherscan.io/](https://etherscan.io/),[https://eth95.dev/](https://eth95.dev/), [https://abi.ninja/](https://abi.ninja/) and send `emergencyWithdraw` tx.  Usage of any of the services is not an endorsment, be careful what you sign and do tx simulation beforehand.\
+    User needs to set `minAmounts` and `deadline` as input parameters.\
+    Here is detailed instruction for `minAmounts. minAmounts` equals `baseTvl().amounts * withdrawalReqest.lpAmount / vault.totalSupply() - 1 Gwei`.
+
+    1. `baseTvl()`can be found in read method of the same vault contract.`baseTvl()` function returns two values in an array (for weth and for wsteth), you'll need to save that for step 3.
+    2. Then find `totalSupply()` in the vault contract and do the same.
+    3. Along with your requested lp amount (can be obtained from withdrawalRequest) copy an array from baseTvl() and for each value from it make the followinh calculation: `baseTvl.amounts[i] * withdrawalReqest.lpAmount / vault.totalSupply()  - 1 Gwei`
+    4. Pass the resulting array to emergencyWithdraw `minAmounts` field.
+
+    \
+    `deadline` is unix timestamp + N minutes while withdrawal is valid.\
+    Input `minAmounts` array and `deadline` into emergencyWithdraw method and send tx.
+3. When your correct tx is confirmed on chain, you'll see ERC20 token from vault sent to your wallet.

@@ -1,0 +1,115 @@
+---
+title: "Core Vaults and Other Approaches"
+description: "How Core Vaults compare to ERC-4626, ERC-7540, and common vault architectural patterns – evaluated against institutional requirements."
+---
+
+## Core Vaults and other approaches
+
+Mellow provides vault infrastructure for launching onchain Earn, treasury, and managed yield products. Distribution partners use Core Vaults to launch these products under their own brand, without constructing the management layer from scratch.
+
+ERC-4626 and ERC-7540 are not competitors to Core Vaults – they define vault interfaces. Core Vaults operate at the management layer: strategy execution, permissions, accounting, compliance, and multi-venue control. This page compares both interface standards and broader architectural patterns against the requirements institutional capital introduces.
+
+***
+
+### Institutional requirements
+
+Basic vault interfaces cover deposits, share issuance, and redemptions. Institutional vault infrastructure requires additional controls for settlement timing, permissions, accounting, compliance, NAV, and multi-venue execution.
+
+**Settlement flexibility.** Not all strategies settle atomically. Some strategies have unbonding periods. Tokenized funds and private credit may redeem on fixed schedules. CEX positions settle offchain. A vault managing capital across these sources needs synchronous and asynchronous flows, often within the same product.
+
+**Strategy isolation.** Strategy isolation limits the impact of failures or misconfiguration in a single allocation. Conservative lending and higher-risk strategies need independent execution contexts with independent risk parameters.
+
+**Operation-level risk controls.** Risk policies described only in documentation depend on process. Risk policies enforced at the contract level become execution rules – scoped per strategy, per asset, per operator, and per action.
+
+**Multi-venue execution.** A delta-neutral strategy or cross-venue carry trade needs DeFi protocol access and CEX execution under one permission model, one NAV framework, and one vault-level control surface.
+
+**Time to new venues.** Yield opportunities move quickly. When a new protocol or market becomes attractive, the speed at which a vault can safely add it determines whether the curator captures the opportunity or misses it. Architectures that require custom code per integration turn every new venue into an engineering and audit cycle.
+
+**NAV for externalized capital.** When capital is deployed to a CEX, held in tokenized treasuries, or locked in an unbonding period, onchain balances do not reflect reality. NAV must be oracle-defined.
+
+**Compliance at the vault level.** Jurisdiction-aware mandates, allowlisted depositors, transfer-restricted shares, and per-issuer eligibility constraints should be enforced through the vault permission system, not handled only at the distribution layer.
+
+**Agent-bounded execution.** Autonomous agents can operate under the same guardrails as human curators, with permissions enforced by verifiers rather than manual oversight.
+
+***
+
+### How common patterns address these requirements
+
+**Interface standards: ERC-4626 and ERC-7540.** ERC-4626 standardized synchronous deposit-and-share operations. ERC-7540 added async requests. Both address the interface layer – neither addresses strategy isolation, operation-level permissions, multi-asset strategy accounting, oracle-defined NAV, or compliance. These are outside the standards' scope. Core Vaults operate at that management layer, using ERC-4626 and ERC-7540 as interfaces rather than as the system itself.
+
+**Adapter-based architectures.** Protocol-specific adapters handle deposits, withdrawals, and accounting per integration. Each adapter adds audit surface, maintenance load, and integration-specific failure modes. Some adapter-based systems add distribution layers or strategy composition on top, but the core integration model remains per-protocol code. Core Vaults replace per-protocol code with verifier configuration, so the audit surface does not grow with each new venue.
+
+**MPC-based architectures.** Capital routes through institutional custody for offchain execution. The vault has limited ability to enforce onchain constraints while capital is outside the contract. NAV depends on offchain reporting. DeFi composability is limited. This pattern fits pure CeFi execution where onchain composability is not a requirement. Core Vaults instead keep DeFi and CeFi under one onchain permission model, with CeFi accessed through off-exchange settlement rather than routed entirely off-chain.
+
+**Single-protocol architectures.** Vaults designed around one protocol offer tighter integration and smaller audit surface. The curator's allocation must fit within that protocol's supported markets – cross-venue strategies are architecturally constrained, and the vault's roadmap, risk profile, and economics are coupled to a single protocol's governance and development decisions. Core Vaults are multi-protocol by design, so a curator can diversify across venues and is not bound to one protocol's roadmap.
+
+***
+
+### How Core Vaults address these requirements
+
+| Requirement                  | Common gap                                      | Core Vaults                                                                                                                                                                                  |
+| ---------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Settlement flexibility       | Sync-only or async-only, no mixed flows         | Async queues for deposits and redemptions. Sync and async strategies coexist. Signature queues for pre-approved participants                                                                 |
+| Strategy isolation           | Capital pools into a single execution context   | Each strategy operates in its own subvault with dedicated verifier constraints. Strategy isolation limits cross-strategy spillover                                                           |
+| Operation-level risk         | Permissions are external or vault-boundary-only | 60+ onchain permission types scoped by strategy, asset, operator, action. Verifiers revert unauthorized transactions before execution                                                        |
+| Multi-venue execution        | DeFi-only or CeFi-only, not both                | DeFi under verifier constraints. CeFi via Copper ClearLoop and Ceffu. One permission model across both                                                                                       |
+| Time to new venues           | Each integration is a code and audit cycle      | Verifier configuration rather than new vault code. For supported interaction patterns, new venues are added without expanding the core audit surface                                         |
+| NAV for externalized capital | Share price from onchain balances only          | Oracle-defined NAV with three-tier validation – normal, suspicious, rejected – and automatic escalation                                                                                      |
+| Vault-level compliance       | External or at distribution endpoint            | Jurisdiction-aware mandates, allowlisted depositors, transfer-restricted shares, and per-issuer eligibility can be enforced at the vault level rather than only at the distribution endpoint |
+| Agent-bounded execution      | No onchain guardrails for autonomous operators  | Agents operate under the same verifiers as human curators, with the same permission checks and execution bounds                                                                              |
+
+***
+
+### The verifier model
+
+The way a vault connects to yield sources determines its audit surface, maintenance cost, and how quickly it can support new venues. Traditional adapter-based architectures encode protocol-specific logic for every venue, so each new integration means new code, new audit surface, and new maintenance overhead.
+
+Core Vaults separate what the vault can do from what it is allowed to do. Execution is handled by shared vault logic. Permissions are defined by verifiers – declarative rules that specify which operations are allowed, scoped to target contracts, function selectors, asset whitelists, and parameter bounds. Any transaction outside those rules reverts before it executes.
+
+The result is that integration becomes configuration. For supported interaction patterns, adding a new venue is primarily a mandate and verifier setup task rather than new vault code, so the core audit surface stays constant as venues are added.
+
+***
+
+### Capability matrix
+
+| Capability                  | Core Vaults                    | ERC-4626 | ERC-7540                 | Adapter-based          | MPC-based  | Single-protocol |
+| --------------------------- | ------------------------------ | -------- | ------------------------ | ---------------------- | ---------- | --------------- |
+| Sync operations             | Yes                            | Yes      | Implementation-dependent | Usually yes            | Varies     | Yes             |
+| Async operations            | Yes                            | No       | Yes                      | Varies                 | Yes        | Varies          |
+| Mixed sync and async        | Yes                            | No       | Implementation-dependent | Varies                 | Varies     | Varies          |
+| Strategy isolation          | Yes – subvaults                | No       | No                       | Varies                 | No         | Varies          |
+| Multi-venue: DeFi and CeFi  | Yes                            | No       | No                       | Usually no             | CeFi only  | No              |
+| Operation-level permissions | 60+ types                      | No       | No                       | Varies / external      | External   | Varies          |
+| Oracle-defined NAV          | Vault-native                   | External | External                 | External               | Offchain   | Varies          |
+| Multi-source composition    | Yes                            | No       | No                       | Yes, adapter-dependent | No         | Limited         |
+| Agent-bounded execution     | Yes                            | No       | No                       | Not native / external  | No         | No              |
+| CeFi custody integration    | Off-exchange settlement rails  | No       | No                       | No                     | Core model | No              |
+| Vault-level compliance      | Vault-level                    | No       | No                       | Varies                 | Varies     | Varies          |
+| Verifier-based integration  | Yes                            | No       | No                       | No                     | No         | No              |
+| New venue without new code  | Yes – configuration            | N/A      | N/A                      | No – per-protocol code | No         | Limited         |
+| Vendor independence         | Yes – multi-protocol by design | N/A      | N/A                      | Varies                 | No         | No              |
+
+***
+
+### Choosing the right approach
+
+Interface standards and single-purpose architectures each solve a slice of the problem: a synchronous interface, an async primitive, a fixed set of protocol adapters, or an off-chain custody route. Each works until a strategy needs more than that slice – a second venue, a CeFi leg, a compliance constraint, a faster integration path.
+
+Core Vaults are built for the full surface rather than a slice. Multi-protocol allocation, mixed DeFi and CeFi execution, operation-level risk controls, subvault isolation, jurisdiction-aware compliance, oracle-defined NAV, fast venue integration, and agent-bounded execution operate within one management layer, under one permission model, on one audit surface. A curator does not assemble these from separate systems or migrate when a strategy outgrows its original design. The same infrastructure covers a single-protocol vault on day one and a multi-venue structured product later, without re-architecting.
+
+For institutional onchain products that need to hold up across venues, asset types, and regulatory requirements, Core Vaults are the management layer to build on.
+
+***
+
+### Core Vaults at a glance
+
+* **Architecture:** Verifier-based – declarative rules, not protocol-specific adapters
+* **Permissions:** 60+ onchain permission types, operation-level scoping
+* **Strategy model:** Subvault isolation with independent execution contexts
+* **DeFi access:** Aave, Morpho, Euler, Fluid, Spark, Ethena, Gearbox, Curve, Uniswap, Cowswap, Pendle, Symbiotic, EigenLayer, and others
+* **CeFi access:** Binance, Bybit, Deribit, OKX, Coinbase, Gate.io, Kraken via off-exchange settlement rails – Copper ClearLoop and Ceffu
+* **NAV:** Oracle-defined, three-tier validation with automatic escalation
+* **Compliance:** Jurisdiction-aware mandates, allowlisted depositors, transfer-restricted shares
+* **Audits:** Sherlock, Nethermind
+* **Track record:** Vault infrastructure since 2021, zero security incidents
+* **Product evolution:** Concentrated Liquidity Vaults → MultiVaults → Interop Vaults → Core Vaults

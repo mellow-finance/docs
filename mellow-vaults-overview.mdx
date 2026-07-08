@@ -1,0 +1,103 @@
+---
+title: "Mellow Vaults Overview"
+description: "Map of all vault product lines — Core Vaults, DVstETH, Restaking Vaults (MultiVault, Interoperable, Simple LRT), and Mellow ALM — with use-case guidance for choosing each one."
+---
+
+Mellow supports multiple vault product lines that reflect the evolution of this architecture. This section maps each product line to its intended use case and documentation entry points.
+
+### Core Vaults&#x20;
+
+[Core Vaults ](https://docs.mellow.finance/core-vaults/overview)are isolated, programmable vaults that encode a complete onchain strategy together with its execution, risk limits, and withdrawal logic inside a single framework. Each vault enforces asset whitelists, per-strategy permissions, oracle checks, and batch-based accounting, ensuring predictable execution and auditable risk boundaries. Strategies can span multiple DeFi protocols and, where required, centralized exchanges via institutional custody rails, without breaking trustless custody for users.
+
+**stRATEGY Vault – first Core Vault product**\
+[The stRATEGY Vault](https://docs.mellow.finance/strategy-vault/overview) allocates deposited tokens across liquid DeFi opportunities to amplify staking rewards, with curator actions constrained by a predefined control set. It references Core Vaults as the underlying technology surface.
+
+**When to start here**
+
+* You need a production-grade framework for curated structured products
+* You want explicit controls and a stable vault framework even as strategies evolve
+
+***
+
+### DVstETH vault
+
+[DVstETH](https://app.gitbook.com/s/-Mk3LEacyGwD8y6mb9-2/dvsteth-vault) is a wrapped liquid staking token powered by Lido wstETH that enables depositors to reuse staking receipts across DeFi. It relies on Distributed Validator Technology (DVT) concepts where validator keys are split into shards across independent nodes to improve key-security assumptions.
+
+**When to start here**
+
+* You want wstETH-based exposure with a DVT incentive layer and a dedicated DV vault product line
+
+***
+
+### Restaking Vaults
+
+#### MultiVaults
+
+[MultiVault](restaking-vaults/multivault/) aggregates multiple isolated vaults – subvaults – into a single top-level vault. LPs deposit into the MultiVault and receive composite LP tokens. The MultiVault can redistribute assets across subvaults based on configured strategy rules, enabling cross-protocol liquidity rebalancing.
+
+The MultiVault architecture is described as an ERC4626 extension with additional features such as limits, whitelists, and locks for deposits and withdrawals.
+
+**When to start here**
+
+* You need a single user-facing vault that can rebalance across multiple isolated vault components
+
+
+
+#### Interoperable vaults&#x20;
+
+[Interoperable Vaults](restaking-vaults/interoperable-vaults/) extend the vault model cross-chain. Users deposit on EVM networks and receive vault shares, while restaking execution occurs on Ethereum mainnet. The system uses LayerZero OFT messaging with custom modifications to support deposit and withdrawal flows across L1 and L2 environments.
+
+**When to start here**
+
+* You want the MultiVault-style vault UX on multiple chains while centralizing restaking on Ethereum
+
+
+
+#### Simple LRT
+
+[Simple LRT](restaking-vaults/simple-lrt/) is a system of contracts built around a vault contract – MellowSymbioticVault or MellowVaultCompat. It modifies ERC4626 and introduces queued withdrawals handled by a dedicated SymbioticWithdrawalQueue contract.
+
+**When to start here**
+
+* You want an ERC4626-like surface with explicit withdrawal queue semantics
+
+***
+
+### Mellow ALM&#x20;
+
+[Mellow ALM](https://app.gitbook.com/s/-Mk3LEacyGwD8y6mb9-2/mellow-alm) covers two related components:
+
+**Mellow Permissionless Vaults**\
+A set of smart contracts that allows anyone to create a multi-ERC20 vault and a strategy across DeFi protocols and EVM chains. It defines distinct actor roles such as liquidity providers, strategists, and governance.
+
+**Mellow ALM Toolkit**\
+A toolkit for concentrated liquidity management on AMMs such as Uniswap and others. It focuses on bootstrapping liquidity and optimizing liquidity positions, with a workflow where users set strategy parameters and the system manages ongoing operations.
+
+**When to start here**
+
+* Your product is AMM liquidity management rather than restaking or LRT-focused vault design
+
+***
+
+
+
+
+
+Once live, each vault dynamically allocates capital across various yield-generating opportunities:
+
+* **Restaking Rewards** (except for DVstETH vault)
+  * Through restaking protocols, stakers can choose to accept additional slashing conditions on their staked ETH for rewards from protocols whose state is secured by stakers’ assets.
+  * Typical design enables the validation of various modules, including consensus protocols for L2s and appChains, data availability layers, virtual machines & application layers, creating new revenue opportunities for restakers.
+  * Restaking protocols share the abundant security of Ethereum consensus by spilling it over to these modules, enhancing the reliability of their consensus and adding extra revenue source to restakers.
+* **DeFi Liquidity Incentives**: Vault strategies can route a portion of assets into liquidity pools (Uniswap, Curve, Balancer) or lending markets (Aave, Compound), capturing swap fees, gauge rewards, and interest.
+* **Protocol Native Incentives**: Some vaults integrate directly with incentive programs—for instance, by depositing into newly launched yield-bearing tokens or participating in loyalty point systems—unlocking bonus distributions from governance or ecosystem grants.
+
+Launching LRTs will be permissionless for curators/users
+
+* Although LRTs permit delegation to multiple AVS operators, permissioned LRT holders and LRT node operators have little to no choice in how these delegation sets are formed or how risks are managed.
+* Holders can only make adjustments by changing the amount of LRT to which they are exposed.
+* Allowing LRT curators to issue new LRTs with refined risk/reward ratios in a permissionless manner makes the possibility of malfunctions causing ripple effects and liquidation cascades across the entire ecosystem remote and unlikely.
+
+Fees mechanism for curators
+
+* LRT curators are incentivized to set a competitive fee on restaking revenue. Mellow plans to aid LRT curators to launch permissionless LRTs with deployment, maintenance and DeFi integrations.

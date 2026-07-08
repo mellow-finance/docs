@@ -1,0 +1,177 @@
+---
+title: "Uni V3 Boosted strategy"
+---
+
+**Overview**
+
+UniV3 Boosted strategy provides a risk profile very similar to a fixed UniV3 position but with higher returns.
+
+Consider UniV3 ETH/USDC 0.05% pool and assume we’d like to put our liquidity into the \[1000, 2000] price range (we refer to it as the Domain price range). How can we do better than just providing it directly into the pool?
+
+The trick is to put only a tiny portion of liquidity into a really narrow price range earning the same fees as direct providing. As soon as the price risks going out of the narrow range, rebalance the interval to cover the price safely.
+
+The liquidity requirements for UniV3, in this case, are significantly lower. The rest of the liquidity can be put into some yield protocols like Yearn. Thus the overall returns are higher for the UniV3 Boosted strategy.
+
+UniV3 Boosted strategy is a strategy for a pair of tokens X and Y, for example — WBTC/WETH or USDC/WETH. The entire capital of the strategy is divided into three parts:
+
+1. A special buffer vault through which all deposits, withdrawals, and rebalancings take place in the strategy to reduce gas consumption
+2. Uniswap V3 position
+3. Yield protocols (Aave/Yearn)
+
+_**Note for future understanding**._ Some strategy parameters, which are typically from 0 to 1, need to be multiplied by a special constant `DENOMINATOR` (typically `$$10^9$$`) in order to be saved as integers in the code. Hence, when we mention parameters as is, it's mentioned as is, whereas we mention them multiplied by `DENOMINATOR,` we mention them with the letter D at the end. For example, `erc20CapitalRatio`= `$$0.5$$`, whereas `erc20CapitalRatioD` = `$$5 \cdot 10^8$$`​.
+
+### RootVault Structure
+
+To implement the above capital division into parts, the system of three vaults is used:
+
+1. ERC20Vault - implements the logic of the special buffer vault
+2. UniV3Vault - implements UniswapV3Positon control logic
+3. AaveVault or YearnVault - implements the logic for working with yield protocols
+
+### Strategy
+
+The idea of the strategy is to optimize a Uniswap V3 position (domain interval) by using an equally profitable Uniswap V3 position of a smaller size (short interval) and depositing the remaining tokens into yield protocols. This is based on the fact that positions with the same liquidity (in terms of Uniswap V3) receive the same fees and suffer the same impermanent losses. However, the number of tokens required for equal liquidity on a smaller interval is less. So, the remaining tokens are deposited into yield protocols, increasing final APY and reducing non-permanent losses compared to storing tokens in a domain interval on Uniswap V3.
+
+The mathematical justification of the formulas we use here is described in this article:
+
+[Uniswap V3 Voodoo Magic Fuckery](https://mellowprotocol.medium.com/uniswap-v3-voodoo-magic-fuckery-f1773aba684)
+
+To optimize gas consumption for interaction with the strategy, a buffer vault (named erc20Vault in our protocol) is used, the `ratioParams.erc20CapitalRatioD` parameter determines the fraction of capital that is normally stored in this buffer vault. The rest of the capital is distributed to the protocols according to calculated weights (for more details go to Appendix 1.).
+
+_Note:_ this strategy also can emulate not only the position in Uniswap V3 but also the position in Uniswap V2. To do this, it is enough to choose the widest possible domain interval.
+
+The only problem that arises when emulating a domain interval is keeping a short interval active to receive fees from this interval. To do this, the strategy has a rebalance mechanic, which burns an inactive position and mints new, actual one.
+
+### Algorithm
+
+The rebalance function consists of two functions: `_partialRebalanceOfUniV3Position`, which is optional, and `_capitalRebalance`, which is called every time.
+
+**rebalance:**
+
+1. If the current price has deviated sufficiently concerning the short interval, then the strategy closes the old position and mints a new one via `_partialRebalanceOfUniV3Position` method:
+   1. Firstly, the strategy removes all liquidity from the old position
+   2. Determines the borders of the new position and mints it (with small amounts)
+   3. Transfers the new position to the uniV3Vault
+   4. Closes the old position
+2. Rebalancing capitals via `_capitalRebalance` method:
+   1. Calculates current amounts of tokens on each vault
+   2. Calculates expected amounts of tokens after rebalancing with the formulas above
+   3. If the deviation between current amounts and expected amounts is large enough, then the following transfers are done. “enough” is determined by the actual deviation and `ratioParams` parameters of the strategy
+   4. Pulls extra tokens from Uniswap V3 position and yield protocols compared to the expected number to erc20Vault (special buffer vault)
+   5. Swaps tokens on Uniswap V3 via the SwapRouter on erc20Vault (if needed)
+   6. Pulls missing (relative to expected values) tokens to Uniswap V3 position and yield protocols from erc20Vault (special buffer vault)
+
+_Note:_ to calculate the expected amount of tokens in uniV3 we need to know, how to convert capital (measured in token X weis) to uniV3 position amounts. The formulas for these calculations are given in Appendix 2.
+
+### Appendix 1
+
+Below are the formulas that determine the portion of the capital that should be directed to the Uniswap V3 position (short interval) and the yield protocols for both tokens.
+
+`$$u_{1}= 1 - u_2 - u_3 =\frac{2\sqrt{c}-\sqrt{a}-\frac{c}{\sqrt{b}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` — fraction of capital to Uniswap V3;
+
+`$$u_{2}=\frac{\frac{c}{\sqrt{b}}-\frac{c}{\sqrt{b_{0}}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` — fraction of capital to the yield protocol in token X;
+
+`$$u_{3}=\frac{\sqrt{a}-\sqrt{a_{0}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` — fraction of capital to the yield protocol in token Y. where:
+
+* `$$a_0$$`, `$$b_0$$` — domain interval in Uniswap V3
+* `$$a$$`, `$$b$$` — short interval in Uniswap V3
+* `$$c$$` — current price
+
+### Appendix 2
+
+To calculate the expected number of tokens in a Uniswap V3 position, we will use the basic Uniswap V3 equation for real tokens:
+
+`$$x\dfrac{\sqrt{P}\cdot\sqrt{p_b}}{\sqrt{p_b} - \sqrt{P}} = \dfrac{y}{\sqrt{P} - \sqrt{p_a}}$$`
+
+Where:
+
+* `$$x$$` — the amount of token X weis
+* `$$y$$`— the amount of token Y weis
+* `$$\sqrt{P}$$` — square root of the current price
+* `$$\sqrt{p_a}$$` — square root of the price at the left border of the position interval
+* `$$\sqrt{p_b}$$` — square root of the price at the right border of the position interval
+
+Thus, if we have `$$x_0$$` amount of weis in token X and we’d like to calculate how much we need to convert to token Y, we are solving the following system:
+
+`$$\begin{cases}x_1 + y_1/P &= x_0\\x_1\dfrac{\sqrt{P}\cdot\sqrt{p_b}}{\sqrt{p_b} - \sqrt{P}} &= \dfrac{y_1}{\sqrt{P} - \sqrt{p_a}}\end{cases}$$`
+
+The conclusion is the following:
+
+`$$y_1 =\dfrac{x_0 P \sqrt{P_b} (\sqrt{P} - \sqrt{P_a})}{ \sqrt{P_b} (\sqrt{P} - \sqrt{P_a}) + \sqrt{P} (\sqrt{P_b} - \sqrt{P}) }$$`\
+`$$x_1 = x_0 - \dfrac{y_1}{P}$$`
+
+## Parameters
+
+Historical token prices for 2022 were used to determine strategy parameters. They were chosen as follows:
+
+1. the maximum daily price change was no more than `halfOfShortInterval`
+2. the minimum price is higher than `domainLowerTick` and the maximum price is less than `domainUpperTick`.
+
+*   StrategyParams for the strategy WBTC/WETH:
+
+    | name                | description                                                                            | default value                 |
+    | ------------------- | -------------------------------------------------------------------------------------- | ----------------------------- |
+    | halfOfShortInterval | Half of the width of the short interval                                                | 1200                          |
+    | tickNeighborhood    | Minimal required difference between tick and current position border to call rebalance | 100                           |
+    | domainLowerTick     | The lower tick of the emulated UniV3 position                                          | 252000 (\~ 1 WBTC = 9 WETH)   |
+    | domainUpperTick     | The upper tick of the emulated UniV3 position                                          | 261600 (\~ 1 WBTC = 23 WETH)  |
+*   StrategyParams for the strategy USDC/WETH:
+
+    | name                | description                                                                            | default value                      |
+    | ------------------- | -------------------------------------------------------------------------------------- | ---------------------------------- |
+    | halfOfShortInterval | Half of the width of the short interval                                                | 1800                               |
+    | tickNeighborhood    | Minimal required difference between tick and current position border to call rebalance | 100                                |
+    | domainLowerTick     | The lower tick of the emulated UniV3 position                                          | 190800 (\~ 1 USDC = 1 / 5000 WETH) |
+    | domainUpperTick     | The upper tick of the emulated UniV3 position                                          | 219600 (\~ 1 USDC = 1 / 300 WETH)  |
+*   OracleParams:
+
+    | name                 | description                                                                                                                           | default value                    |
+    | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+    | averagePriceTimeSpan | The time interval in seconds used to determine the average tick values and prices in UniswapV3Pool                                    | 2.5 minutes (150 sec)            |
+    | maxTickDeviation     | If the spot tick in UniswapV3Pool deviates from the average tick by a larger value, then rebalance reverts with LIMIT\_OVERFLOW error | 100 ticks (\~1% price deviation) |
+*   RatioParams:
+
+    | name                   | description                                                                                                                                                                    | default value  |
+    | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+    | erc20CapitalRatioD     | Percentage of the total capital of the strategy that is in erc20Vault                                                                                                          | 1000000 (0.1%) |
+    | minCapitalDeviationD   | Percentage of the total capital of the strategy by which the current value for any token on any vault must deviate from the expected value to trigger the rebalancing function | 500000 (0.05%) |
+    | minRebalanceDeviationD | Percentage of the total capital of the strategy by which the current value must deviate from the expected value to trigger the rebalancing function                            | 10000000 (1%)  |
+*   MintingParams for the strategy USDC/WETH:
+
+    | name                | description                                                                                                                                           | default value |
+    | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+    | minToken0ForOpening | Required number of tokens (WETH in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance | 1000000000    |
+    | minToken1ForOpening | Required number of tokens (USDC in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance | 10000         |
+*   MintingParams for the strategy WBTC/WETH:
+
+    | name                | description                                                                                                                                           | default value |
+    | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+    | minToken0ForOpening | Required number of tokens (WETH in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance | 1000000000    |
+    | minToken1ForOpening | Required number of tokens (WBTC in weis) that must be on the balance of the strategy to make a mint of a new Uniswap V3 position during the rebalance | 50000         |
+
+Note: `tickNeighborhood` could be negative as well, this means that tick should be outside of position for at least abs(`tickNeighborhood`) ticks to call rebalance
+
+#### Risks:
+
+The strategy has the same risk as the underlying UniV3 position with the domain interval with one exception: if the rebalance happens when the price is out of the short interval. If UniV3 Boosted rebalances at price `$$c > b$$` then the approximate losses are:
+
+1.  Profit due to better swap price:
+
+    `$$profit = 100\% * (strategyCapital / uniswapCapital - 1)$$`, where:
+
+    1. `$$strategyCapital = L(c (\sqrt{b_0} - \sqrt{b}) / \sqrt{b b_0} + \sqrt{b} - \sqrt{a_0})$$` — capital of the strategy in token Y if there has not been a rebalance since the price equal to `$$b$$`
+    2. `$$uniswapCapital = L (c(\sqrt{b_0} - \sqrt{c}) / \sqrt{c b_0} + \sqrt{c} - \sqrt{a_0})$$` — capital of uniswap position in token Y
+    3. `$$L$$`— liquidity of the uniswap position in terms of UniswapV3
+2.  Fees paid for swap:
+
+    `$$loss = 0.05\% * (strategyRatioX - uniswapRatioX)$$`, where:
+
+    1. `$$strategyRatioX = c(\sqrt{b_0} - \sqrt{b}) / (\sqrt{b b_0} * (\sqrt{b} - \sqrt{a_0}) + c(\sqrt{b_0} - \sqrt{b}))$$` — the ratio of token X to the total capital of the strategy if there has not been a rebalance since the price equal to `$$b$$`
+    2. `$$uniswapRatioX = c(\sqrt{b_0} - \sqrt{c}) / (\sqrt{c b_0} * (\sqrt{c} - \sqrt{a_0}) + c(\sqrt{b_0} - \sqrt{c}))$$` — the ratio of token X to the total capital of the uniswap position
+3.  Fees foregone not providing in the `$$[b, c]$$` range:
+
+    `$$loss = 100\% * possibleFees / uniswapCapital$$`, where:
+
+    1. `$$possibleFees = poolFees / (1 - poolFees) * L (\sqrt{c} - \sqrt{b})$$` - the amount of fees that the uniswap position receives when the price moves from `$$b$$` to `$$c$$` in token Y
+    2. `$$uniswapCapital = L (c(\sqrt{b_0} - \sqrt{c}) / \sqrt{c b_0} + \sqrt{c} - \sqrt{a_0})$$` — capital of uniswap position in token Y
+    3. `$$L$$` — liquidity of the uniswap position in terms of UniswapV3

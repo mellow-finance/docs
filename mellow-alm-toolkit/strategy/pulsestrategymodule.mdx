@@ -1,0 +1,162 @@
+---
+title: "PulseStrategyModule"
+---
+
+#### Overview
+
+The `PulseStrategyModule` provides liquidity management strategies within Automated Market Makers (AMMs). It supports various strategies tailored for different market trends, optimizing liquidity positioning through minimal yet effective rebalancing. Key components include managing penalty calculations and target setting to optimize the interval for liquidity deployment.
+
+***
+
+#### Errors
+
+* **`InvalidParams()`**: Raised when parameters provided to a strategy function are outside expected bounds.
+* **`InvalidLength()`**: Triggered when an input array has an incorrect length, typically related to market data or strategy parameters.
+
+***
+
+#### Enums
+
+#### **StrategyType**
+
+Identifies the strategy applied to manage and rebalance liquidity positions:
+
+* **`Original`**: This is the classic strategy where the position is actively managed within an interval `[tickLower, tickUpper]`. If the market tick moves outside an interval `[tickLower + tickNeighborhood, tickUpper - tickNeighborhood]`, a rebalance is triggered to center the position as closely as possible to the current tick, maintaining the same width. This ensures the position remains effectively aligned with the market.
+* **`LazySyncing`**: Supports active position management within the `[tickLower, tickUpper]` interval, with rebalancing actions triggered under two scenarios:
+  * If the `current tick` < `tickLower`, rebalance to a new position closest to the current tick on the right side, with the same width.
+  * If the `current tick` > `tickUpper`, rebalance to a new position closest to the current tick on the left side, with the same width. This strategy aims to realign the position with the market with minimal adjustments.
+* **`LazyAscending`**: Similar to LazySyncing but specifically focuses on ascending market conditions. If the current tick is less than `tickLower`, it does not trigger a rebalance. Rebalancing is considered only when the market moves upwards beyond the `tickUpper`, aiming to catch upward trends without reacting to downward movements.
+* **`LazyDescending`**: Opposite to LazyAscending, this strategy caters to descending market conditions. If the current tick is greater than `tickUpper`, it does not prompt a rebalance. The strategy focuses on rebalancing when the market descends below `tickLower`, aiming to manage downward trends without reacting to upward movements.
+* **`Tamper`**: Is a strategy for the stable pair of tokens like WETH/WSTETH, which works on top of the corresponding pool. It holds two crossing positions in this pool, changing them and rebalancing liquidity between them depending on the price in the pool.
+
+#### Structs
+
+#### **StrategyParams**
+
+Defines required parameters for each strategy, including key elements that drive rebalancing decisions:
+
+* **strategyType**: The active strategy type.
+* **tickNeighborhood**: A range around tick values that prompts rebalancing.
+* **tickSpacing**: Defines spacing between ticks in the AMM pool.
+* **width**: Width of the interval for liquidity placement post-rebalance.
+
+#### `calculateTarget(int24 tick, int24 tickLower, int24 tickUpper, StrategyParams memory params)`
+
+* **Description**: Determines the target position and rebalancing requirements based on the current tick and strategy parameters.
+* **Parameters**:
+  * `tick`: The current market tick, representing the price level.
+  * `tickLower`: The lower tick boundary of the existing position.
+  * `tickUpper`: The upper tick boundary of the existing position.
+  * `params`: Contains strategy-specific parameters, including the strategy type and rebalancing criteria.
+* **Returns**:
+  * `isRebalanceRequired`: Boolean indicating if a rebalance is needed based on the strategy.
+  * `target`: Details of the new position (tick bounds) if rebalancing occurs.
+* **Logic**: The function dynamically assesses the need for rebalancing based on the `StrategyType` selected and the current market tick's position relative to the existing liquidity interval. It then calculates the optimal target position parameters to realign the position with the chosen strategy and prevailing market conditions.
+
+#### `function calculateTargetPulse(uint160 sqrtPriceX96, int24 tick, IAmmModule.AmmPosition[] memory positions, IPulseStrategyModule.StrategyParams memory params) public pure returns (bool isRebalanceRequired, ICore.TargetPositionInfo memory target)`
+
+The `calculateTargetPulse` function efficiently determines if the current AMM positions require rebalancing based on price boundaries and strategy parameters. When rebalancing is needed, it provides a target position with updated price ranges and liquidity ratios, allowing for dynamic and adaptive position management within the AMM. The function operates in a pure, stateless manner, making it reliable and consistent for real-time position assessments.
+
+* **Purpose**:
+  * This function checks whether rebalancing is necessary for a set of AMM positions and, if so, calculates the target position details required for rebalancing.
+* **Parameters**:
+  * `sqrtPriceX96`: The current square root price in Q96 format, used to determine price boundaries.
+  * `tick`: The current tick, representing the nearest price point.
+  * `positions`: An array of existing `AmmPosition` data for the managed position, specifying the range and liquidity of each position.
+  * `params`: Strategy parameters, defining rules for when and how rebalancing should occur.
+* **Returns**:
+  * `isRebalanceRequired`: A boolean indicating if rebalancing is needed.
+  * `target`: A `TargetPositionInfo` struct with the calculated position details, including new price ranges and liquidity ratios for rebalancing.
+
+#### Execution Flow
+
+1. **Initialize Rebalance Check**:
+   * Initializes `tickLower` and `tickUpper`, which represent the price range of the current position.
+   * Sets `isRebalanceRequired` to `true` if there are no existing positions or more than one, as this indicates a need to update or consolidate the position.
+2. **Position Boundary Check**:
+   * If there is exactly one position, the function retrieves the `tickLower` and `tickUpper` values from this position, establishing the current boundaries.
+   * Calls `calculatePulsePosition` to compute the target tick range (`targetTickLower` and `targetTickUpper`) based on the current price (`sqrtPriceX96`), tick, existing boundaries, and strategy parameters.
+3. **Target Position Comparison**:
+   * Compares `targetTickLower` and `targetTickUpper` with the existing `tickLower` and `tickUpper`.
+   * If the calculated target ticks match the existing ticks, the function returns with `isRebalanceRequired` set to `false` and an empty `target` struct, as rebalancing is unnecessary.
+4. **Set Target Position for Rebalancing**:
+   * If rebalancing is required, the function populates the `target` struct with:
+     * `lowerTicks` and `upperTicks`: Arrays holding the target tick boundaries.
+     * `liquidityRatiosX96`: An array with the liquidity ratio set to `Q96` (a scaling factor of 1), assuming equal liquidity across the entire range.
+5. **Return Rebalance Required Flag**:
+   * Sets `isRebalanceRequired` to `true`, confirming that rebalancing is needed with the newly calculated `target`values.
+
+#### `function calculateTamperPosition(uint160 sqrtPriceX96, int24 tick, int24 width) public pure returns (int24 targetLower, uint256 lowerLiquidityRatioX96)`
+
+The `calculateTamperPosition` function determines the lower boundary and liquidity allocation for a position based on the current price, tick, and width parameters. It uses interpolation and the `TickMath` library to accurately place liquidity, allocating more to the lower range if the current price is near the bottom half of the target range. The function provides dynamic liquidity control, adjusting allocation smoothly as the price shifts within the specified boundaries.
+
+* **Purpose**:
+  * Calculates the lower boundary (`targetLower`) of the target position and the liquidity ratio for the lower range (`lowerLiquidityRatioX96`) based on the current price and a specified width around the position’s current tick.
+* **Parameters**:
+  * `sqrtPriceX96`: The current square root price in Q96 format, which helps determine where the current price lies within the target range.
+  * `tick`: The current tick of the position, representing the closest price point.
+  * `width`: The width of the position range, which defines how far above and below the current tick the position will span.
+* **Returns**:
+  * `targetLower`: The lower tick boundary of the target position.
+  * `lowerLiquidityRatioX96`: The liquidity ratio for the lower range in Q96 format, indicating the proportion of liquidity allocated to the lower part of the range.
+
+#### Execution Flow
+
+1. **Initial Calculation of `targetLower`**:
+   * Calculates half of the specified `width` to find a centered position range.
+   * Calls `calculateCenteredPosition`, passing `sqrtPriceX96`, `tick`, `width + half`, and `half`, to determine `targetLower`, the lower boundary of the target range.
+2. **Calculate Center Price**:
+   * Computes `sqrtPriceCenterX96`, the square root price at the midpoint tick (`targetLower + half`) using `TickMath.getSqrtRatioAtTick`.
+   * This value serves as a reference point to compare the current price with the center of the target range.
+3. **Determine `lowerLiquidityRatioX96` Based on Price Position**:
+   * **Case 1**: If `sqrtPriceX96` (current price) is less than or equal to `sqrtPriceCenterX96`, set `lowerLiquidityRatioX96` to `Q96`, indicating full liquidity allocation to the lower range.
+   * **Case 2**: If `sqrtPriceX96` is greater than or equal to the price at `targetLower + width`, set `lowerLiquidityRatioX96` to `0`, indicating no liquidity in the lower range.
+   * **Case 3**: If `sqrtPriceX96` lies within the range `[targetLower + half, targetLower + width]`:
+     * Calculate `preciseTickX96`, a precise tick position based on linear interpolation of `sqrtPriceX96`between `tick` and `tick + 1`.
+     * Calculate `deduction`, a value based on how far `preciseTickX96` deviates from the center of the lower range, and normalize it to `Q96`.
+     * Set `lowerLiquidityRatioX96` to `Q96 - deduction`, ensuring that the liquidity ratio decreases gradually as the price approaches the upper boundary of the lower range.
+
+#### `calculatePenalty(uint160 sqrtPriceX96, uint160 sqrtPriceX96Lower, uint160 sqrtPriceX96Upper)`
+
+* **Description**: Calculates a penalty based on whether the current price (`sqrtPriceX96`) is within a given range defined by `sqrtPriceX96Lower` and `sqrtPriceX96Upper`.
+* **Parameters**:
+  * `sqrtPriceX96`: The current market price in Q96 fixed-point format.
+  * `sqrtPriceX96Lower`: The lower bound of the acceptable price range in Q96 format.
+  * `sqrtPriceX96Upper`: The upper bound of the acceptable price range in Q96 format.
+* **Returns**: The penalty value, which is `type(uint256).max` if the price is outside the range, otherwise calculated based on distance from bounds.
+
+#### `function validateStrategyParams(bytes memory params_)`
+
+The `validateStrategyParams` function ensures that the provided strategy parameters are consistent, valid, and tailored to the chosen strategy type. Each parameter is rigorously checked to prevent invalid configurations, and specific conditions are enforced for different strategies, especially for `Tamper`, which has unique requirements. If any check fails, the function provides immediate feedback by reverting with an appropriate error.
+
+* **Purpose**:
+  * Validates the structure and values of the strategy parameters provided in `params_`. Ensures that each parameter meets specific conditions based on the strategy type to prevent misconfigurations.
+* **Parameters**:
+  * `params_`: Encoded bytes representing `StrategyParams`. These include settings like width, tick spacing, strategy type, tick neighborhood, and liquidity deviation.
+* **Execution Flow**
+
+1. **Length Check**:
+   * Validates that `params_` has a length of `0xa0` bytes (160 bytes). If not, it reverts with an `InvalidLength` error, ensuring the data structure is the expected size.
+2. **Decode Parameters**:
+   * Decodes `params_` into a `StrategyParams` struct, making it easier to work with each parameter individually.
+3. **Basic Parameter Validations**:
+   * Checks if:
+     * `width` and `tickSpacing` are both non-zero.
+     * `width` is evenly divisible by `tickSpacing`.
+     * `strategyType` is a valid value within the `StrategyType` enum, specifically less than or equal to `Tamper`.
+   * If any of these checks fail, the function reverts with an `InvalidParams` error.
+4. **Strategy Type-Specific Validations**:
+   * **Original Strategy**:
+     * Allows `tickNeighborhood` to be a non-zero (possibly negative) value.
+     * Checks that `tickNeighborhood * 2` does not exceed `width`, ensuring the neighborhood is within bounds of the width.
+     * If this condition fails, it reverts with `InvalidParams`.
+   * **Other Strategies**:
+     * Ensures `tickNeighborhood` is zero if the strategy type is not `Original`. Any non-zero value results in `InvalidParams`.
+   * **Tamper Strategy**:
+     * Checks additional conditions specific to the `Tamper` strategy:
+       * `width` must be even.
+       * `width / 2` must be evenly divisible by `tickSpacing`.
+       * `maxLiquidityRatioDeviationX96` should be a positive number less than `Q96` (representing 1 in Q96 format).
+     * If any condition fails, the function reverts with `InvalidParams`.
+   * **Non-Tamper Strategies**:
+     * Ensures `maxLiquidityRatioDeviationX96` is zero, as it’s only relevant to `Tamper`. Any non-zero value results in `InvalidParams`.

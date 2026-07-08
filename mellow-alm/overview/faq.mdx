@@ -1,0 +1,55 @@
+---
+title: "FAQ"
+---
+
+### How's Vault APR calculated
+
+The APR is calculated in 3 steps:
+
+1. Fix a starting point (generally that would be the last time some vault parameters were tweaked)
+2. Take the LP price series for the vault
+3. Derive APR from the LP price at a starting point and current point
+
+There are two different approaches to calculating the LP price: the regular way (in ERC20 token and USD) and the price-neutral way.
+
+**LP price regular way**
+
+```
+$$
+p^{LP}_t= TVL^{min}_t/LP,\,\,\,\, \text{where LP - total LP token supply}
+$$
+```
+
+It's worth mentioning that the TVL of the vault is not one number but rather a range of possible values (defined by TVL min and TVL max). This is done for several reasons: for Uniswap Vaults to avoid price manipulation attacks, and for Aave vaults for gas savings.
+
+**LP price price-neutral way**
+
+The problem with the regular way is that APR includes price risk. For example, if you take USDC/WETH position in Uniswap and the price goes up 10x, that's a huge impermanent loss. But the USDC APR is still positive in this case, while WETH APR is extremely negative.&#x20;
+
+This gives the way to various manipulations like showing APR in WETH whenever the price goes down and in USDC whenever the price goes up.
+
+To avoid this, along with the regular APRs, we show price-neutral APR. Price-neutral APR eliminates the price risk and shows how much returns come from the strategy itself rather than price movement. See this thread for details [https://twitter.com/0xAlexEuler/status/1503444182257393666](https://twitter.com/0xAlexEuler/status/1503444182257393666)
+
+```
+$$
+p^{LP}_t= \frac{{x_t}\cdot p_t + {y_t}}{{x_0}\cdot p_t + {y_0}}\cdot ({{x_0}\cdot p_0 + {y_0}})/LP
+$$
+```
+
+x and y are the amounts of token0 and token1 in the vault, pₜ is the token1 / token0 price at the time t and 0 is a starting point.
+
+**APR**
+
+The APR is easily derived from the LP price:
+
+```
+$$
+APR^{PN}_t = ((p^{LP}_t / p^{LP}_0) ^ {1/t} - 1) * 100\%, \,\, \text{t is measured in years}
+$$
+```
+
+Important note:
+
+The APR is a historical measure, it does not guarantee future performance. In some cases like farming, it's somewhat easy to predict the future APR using the current token price and that will guarantee that you'll have this APR at least in the near future. For more complex strategies it's hard to make a prediction though. Like there could be rare losses or gains that change the ARP substantially. That's why we show only historical APR, which might differ from the actual future APR.
+
+The other thing is that APR also includes gains from LP entry and exit price spread. In many protocols, this difference goes directly into the protocol treasury. In Mellow, it stays within the vault and is distributed among other LPs thus increasing the vault APR.

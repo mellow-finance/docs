@@ -1,0 +1,319 @@
+---
+title: "DeFi points integration instructions"
+description: "Technical integration guide with TypeScript interfaces: getContracts, getUserShares, getBalances, getDeFiPools. Includes full Zircuit example implementation and all type definitions."
+---
+
+### DeFi Integrations
+
+#### Get contracts
+
+Async function to load contracts holding LRTs on behalf of users.
+
+```ts
+getContracts: (params: GetContractsParams) => Promise<DeFiContract[]> | DeFiContract[];
+```
+
+#### Get user shares
+
+Async function to load user shares between 2 blocks (inclusive).
+
+This function is called for all contracts returned by `getContracts`.&#x20;
+
+```ts
+getUserShares: (params: GetUserSharesParams) => Promise<IDeFiUserShare[]> | IDeFiUserShare[];
+```
+
+A user share represents the amount of LRT owned by an address pro-rata to others.
+
+User shares are sorted by block and a new entry must be added each time LRT ratios change.
+
+Example:
+
+<table><thead><tr><th data-type="number">chainId</th><th>block</th><th>user</th><th>amount</th><th>vault</th><th>protocol_address</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>0x01</td><td>100</td><td>0x0</td><td>0x0</td></tr><tr><td>1</td><td>1</td><td>0x02</td><td>200</td><td>0x0</td><td>0x0</td></tr><tr><td>1</td><td>1</td><td>0x03</td><td>50</td><td>0x0</td><td>0x0</td></tr><tr><td>1</td><td>3</td><td>0x03</td><td>20</td><td>0x0</td><td>0x0</td></tr><tr><td>1</td><td>4</td><td>0x01</td><td>150</td><td>0x0</td><td>0x0</td></tr><tr><td>1</td><td>5</td><td>0x02</td><td>0</td><td>0x0</td><td>0x0</td></tr></tbody></table>
+
+* At block 1, `0x01` owns \~28% of the user shares (100 / (100 + 200 + 50)), `0x02` owns \~57% and `0x03` owns \~14%.
+* At block 3, `0x03` underlying LRT balance changed, he now owns \~6% of the user shares (20 / (100 + 200 + 20)), while `0x01` owns \~31% and `0x02` owns \~62%.
+* At block 5, `0x02` withdrew all his funds from the protocol, he now owns 0% of the user shares, while `0x01` owns \~88.2% (150 / (150 + 20)) and `0x03` owns \~11.8% (20 / (150 + 20)).
+
+#### Get user balances (optional)
+
+Optional async function to load user balances (if they're not 1:1 to user shares).
+
+This function is called for all contracts returned by `getContracts`.&#x20;
+
+```typescript
+getBalances: (params: GetBalancesParams) => Promise<IDeFiUserBalance[]> | IDeFiUserBalance[];
+```
+
+### Example
+
+```ts
+import { GetContractsParams, GetDeFiPoolsParams, GetUserSharesParams, IDeFiUserShare } from "../types";
+
+export class ZircuitDeFiCollector implements IDeFiCollector {
+  public getContracts({ chainId }: GetContractsParams) {
+    if (chainId === 1) {
+      return [
+        {
+          chainId,
+          vault: "0x7a4EffD87C2f3C55CA251080b1343b605f327E3a",
+          address: "0xF047ab4c75cebf0eB9ed34Ae2c186f3611aEAfa6"
+        },
+        // ...
+      ];
+    }
+    
+    return [];
+  }
+  
+  public getDeFiPools({ chainId }: GetDeFiPoolsParams) {
+    if (chainId === 1) {
+      return [
+        {
+          id: "pool-zircuit-rstETH",
+          chainId: 1,
+          name: "rstETH",
+          protocol: "Zircuit",
+          vault: "0x7a4EffD87C2f3C55CA251080b1343b605f327E3a",
+          protocol_address: "0xF047ab4c75cebf0eB9ed34Ae2c186f3611aEAfa6",
+          url: "https://stake.zircuit.com",
+          boost: 2,
+        }
+        // ...
+      ];
+    }
+    
+    return [];
+  }
+
+  public async getUserShares({
+    chainId,
+    contract, // ZtakingPool
+    fromBlock,
+    toBlock,
+  }: GetUserSharesParams) {
+    if (chainId !== 1) {
+      return [];
+    }
+
+    const userShares: IDeFiUserShare[] = [];
+    const vaults = ["0x7a4EffD87C2f3C55CA251080b1343b605f327E3a"];
+    const depositEvents = await getDepositEvents(contract);
+    const withdrawalEvents = await getWithdrawalEvents(contract);
+    // balance changes events
+    const events = [...depositEvents, ...withdrawalEvents].sort(
+      (a, b) => a.block - b.block
+    );
+
+    for (const event of events) {
+      // get user vaults balances at this block
+      const balances = await getMulticallBalance(
+        event.block,
+        event.user,
+        vaults
+      );
+      for (const balance of balances) {
+        userShares.push({
+          block: event.block,
+          user: event.user,
+          vault: balance.vault,
+          protocol_address: contract,
+        });
+      }
+    }
+
+    return userShares;
+  }
+}
+```
+
+### Interface
+
+```ts
+export type ChainId = 1 | 1923 | 9889 | 17000 | 48900;
+
+export interface IDeFiUserShare {
+  chainId: ChainId;
+  block: number;
+  /**
+   * UNIX timestamp
+   */
+  timestamp: number;
+  /**
+   * User address (checksummed)
+   */
+  user: string;
+  /**
+   * Share amount
+   */
+  amount: bigint;
+  /**
+   * Vault address (checksummed)
+   */
+  vault: string;
+  /**
+   * Protocol address (checksummed) e.g. LP, SY, Credit Account
+   */
+  protocol_address: string;
+}
+
+export interface IDeFiUserBalance {
+  chainId: ChainId;
+  block: number;
+  timestamp: number;
+  user: string;
+  amount: bigint;
+  vault: string;
+  protocol_address: string;
+}
+
+/**
+ * Pool metadata
+ */
+export interface IDefiPool {
+  /**
+   * Unique pool identifier
+   */
+  id: string;
+  /**
+   * Pool display name
+   */
+  name: string;
+  /**
+   * Protocol display name
+   */
+  protocol: string;
+  /**
+   * Vault address (checksummed)
+   */
+  vault: string;
+  /**
+   * Protocol address (checksummed) e.g. LP, SY, Credit Account
+   */
+  protocol_address: string;
+  /**
+   * Link to protocol pool page
+   */
+  url: string;
+  /**
+   * Mellow points multiplier e.g. 2, 3 for 2x or 3x boost
+   */
+  boost: number;
+}
+
+export interface IPointsFee {
+  chainId: ChainId;
+  contract: string;
+  vault: string;
+  /**
+   * Recipient address
+   */
+  recipient: string;
+  /**
+   * Ex: 3n for 3% fee
+   */
+  amount: bigint;
+}
+
+export type GetContractsParams = {
+  chainId: ChainId;
+  toBlock: number;
+  toTimestamp: number;
+};
+
+export type GetDeFiPoolsParams = GetContractsParams;
+
+export type GetUserSharesParams = {
+  chainId: ChainId;
+  contract: string;
+  fromBlock: number;
+  toBlock: number;
+  fromTimestamp: number;
+  toTimestamp: number;
+  /**
+   * Currently loaded user shares
+   */
+  userShares: IDeFiUserShare[];
+};
+
+export type GetBalancesParams = {
+  chainId: ChainId;
+  contract: string;
+  fromBlock: number;
+  toBlock: number;
+  fromTimestamp: number;
+  toTimestamp: number;
+  /**
+   * All user shares (includes shares just loaded)
+   */
+  allUserShares: IDeFiUserShare[];
+  /**
+   * Currently loaded user balances
+   */
+  userBalances: IDeFiUserBalance[];
+};
+
+export type GetCurrentBalancesParams = {
+  chainId: ChainId;
+  contract: string;
+  userBalances: IDeFiUserBalance[];
+};
+
+export type ProcessUserSharesParams = {
+  chainId: ChainId;
+  contract: string;
+  userShares: Map<string, IDeFiUserShare>;
+  block: number;
+  timestamp: number;
+};
+
+export type DeFiContract = {
+  vault: string;
+  chainId: ChainId;
+  address: `0x${string}`;
+  /**
+   * To fallback points if the contract owns LRTs but there's no shareholder
+   * ex: Pendle leftover points for expired pools
+   * ex: LRTs deposited in SY but SY not used in YT / LP
+   */
+  fallbackAddress?: `0x${string}`;
+  startBlock?: number;
+  startTimestamp?: number;
+};
+
+export interface IDeFiCollector {
+  /**
+   * Get LRT holders e.g. UniswapV3 Pool, Pendle SY
+   */
+  getContracts: (
+    params: GetContractsParams
+  ) => Promise<DeFiContract[]> | DeFiContract[];
+  /**
+   * Get DeFi pools metadata
+   */
+  getDeFiPools: (
+    params: GetDeFiPoolsParams
+  ) => Promise<IDefiPool[]> | IDefiPool[];
+  /**
+   * Get historical user shares
+   */
+  getUserShares: (
+    params: GetUserSharesParams
+  ) => Promise<IDeFiUserShare[]> | IDeFiUserShare[];
+  /**
+   * (Optional) Get historical user balances
+   */
+  getBalances?: (
+    params: GetBalancesParams
+  ) => Promise<IDeFiUserBalance[]> | IDeFiUserBalance[];
+  /**
+   * (Optional) Get protocol fees
+   */
+  getPointsFees?: () => IPointsFee[];
+  /**
+   * (Optional) Hook to post process current user shares
+   */
+  processUserShares?: (params: ProcessUserSharesParams) => void;
+}
+
+```

@@ -1,0 +1,110 @@
+---
+title: "Governance parameters"
+---
+
+### Protocol Governance parameters
+
+Protocol Governance manages the global parameters of the protocol.
+
+<table><thead><tr><th width="209">Parameter</th><th width="335">Description</th><th width="150">Unit</th><th>Default value</th></tr></thead><tbody><tr><td>maxTokensPerVault</td><td>Maximum different tokens that a vault can manage </td><td>#</td><td>10</td></tr><tr><td>governanceDelay</td><td>The delay that has to pass for updating a certain class of params (delayed)</td><td>secs</td><td>86400</td></tr><tr><td>protocolTreasury</td><td>The treasury address for protocol fees</td><td>address</td><td></td></tr><tr><td>forceAllowMask</td><td>If a bit in this mask is set, the permission is allowed for all addresses</td><td>bitmask (uint256)</td><td>0</td></tr><tr><td>withdrawLimit</td><td>The maximum withdrawal per block. The hardcoded minimum value is 200_000 USD</td><td>USD</td><td>200_000</td></tr><tr><td>unitPrices</td><td>Token price estimates, used for withdrawLimit. For new token can be set immediately, for updates a cool-down period of 14 days is used.</td><td>address (token) => units of token per 1 USD</td><td>USDC => 10 ^ 6<br/>ETH => 10 ^ 18 / 3000<br/>BTC => 10 ^ 8 / 45000</td></tr></tbody></table>
+
+### Vault Governances parameters
+
+Any [Vault kind](definitions#vault-kind) is governed by a Vault Governance contract. This contract is responsible for governing the parameters for this Vault kind. There are several types of parameters of any governance.
+
+* InternalParams are parameters common for all Vault Governances, to be staged in a constructor of a corresponding Vault Governance and to be updated with a delay by the Governance of the protocol, which are:
+
+| Parameter          | Description                                                                                          |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| protocolGovernance | Governance of the protocol (ProtocolGovernance)                                                      |
+| registry           | Vault registry of the protocol (VaultRegistry)                                                       |
+| singleton          | Singleton instance of a certain Vault kind, serving as a prototype for all vaults of the Vault Group |
+
+* delayedStrategyParams are parameters different for each Vault Governance and for each vault instance (typically being some parameters of the strategy set for an ERC20RootVault instance of this strategy), which may be updated with a delay by a Strategist or Governance
+* protocolPerVaultParams are parameters different for each Vault Governance and for each vault instance (typically being some protocol parameters of a single vault), which may be updated with a delay by the Governance
+* protocolParams are parameters common for all vaults of the Vault kind, which may be updated immediately by the Governance
+* delayedProtocolParams are parameters common for all vaults of the Vault kind, which may be updated with a delay by the Governance
+* operatorParams are parameters common for all vaults of the Vault kind, which may be updated immediately by a Strategist or Governance
+
+#### Getting and setting parameters
+
+There are, therefore, three types of parameters that are to be stated for all vaults of the Vault kind, and three types of parameters that are unique for each vault. These unique parameters are to be set and get not for a vault's address, but for a vault's NFT in the [VaultRegistry](governance-parameters#vaultregistry). An example of getting (the same works for setting) parameters having just the address of a vault:
+
+1. Take a deployed VaultRegistry contract and call [`nftForVault(address)`](api#nftforvault), where `address` is the address of your vault. If the address is correct, you get an NFT `nft`
+2. Take a corresponding Vault Governance contract and get the wanted parameters. For example, if your vault is ERC20RootVault, you can take the ERC20RootVaultGovernance deployed contract and call [`delayedStrategyParams(nft)`](api#delayedstrategyparams), getting stated strategyParams for this vault
+
+Note that a Vault Governance may not have any parameters of some type.
+
+Here are the parameters of Vault Governances we currently have.
+
+#### Aave VaultGovernance
+
+delayedProtocolParams:
+
+| Parameter        | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| lendingPool      | Aave lending pool                                   |
+| estimatedAaveAPY | Aave APY estimation for cal**c**ulating _tvl_ range |
+
+#### UniV3 VaultGovernance
+
+delayedProtocolParams:
+
+| Parameter       | Description                            |
+| --------------- | -------------------------------------- |
+| positionManager | UniV3 position manager                 |
+| oracle          | Oracle used for UniV3 price estimating |
+
+#### Yearn VaultGovernance
+
+delayedProtocolParams:
+
+| Parameter          | Description          |
+| ------------------ | -------------------- |
+| yearnVaultRegistry | Yearn vault registry |
+
+As can be seen, Vault kinds on top of the other protocols have only delayedProtocolParams in which we set some basic addresses connected with those protocols which are needed to be called for all instances of this Vault kind.
+
+ERC20 VaultGovernance and Mellow VaultGovernance have no parameters.
+
+#### ERC20Root VaultGovernance
+
+You might want to see what [ERC20Root Vault](governance-parameters#erc20root-vault) serves for.
+
+strategyParams:
+
+| Parameter            | Description                              |
+| -------------------- | ---------------------------------------- |
+| tokenLimitPerAddress | LP tokens limit per address              |
+| tokenLimit           | LP tokens limit for a whole Vault System |
+
+delayedStrategyParams:
+
+| Parameter                   | Description                                                                                              |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- |
+| strategyTreasury            | Address of the treasury used for collecting management fees                                              |
+| strategyPerformanceTreasury | Address of the treasury used for collecting performance fees                                             |
+| privateVault                | If true, only allowed depositors may deposit to this vault                                               |
+| managementFee               | Management fees rate (multiplied by DENOMINATOR = `$$10^9$$`)                                              |
+| performanceFee              | Performance fees rate (multiplied by DENOMINATOR = `$$10^9$$`)                                             |
+| depositCallbackAddress      | Address of callback function after deposit (to make some actions by subvaults in responde to a deposit)  |
+| withdrawCallbackAddress     | Address of callback function after deposit (to make some actions by subvaults in responde to a withdraw) |
+
+protocolPerVaultParams:
+
+| Parameter   | Description                                               |
+| ----------- | --------------------------------------------------------- |
+| protocolFee | Protocol fees rate (multiplied by DENOMINATOR = `$$10^9$$`) |
+
+delayedProtocolParams:
+
+| Parameter                | Description                                                     |
+| ------------------------ | --------------------------------------------------------------- |
+| managementFeeChargeDelay | The minimal interval between management fee charges, in seconds |
+| oracle                   | Oracle for getting token prices in this Vault System            |
+
+operatorParams:
+
+| Parameter      | Description                                       |
+| -------------- | ------------------------------------------------- |
+| disableDeposit | If true, disable deposit for all ERC20Root vaults |

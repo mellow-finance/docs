@@ -1,0 +1,82 @@
+---
+title: "Strategy"
+---
+
+`StrategyModule` defines essential functions for validating strategy parameters and determining the need for and direction of rebalancing within AMM pools. It interacts closely with the `ICore` contract, AMM modules, and oracles to optimize liquidity positions based on predefined strategies.
+
+#### `validateStrategyParams(bytes memory params)`
+
+Validates encoded strategy parameters to ensure they meet requirements of the implementation of the StrategyModule for a valid rebalancing strategy.
+
+* **Input Parameters**:
+  * `params`: A byte array containing the encoded strategy parameters to be validated.
+* **Logic**:
+  * The function assesses the `params` to ensure they conform to expected formats and values.
+
+#### `getTargets(ICore.ManagedPositionInfo memory info, IAmmModule ammModule, IOracle oracle)`
+
+Determines whether rebalancing is necessary for a given liquidity position and calculates the target parameters for such a rebalance.
+
+* **Input Parameters**:
+  * `info`: Struct containing the current position information.
+  * `ammModule`: Reference to the AMM module, facilitating interactions with specific AMM protocol implementations.
+  * `oracle`: Reference to the oracle used for fetching current market data or price information.
+* **Returns**:
+  * `isRebalanceRequired`: A boolean value indicating whether the position requires rebalancing based on current market conditions and the strategy's parameters.
+  * `target`: A struct detailing the target position's parameters post-rebalance, including the desired ticks and liquidity distribution.
+* **Logic**:
+  * Utilizes `info`, `ammModule`, and `oracle` to evaluate the current state of the market and the position's alignment with the strategy's goals.
+  * Calculates whether rebalancing is necessary and, if so, determines the optimal parameters for the rebalanced position to align with strategic objectives and market conditions.
+
+### Implementations
+
+[PulseStrategyModule](https://www.notion.so/PulseStrategyModule-15902ad86276815783fbc92a9ad2925e?pvs=21)
+
+## Back testing
+
+#### Historical blockchain data
+
+The movement of the value of `sqrtPriceX96` is sufficient information to simulate any strategy. There is only one limitation: liquidity under management should more less e to the remain liquidity in the pool because it may affect price movement.
+
+The consequence of `sqrtPriceX96` may be obtained from swap log events happened in the pool in desired period of time.
+
+#### Amounts and Liquidity in position
+
+Original UniswapV3 formulas is used to calculate amounts and liquidity holding in simulator position. In case of swap (Original and Tamper strategies) fee (the same as in the pool) is charging from simulator position.
+
+#### Swap
+
+If strategy needs perform swap of tokens in case of rebalance there are two options:
+
+* use liquidity from side sources (another pools and protocols), it does not affect on spot price at the managing pool
+* use liquidity from managing pool, it affects on the spot price
+
+#### Lazy syncing strategy
+
+The start position is minted in desired tick range `[tickLower; tickUpper]` where center of the position as close to the spot tick as possible.
+
+There are two states of position:
+
+* Spot tick in the range or outside and distance to the bound less than `tickSpacing`, so rebalance is not happening.
+* Spot tick is outside and distance to the bound more than `tickSpacing`, so rebalance is needed: position moves as close as possible to the spot tick but must be at the same side as before rebalance.
+
+#### Tamper strategy
+
+There are two pool position called lower and upper. Positions always have to hold the following:
+
+* The lower position with bounds `$\[x;x+width]$`
+* The upper position with bounds `$\[x+{\frac {width} 2};x+{\frac {3⋅width} 2}]$`
+
+The initial positions are minted that the center of `$\[x+{\frac {width} 2};x+width]$` is close as possible to the spot tick at the moment of minting.
+
+There are three states of position:
+
+* `$p>x+width$`. That means that the price is higher than the upper bound of the lower position. In that case, we move all liquidity from current lower position the new upper position with bounds `$\[x+width;x+2⋅width]$`. If the spot tick is in this range we perform necessary swap of tokens to mint all available liquidity. Then, a new rebalance is to be called and we're back to choose a scenario in new circumstances.
+* `$p\<x+\frac {width} 2$`. That means that the price is lower than the lower bound of the upper position. In that case, we move all liquidity into a new lower position with bounds `$\[x−\frac{width}2;x+\frac{width}2]$` If the spot tick is in range of the new position we perform necessary swap of tokens to mint all available liquidity. Then, a new rebalance is to be called and we're back to choose a scenario in new circumstances.
+* `$x+\frac{width}2≤p≤x+width$`. That means that the price is inside both intervals. In this case, if we denote the amount of liquidity in the lower position positions as `$l\_x$` and the amount of liquidity in the lower position as `$l\_y$`, the following must be obtained eventually:
+
+```
+s\_x=2⋅\\\frac{(x+width−p)}{width},s\_y=1−s\_x
+```
+
+Where `$s\_x=\frac{l\_x}{l\_x+l\_y}, s\_y=\frac{l\_y}{l\_x+l\_y}$` (i.e. shares of total strategy liquidity in the lower and the upper positions). To obtain those ratios, the strategy transfers tokens from one position to another, depending on which position lacks liquidity. Let `$r\_x$` be `$\frac{l\_x}{l\_x+l\_y}$` before the rebalance. The rebalance is done only if `$∣s\_x−r\_x∣$` `> maxLiquidityRatioDeviationX96`, which is a strategy parameter.

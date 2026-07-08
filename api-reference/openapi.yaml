@@ -1,0 +1,461 @@
+openapi: 3.0.0
+info:
+  title: Mellow Protocol API
+  description: |
+    API for Mellow Protocol's permissionless vaults and Liquid Restaking Token (LRT) system. 
+    Mellow offers a series of vault smart contracts tailored to different risk profiles, managed by LRT curators.
+    The system allows permissionless creation of modular LRTs and active liquidity management.
+  version: "1.0.0"
+
+servers:
+  - url: https://points.mellow.finance
+    description: Production server
+
+paths:
+  /:
+    get:
+      summary: Get supported API routes
+      description: Returns a list of all supported API endpoints in the Mellow Protocol API
+      operationId: getSupportedRoutes
+      responses:
+        "200":
+          description: Successful response containing all supported API routes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  supported:
+                    type: array
+                    description: List of supported API routes
+                    items:
+                      type: string
+                example:
+                  supported:
+                    - "/v1/vaults"
+                    - "/v1/vaults/{vault}/users"
+                    - "/v1/users/{user}"
+                    - "/v1/defi/users/{user}"
+                    - "/v1/defi/protocols"
+                    - "/v1/chain/{chainId}/vaults"
+                    - "/v1/chain/{chainId}/vaults/{vault}"
+                    - "/v1/chain/{chainId}/vaults/{vault}/users"
+                    - "/v1/chain/{chainId}/users"
+                    - "/v1/chain/{chainId}/users/{user}"
+                    - "/v1/chain/{chainId}/users/{user}/amphor"
+                    - "/v1/chain/{chainId}/users/{user}/renzo"
+                    - "/v1/chain/{chainId}/users/{user}/mind"
+                    - "/v1/chain/{chainId}/users/{user}/quasar"
+                    - "/v1/chain/{chainId}/defi/protocols"
+                    - "/v1/chain/{chainId}/defi/protocols/{protocol}/users"
+                    - "/v1/chain/{chainId}/defi/users/{user}"
+                    - "/v1/chain/{chainId}/referrer/{vault}"
+                    - "/health"
+
+  /v1/defi/protocols:
+    get:
+      summary: Get DeFi protocol integrations
+      description: |
+        Retrieves information about all DeFi protocol integrations and their points distribution across different chains.
+      operationId: getDefiProtocols
+      responses:
+        "200":
+          description: Successful response containing DeFi protocol integrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - chain_id
+                    - vault_address
+                    - defi_protocol_address
+                    - user_mellow_points
+                    - user_symbiotic_points
+                    - user_referal_points
+                    - user_vault_balance
+                  properties:
+                    chain_id:
+                      type: integer
+                      description: The blockchain network ID where the protocol is integrated
+                    vault_address:
+                      type: string
+                      description: The address of the vault contract
+                    defi_protocol_address:
+                      type: string
+                      description: The address of the DeFi protocol contract
+                    user_mellow_points:
+                      type: string
+                      description: Points allocated in the Mellow protocol
+                    user_symbiotic_points:
+                      type: string
+                      description: Points allocated in the Symbiotic protocol
+                    user_referal_points:
+                      type: string
+                      description: Points earned through referrals
+                    user_vault_balance:
+                      type: string
+                      description: Balance in the vault in smallest units
+                    name:
+                      type: string
+                      description: Name of the protocol integration
+                      nullable: true
+                    protocol:
+                      type: string
+                      description: Protocol identifier
+                      nullable: true
+                    pool_id:
+                      type: string
+                      description: Unique identifier for the liquidity pool
+                      nullable: true
+                    url:
+                      type: string
+                      description: URL to the protocol's interface
+                      nullable: true
+                    boost:
+                      type: string
+                      description: Boost multiplier for points earning
+                      nullable: true
+                example:
+                  - chain_id: 48900
+                    vault_address: "0x5fD13359Ba15A84B76f7F87568309040176167cd"
+                    defi_protocol_address: "0x7d8311839eB44Dd5194abd2dd3998722455A24E0_0x9eFdE41A87fa4dD47BAa584954e8Abd5b8bdBfE7"
+                    user_mellow_points: "6223.551000000001"
+                    user_symbiotic_points: "6223.549319787699"
+                    user_referal_points: "0.0"
+                    user_vault_balance: "5035533496859123083549"
+                    name: "inwstETHs amphrETH"
+                    protocol: "Zircuit"
+                    pool_id: "pool-zircuit-l2-staking-inwsteths-amphreth"
+                    url: "https://app.zircuit.com/liquidity-hub"
+                    boost: "2"
+
+  /v1/defi/users/{user_address}:
+    get:
+      summary: Get user's vaults DeFi positions
+      description: |
+        Retrieves detailed information about a user's positions across all integrated DeFi protocols,
+        including points earned, balances, and protocol-specific details.
+      operationId: getUserDefiPositions
+      parameters:
+        - name: user_address
+          in: path
+          required: true
+          description: Ethereum address of the user (must be a valid Ethereum address)
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{40}$"
+          example: "0xDB611d682cb1ad72fcBACd944a8a6e2606a6d158"
+      responses:
+        "200":
+          description: Successful response containing user's positions in DeFi protocols
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - chain_id
+                    - vault_address
+                    - defi_protocol_address
+                    - user_mellow_points
+                    - user_symbiotic_points
+                    - user_referal_points
+                    - user_vault_balance
+                    - timestamp
+                  properties:
+                    chain_id:
+                      type: integer
+                      description: The blockchain network ID where the protocol is integrated
+                    vault_address:
+                      type: string
+                      description: The address of the vault contract
+                    defi_protocol_address:
+                      type: string
+                      description: The address of the DeFi protocol contract
+                    user_mellow_points:
+                      type: string
+                      description: Points earned in the Mellow protocol
+                    user_symbiotic_points:
+                      type: string
+                      description: Points earned in the Symbiotic protocol
+                    user_referal_points:
+                      type: string
+                      description: Points earned through referrals
+                    user_vault_balance:
+                      type: string
+                      description: User's balance in the vault in smallest units
+                    timestamp:
+                      type: integer
+                      description: Unix timestamp of when the data was last updated
+                    name:
+                      type: string
+                      description: Name of the protocol integration
+                      nullable: true
+                    protocol:
+                      type: string
+                      description: Protocol identifier (e.g., Uniswap v3, Pendle, Gearbox)
+                      nullable: true
+                    pool_id:
+                      type: string
+                      description: Unique identifier for the liquidity pool
+                      nullable: true
+                    url:
+                      type: string
+                      description: URL to the protocol's interface for this position
+                      nullable: true
+                    boost:
+                      type: string
+                      description: Boost multiplier for points earning
+                      nullable: true
+                example:
+                  - chain_id: 1
+                    vault_address: "0x4f3Cc6359364004b245ad5bE36E6ad4e805dC961"
+                    defi_protocol_address: "0x104b3E3ACD2396a7292223B5778Ea1caCdB68ec9"
+                    user_mellow_points: "94678.511"
+                    user_symbiotic_points: "92911.0138859653"
+                    user_referal_points: "0.0"
+                    user_vault_balance: "0"
+                    timestamp: 1737403835
+                    name: "urLRT / wstETH"
+                    protocol: "Uniswap v3"
+                    pool_id: "pool-uniswap-urlrt-wsteth"
+                    url: "https://app.uniswap.org/explore/pools/ethereum/0x104b3E3ACD2396a7292223B5778Ea1caCdB68ec9"
+                    boost: "3"
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Internal server error message
+                example: "Internal server error"
+
+  /v1/vaults:
+    get:
+      summary: Get all vaults
+      description: |
+        Retrieves comprehensive information about all available vaults in the Mellow Protocol ecosystem. 
+        Each vault represents a smart contract that manages liquidity across different DeFi protocols.
+        The response includes vault configurations, associated tokens, current performance metrics, and operational parameters.
+      operationId: getVaults
+      responses:
+        "200":
+          description: Successful response containing an array of all active vaults with their complete details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Vault"
+
+  /v1/users/{user_address}:
+    get:
+      summary: Get user's vaults positions
+      description: |
+        Retrieves detailed information about a specific user's positions across all Mellow Protocol vaults.
+        This includes their liquidity provisions, earned profits, and current holdings as a Liquidity Provider.
+      operationId: getUserPositions
+      parameters:
+        - name: user_address
+          in: path
+          required: true
+          description: Ethereum address of the user (must be a valid Ethereum address)
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{40}$"
+          example: "0x1234567890123456789012345678901234567890"
+      responses:
+        "200":
+          description: Successful response containing user's positions across all vaults
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPosition"
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Internal server error message
+                example: "Internal server error"
+
+components:
+  schemas:
+    Token:
+      type: object
+      properties:
+        address:
+          type: string
+          description: The Ethereum contract address of the ERC20 token
+          example: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+        symbol:
+          type: string
+          description: The trading symbol of the token used for identification in markets and interfaces
+          example: "WETH"
+        decimals:
+          type: integer
+          description: The number of decimal places the token uses for precision in calculations and display
+          example: 18
+
+    Point:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the point system or protocol (e.g., mellow, obol, ssv)
+          example: "mellow"
+        value:
+          type: string
+          description: The numerical value of points allocated to this protocol or system, represented as a string for precision
+          example: "17049600.467"
+
+    UserPosition:
+      type: object
+      required:
+        - chain_id
+        - user_address
+        - user_mellow_points
+        - user_symbiotic_points
+        - user_referal_points
+        - user_vault_balance
+        - timestamp
+        - vault_address
+      properties:
+        chain_id:
+          type: integer
+          description: The blockchain network ID where the vault is deployed
+        user_address:
+          type: string
+          description: The Ethereum address of the user
+        user_mellow_points:
+          type: string
+          description: Points earned by the user in the Mellow protocol
+        user_symbiotic_points:
+          type: string
+          description: Points earned by the user in the Symbiotic protocol
+        user_referal_points:
+          type: string
+          description: Points earned by the user through referrals
+        user_vault_balance:
+          type: number
+          description: User's balance in the vault in smallest units
+        timestamp:
+          type: integer
+          description: Unix timestamp of when the data was last updated
+        vault_address:
+          type: string
+          description: The smart contract address of the vault
+      example:
+        chain_id: 1
+        user_address: "0x7F43fDe12A40dE708d908Fb3b9BFB8540d9Ce444"
+        user_mellow_points: "0"
+        user_symbiotic_points: "0"
+        user_referal_points: "0"
+        user_vault_balance: 10000000000000
+        timestamp: 1737151835
+        vault_address: "0x7F43fDe12A40dE708d908Fb3b9BFB8540d9Ce444"
+
+    Vault:
+      type: object
+      required:
+        - id
+        - chain_id
+        - address
+        - symbol
+        - decimals
+        - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the vault, typically combining the network and vault type
+          example: "ethereum-dvsteth"
+        chain_id:
+          type: integer
+          description: The blockchain network ID where the vault is deployed (e.g., 1 for Ethereum mainnet)
+          example: 1
+        address:
+          type: string
+          description: The smart contract address of the vault on the blockchain
+          example: "0x5E362eb2c0706Bd1d134689eC75176018385430B"
+        symbol:
+          type: string
+          description: The trading symbol of the vault's LP token, used for identification in interfaces
+          example: "DVstETH"
+        decimals:
+          type: integer
+          description: The number of decimal places used for the vault's LP token calculations and display
+          example: 18
+        name:
+          type: string
+          description: Human-readable name of the vault that describes its purpose or strategy
+          example: "Decentralized Validator Vault"
+        layer:
+          type: string
+          description: The protocol layer or strategy type that the vault implements (e.g., lido_simple_dvt, symbiotic)
+          example: "lido_simple_dvt"
+        points:
+          type: array
+          description: Array of point allocations for different protocols or systems integrated with this vault
+          items:
+            $ref: "#/components/schemas/Point"
+        base_token:
+          $ref: "#/components/schemas/Token"
+          description: The primary token that the vault uses for valuations and calculations
+        underlying_tokens:
+          type: array
+          description: List of tokens that the vault manages or holds as part of its strategy
+          items:
+            $ref: "#/components/schemas/Token"
+        deposit_tokens:
+          type: array
+          description: List of tokens that users can deposit into the vault for participation
+          items:
+            $ref: "#/components/schemas/Token"
+        withdraw_tokens:
+          type: array
+          description: List of tokens that users can receive when withdrawing from the vault
+          items:
+            $ref: "#/components/schemas/Token"
+        withdraw_avg_time_seconds:
+          type: integer
+          description: Average time in seconds it takes to process a withdrawal from the vault
+          example: 345600
+        collector:
+          type: string
+          description: The address of the fee collector contract that receives protocol fees from the vault
+          example: "0x240Fbe0790D5B25366BF88EE14AE8Dde72BfE312"
+        price:
+          type: number
+          description: Current price of the vault's LP token in terms of the base currency
+          example: 3519.90723976
+        apr:
+          type: number
+          nullable: true
+          description: Annual Percentage Rate (APR) representing the vault's yearly yield, can be null if not applicable
+          example: 2.886142857142857
+        tvl_usd:
+          type: number
+          description: Total Value Locked in the vault converted to USD, representing the total assets under management
+          example: 24991702.73953098
+        tvl_base_token:
+          type: string
+          description: Total Value Locked expressed in the base token's smallest units (considering decimals)
+          example: "7177311992681062422621"
+        limit_usd:
+          type: number
+          description: Maximum USD value that can be deposited into the vault (deposit cap)
+          example: 48398724.54674784
+        limit_base_token:
+          type: string
+          description: Maximum amount of base tokens that can be deposited into the vault, expressed in smallest units
+          example: "13899522963290482556503"
+        total_supply:
+          type: string
+          description: Total supply of the vault's LP tokens in circulation, expressed in smallest units
+          example: "7100102655321765400668"

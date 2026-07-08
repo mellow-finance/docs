@@ -1,0 +1,33 @@
+---
+title: "VeloAmmModule"
+---
+
+#### CallbackParams
+
+Represents parameters for callbacks in operations tied to the Velo and auxiliary protocols, particularly around yield farming and reward tracking.
+
+```solidity
+struct CallbackParams {
+    address farm;
+    address gauge;
+    address counter;
+}
+```
+
+* **farm**: Address of the Synthetix farm contract. It acts as a central hub for yield farming activities, interfacing directly with users and other contracts to manage and allocate yield farming rewards based on defined criteria.
+* **gauge**: Address of the Velo gauge contract.
+* **counter**: Address of a counter contract. This contract is designed for tracking and aggregating specific numerical data, such as the total amount of rewards added to the farm. It serves as a specialized tool for monitoring and reporting on key metrics that inform decisions and actions within the protocol, ensuring transparency and accuracy in reward distribution and other quantifiable activities.
+
+#### ProtocolParams
+
+Encapsulates the operational parameters defining the Velo AMM module's financial interplays, focusing on fee mechanisms and treasury interactions.
+
+```solidity
+struct ProtocolParams {
+    address treasury;
+    uint32 feeD9;
+}
+```
+
+* **treasury**: The designated treasury of the Mellow protocol, acting as the recipient for fees accrued through the Velo AMM module's activities. This setup underscores the protocol's economic structure, funneling operational proceeds back into the ecosystem.
+* **feeD9**: Specifies the fee percentage levied by the Velo AMM module. The use of a fixed-point format with 9 decimal places permits the detailed specification of fees, ensuring clarity and precision in financial transactions. For instance, a `feeD9` of 10,000,000 denotes a 1% fee, illustrating the module's revenue-generating mechanisms.

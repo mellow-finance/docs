@@ -1,0 +1,46 @@
+---
+title: "ERC20SwapModule"
+---
+
+### Overview
+
+`ERC20SwapModule` contract facilitates ERC20 token swaps based on predefined parameters.
+
+### Key Features
+
+* **Secure ERC20 Swaps**: Enables ERC20 swaps with security checks on input and output amounts.
+* **Parameter Validation**: Ensures swap parameters like deadlines and minimum amounts are respected.
+* **Allowance Management**: Uses `forceApprove` to manage allowances securely after swaps.
+
+### Error Definitions
+
+* **Deadline**: Raised when the swap operation exceeds the specified deadline.
+* **SwapFailed**: The swap operation did not execute successfully.
+* **InvalidSwapAmounts**: Input or output amounts don't meet the expected values.
+
+### Methods
+
+1. **Swap Function**
+   * `swap(SwapParams, address, bytes)`: Executes a token swap based on provided parameters.
+     * **params**: Contains details of the swap operation:
+       * **tokenIn**: The address of the input token.
+       * **tokenOut**: The address of the output token.
+       * **amountIn**: The amount of the input token to swap.
+       * **minAmountOut**: The minimum acceptable amount of the output token.
+       * **deadline**: The deadline for completing the swap.
+     * **to**: Address of the swap target.
+     * **data**: Call data required to execute the swap operation.
+     * **Returns**: The response from the swap call.
+     * **Errors**:
+       * `Deadline`: If the current timestamp is past the deadline.
+       * `InvalidSwapAmounts`: If the amount of tokens swapped does not match the specified input or output criteria.
+       * `SwapFailed`: The swap operation failed to execute successfully.
+
+### Event
+
+* `ERC20SwapModuleSwap(SwapParams, address, bytes, uint256, bytes)`: Emitted after a swap is successfully executed.
+  * **params**: The parameters used for the swap.
+  * **to**: The address of the swap target.
+  * **data**: The call data used for the swap.
+  * **timestamp**: The timestamp when the swap was completed.
+  * **response**: The response data returned from the swap operation.

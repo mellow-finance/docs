@@ -1,0 +1,18 @@
+---
+title: "Components"
+---
+
+<Frame>
+  <img src="/images/alm-toolkit.png" alt="" />
+</Frame>
+
+The MALM system is a highly modular framework of smart contracts, deployed on Ethereum Virtual Machine (EVM) compatible Layer 2 blockchains. This modular architecture ensures high flexibility, scalability, and interoperability across different blockchain ecosystems. The system has several key components, each serving a distinct and critical function:
+
+1. **Core Module**: This is the heart of the MALM system, acting as the central hub that seamlessly integrates all other modules. It ensures cohesive functioning and efficient communication between different components, establishing a robust and reliable operational framework. This module works with Positions from AMMs: it owns them and provide means to deplosit, withdraw and rebalance them.
+2. **AMM Modules**: These serve as specialized interfaces to various Automated Market Makers (AMMs) such as Uniswap, PancakeSwap, Velodrome, and others. The adapters enable the MALM system to interact with different liquidity pools on these platforms, facilitating a wide range of trading and liquidity management activities.
+3. **DepositWithdraw Module:** Facilitates partial deposit and withdraws of liquidity from Positions
+4. **Strategies Module**: This component houses an array of strategies for managing liquidity. Each strategy is designed to cater to different market conditions and strategic goals, offering users a diverse range of options to optimize their goals and manage risks effectively.
+5. **Oracles**: A critical component for price estimation, the Oracles module sources reliable and up-to-date market data. This data is essential for accurate valuation of assets, risk assessment, and making informed decisions regarding liquidity positions.
+6. **LP (Liquidity Provider) Wrapper**: This module enables multiple liquidity providers to pool their resources into a single strategy.
+
+The modular nature of the system enhances its flexibility and allows for easy upgrades and integration of new features, ensuring that MALM remains highly adaptable.
