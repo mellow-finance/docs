@@ -278,7 +278,7 @@
                     ]
                   },
                   {
-                    "group": "Legacy: Mellow-LRT",
+                    "group": "LRT V1.0",
                     "pages": [
                       "resources/mellow-lrt-depreciated/index",
               "resources/mellow-lrt-depreciated/vault",
@@ -400,8 +400,8 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Discord",
+        "href": "https://discord.gg/mellow"
       }
     ],
     "primary": {
