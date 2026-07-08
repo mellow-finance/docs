@@ -137,47 +137,6 @@
         ]
       },
       {
-        "group": "DVstETH Vault",
-        "icon": "cubes",
-        "pages": [
-          "dvsteth-vault/overview",
-          "dvsteth-vault/dvv-deployment"
-        ]
-      },
-      {
-        "group": "Restaking Vaults",
-        "icon": "layer-group",
-        "pages": [
-          {
-            "group": "Multivault",
-            "pages": [
-              "restaking-vaults/multivault/index",
-              "restaking-vaults/multivault/overview",
-              "restaking-vaults/multivault/architecture",
-              "restaking-vaults/multivault/multi-deployments"
-            ]
-          },
-          {
-            "group": "Interoperable Vaults",
-            "pages": [
-              "restaking-vaults/interoperable-vaults/index",
-              "restaking-vaults/interoperable-vaults/overview",
-              "restaking-vaults/interoperable-vaults/architecture",
-              "restaking-vaults/interoperable-vaults/interop-deployments"
-            ]
-          },
-          {
-            "group": "Simple LRT",
-            "pages": [
-              "restaking-vaults/simple-lrt/index",
-              "restaking-vaults/simple-lrt/overview",
-              "restaking-vaults/simple-lrt/architecture",
-              "restaking-vaults/simple-lrt/simple-deployments"
-            ]
-          }
-        ]
-      },
-      {
         "group": "Mellow ALM",
         "icon": "arrows-left-right",
         "pages": [
@@ -287,9 +246,42 @@
         "pages": [
           "resources/api",
           {
-            "group": "Legacy: Mellow-LRT (Deprecated)",
+            "group": "Legacy",
             "pages": [
-              "resources/mellow-lrt-depreciated/index",
+              {
+                "group": "Restaking Vaults",
+                "pages": [
+                  {
+                    "group": "Multivault",
+                    "pages": [
+                      "restaking-vaults/multivault/index",
+                      "restaking-vaults/multivault/overview",
+                      "restaking-vaults/multivault/architecture",
+                      "restaking-vaults/multivault/multi-deployments"
+                    ]
+                  },
+                  {
+                    "group": "Interoperable Vaults",
+                    "pages": [
+                      "restaking-vaults/interoperable-vaults/index",
+                      "restaking-vaults/interoperable-vaults/overview",
+                      "restaking-vaults/interoperable-vaults/architecture",
+                      "restaking-vaults/interoperable-vaults/interop-deployments"
+                    ]
+                  },
+                  {
+                    "group": "Simple LRT",
+                    "pages": [
+                      "restaking-vaults/simple-lrt/index",
+                      "restaking-vaults/simple-lrt/overview",
+                      "restaking-vaults/simple-lrt/architecture",
+                      "restaking-vaults/simple-lrt/simple-deployments"
+                    ]
+                  },
+                  {
+                    "group": "Legacy: Mellow-LRT",
+                    "pages": [
+                      "resources/mellow-lrt-depreciated/index",
               "resources/mellow-lrt-depreciated/vault",
               "resources/mellow-lrt-depreciated/vaultconfigurator",
               {
@@ -360,6 +352,17 @@
               },
               "resources/mellow-lrt-depreciated/emergency-withdrawal-guide-advanced",
               "resources/mellow-lrt-depreciated/dvv-legacy-architecture"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "DVstETH Vault",
+                "pages": [
+                  "dvsteth-vault/overview",
+                  "dvsteth-vault/dvv-deployment"
+                ]
+              }
             ]
           },
           "resources/brand-assets"
