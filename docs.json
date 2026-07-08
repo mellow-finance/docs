@@ -5,17 +5,10 @@
   "colors": {
     "primary": "#1D8DFF",
     "light": "#5CACFF",
-    "dark": "#0A0A0A"
-  },
-  "background": {
-    "color": {
-      "light": "#FFFFFF",
-      "dark": "#0A0A0A"
-    },
-    "decoration": "grid"
+    "dark": "#0B6FD1"
   },
   "appearance": {
-    "default": "dark"
+    "default": "light"
   },
   "favicon": "/favicon.svg",
   "navigation": {
