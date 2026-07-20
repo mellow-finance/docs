@@ -1,103 +1,124 @@
 ---
-title: "Mellow Vaults Overview"
-description: "Map of all vault product lines — Core Vaults, DVstETH, Restaking Vaults (MultiVault, Interoperable, Simple LRT), and Mellow ALM — with use-case guidance for choosing each one."
+description: "Overview of Mellow's current Core Vault architecture, supported use cases, operating model, and documentation for new deployments."
+title: "Vault infrastructure overview"
 ---
 
-Mellow supports multiple vault product lines that reflect the evolution of this architecture. This section maps each product line to its intended use case and documentation entry points.
+# Vault infrastructure overview
 
-### Core Vaults&#x20;
+Mellow is vault infrastructure for onchain asset management.
 
-[Core Vaults ](https://docs.mellow.finance/core-vaults/overview)are isolated, programmable vaults that encode a complete onchain strategy together with its execution, risk limits, and withdrawal logic inside a single framework. Each vault enforces asset whitelists, per-strategy permissions, oracle checks, and batch-based accounting, ensuring predictable execution and auditable risk boundaries. Strategies can span multiple DeFi protocols and, where required, centralized exchanges via institutional custody rails, without breaking trustless custody for users.
+Mellow provides the management layer between onchain assets and the platforms that distribute financial products. Banks, fintechs, exchanges, wallets, custodians, brokers, payment platforms, asset issuers, asset managers, ecosystems, and agentic platforms can use Mellow to launch Earn, treasury, and managed strategy products under their own brand.
 
-**stRATEGY Vault – first Core Vault product**\
-[The stRATEGY Vault](https://docs.mellow.finance/strategy-vault/overview) allocates deposited tokens across liquid DeFi opportunities to amplify staking rewards, with curator actions constrained by a predefined control set. It references Core Vaults as the underlying technology surface.
+Core Vaults are Mellow's current architecture for new deployments.
 
-**When to start here**
+## Core Vaults
 
-* You need a production-grade framework for curated structured products
-* You want explicit controls and a stable vault framework even as strategies evolve
+Core Vaults combine strategy execution, accounting, liquidity management, and contract-level risk enforcement within one vault architecture.
 
-***
+Each Core Vault operates under a mandate. The mandate defines:
 
-### DVstETH vault
+- Eligible depositors
+- Supported assets
+- Approved execution venues
+- Allocation limits
+- Liquidity requirements
+- Verifier rules
+- Oracle constraints
 
-[DVstETH](https://app.gitbook.com/s/-Mk3LEacyGwD8y6mb9-2/dvsteth-vault) is a wrapped liquid staking token powered by Lido wstETH that enables depositors to reuse staking receipts across DeFi. It relies on Distributed Validator Technology (DVT) concepts where validator keys are split into shards across independent nodes to improve key-security assumptions.
+Every curator action passes through onchain verifiers. Operations outside the mandate revert.
 
-**When to start here**
+Core Vaults include:
 
-* You want wstETH-based exposure with a DVT incentive layer and a dedicated DV vault product line
+- Asynchronous deposit and redemption queues
+- Separate economic and withdrawable NAV
+- Verifier-bounded execution
+- More than 60 operation-level onchain permissions
+- Strategy isolation through subvaults
+- Multi-asset accounting
+- Oracle-defined NAV
+- Jurisdiction-aware eligibility controls
+- Crosschain execution through a bridge-agnostic architecture
 
-***
+Core Vaults use declarative verifier rules rather than protocol-specific adapters. New execution paths are added through configuration without changing the base vault architecture.
 
-### Restaking Vaults
+## Beyond ERC-4626
 
-#### MultiVaults
+Core Vaults are architecturally beyond ERC-4626.
 
-[MultiVault](restaking-vaults/multivault/) aggregates multiple isolated vaults – subvaults – into a single top-level vault. LPs deposit into the MultiVault and receive composite LP tokens. The MultiVault can redistribute assets across subvaults based on configured strategy rules, enabling cross-protocol liquidity rebalancing.
+ERC-4626 standardizes the interface for single-asset, single-strategy vaults with synchronous liquidity. It does not define multi-asset accounting, asynchronous liquidity, strategy isolation, externalized NAV, institutional permissions, or cross-venue execution.
 
-The MultiVault architecture is described as an ERC4626 extension with additional features such as limits, whitelists, and locks for deposits and withdrawals.
+Core Vaults provide these functions within one consistent architecture.
 
-**When to start here**
+## Products powered by Core Vaults
 
-* You need a single user-facing vault that can rebalance across multiple isolated vault components
+The same Core Vault architecture supports multiple product types. Each product is defined by its mandate.
 
+### Earn products
 
+Distribution partners can offer yield products under their own brand. The partner owns the customer relationship and product surface, while Mellow provides the vault infrastructure.
 
-#### Interoperable vaults&#x20;
+### Treasury management
 
-[Interoperable Vaults](restaking-vaults/interoperable-vaults/) extend the vault model cross-chain. Users deposit on EVM networks and receive vault shares, while restaking execution occurs on Ethereum mainnet. The system uses LayerZero OFT messaging with custom modifications to support deposit and withdrawal flows across L1 and L2 environments.
+Companies can manage stablecoin balances and other onchain assets under defined liquidity, allocation, venue, and compliance constraints.
 
-**When to start here**
+### RWA allocation
 
-* You want the MultiVault-style vault UX on multiple chains while centralizing restaking on Ethereum
+Core Vaults can manage portfolios containing eligible tokenized treasuries, money-market funds, private credit, DeFi positions, and liquidity buffers.
 
+Asset availability depends on the vault mandate, integrations, jurisdiction, and issuer eligibility requirements.
 
+### Curator-operated strategies
 
-#### Simple LRT
+Asset managers, market makers, staking operators, and DeFi teams can operate strategies within contract-level limits defined by the vault mandate.
 
-[Simple LRT](restaking-vaults/simple-lrt/) is a system of contracts built around a vault contract – MellowSymbioticVault or MellowVaultCompat. It modifies ERC4626 and introduces queued withdrawals handled by a dedicated SymbioticWithdrawalQueue contract.
+### Ecosystem vaults
 
-**When to start here**
+Networks, protocols, foundations, and asset issuers can launch managed capital products around approved ecosystem venues and assets.
 
-* You want an ERC4626-like surface with explicit withdrawal queue semantics
+### Agentic asset management
 
-***
+Autonomous operators can manage capital inside the same verifier-bounded environment as human curators. The vault enforces approved functions, assets, venues, allocation bands, and sensitive-operation controls before execution.
 
-### Mellow ALM&#x20;
+### Meta-vaults
 
-[Mellow ALM](https://app.gitbook.com/s/-Mk3LEacyGwD8y6mb9-2/mellow-alm) covers two related components:
+Meta-vaults provide an allocation layer above multiple approved vaults, curators, assets, and strategy sources.
 
-**Mellow Permissionless Vaults**\
-A set of smart contracts that allows anyone to create a multi-ERC20 vault and a strategy across DeFi protocols and EVM chains. It defines distinct actor roles such as liquidity providers, strategists, and governance.
+## Operating model
 
-**Mellow ALM Toolkit**\
-A toolkit for concentrated liquidity management on AMMs such as Uniswap and others. It focuses on bootstrapping liquidity and optimizing liquidity positions, with a workflow where users set strategy parameters and the system manages ongoing operations.
+A typical Mellow deployment includes four roles:
 
-**When to start here**
+- **Depositors** provide capital
+- **Distribution partners** own the product surface, brand, and customer relationship
+- **Curators or vault managers** operate the strategy within the mandate
+- **Mellow** provides the vault infrastructure
 
-* Your product is AMM liquidity management rather than restaking or LRT-focused vault design
+The distribution partner and vault manager may be the same entity, but they are often separate.
 
-***
+## Execution venues
 
+Core Vaults support strategy execution across DeFi and CeFi venues.
 
+Live DeFi integrations include Aave, Morpho, Euler, Fluid, Gearbox, Curve, Uniswap, Cowswap, Pendle, Symbiotic, and EigenLayer.
 
+Live CeFi integrations are available through Copper ClearLoop and Ceffu.
 
+The vault mandate determines which integrations and operations are available to a specific product.
 
-Once live, each vault dynamically allocates capital across various yield-generating opportunities:
+## Start here
 
-* **Restaking Rewards** (except for DVstETH vault)
-  * Through restaking protocols, stakers can choose to accept additional slashing conditions on their staked ETH for rewards from protocols whose state is secured by stakers’ assets.
-  * Typical design enables the validation of various modules, including consensus protocols for L2s and appChains, data availability layers, virtual machines & application layers, creating new revenue opportunities for restakers.
-  * Restaking protocols share the abundant security of Ethereum consensus by spilling it over to these modules, enhancing the reliability of their consensus and adding extra revenue source to restakers.
-* **DeFi Liquidity Incentives**: Vault strategies can route a portion of assets into liquidity pools (Uniswap, Curve, Balancer) or lending markets (Aave, Compound), capturing swap fees, gauge rewards, and interest.
-* **Protocol Native Incentives**: Some vaults integrate directly with incentive programs—for instance, by depositing into newly launched yield-bearing tokens or participating in loyalty point systems—unlocking bonus distributions from governance or ecosystem grants.
+- [Core Vaults overview](/core-vaults/overview)
+- [Core Vaults for stablecoins](/core-vaults-for-stablecoins)
+- [Core Vaults for RWA allocation](/core-vaults-for-rwa-allocation)
+- [Core Vaults and other approaches](/core-vaults-and-other-approaches)
+- [Core Vaults integration guide](/core-vaults-integration-guide)
+- [Core Vault deployments](/core-vaults/core-deployments)
 
-Launching LRTs will be permissionless for curators/users
+The [stRATEGY Vault](/strategy-vault/overview) is an example of a product deployed using Core Vault infrastructure.
 
-* Although LRTs permit delegation to multiple AVS operators, permissioned LRT holders and LRT node operators have little to no choice in how these delegation sets are formed or how risks are managed.
-* Holders can only make adjustments by changing the amount of LRT to which they are exposed.
-* Allowing LRT curators to issue new LRTs with refined risk/reward ratios in a permissionless manner makes the possibility of malfunctions causing ripple effects and liquidation cascades across the entire ecosystem remote and unlikely.
+## Historical architectures
 
-Fees mechanism for curators
+Earlier generations of Mellow infrastructure include Mellow ALM, MultiVault and Restaking Vaults, Interoperable Vaults, Simple LRT, and DVstETH.
 
-* LRT curators are incentivized to set a competitive fee on restaking revenue. Mellow plans to aid LRT curators to launch permissionless LRTs with deployment, maintenance and DeFi integrations.
+Some existing products using these architectures may remain live. Their documentation is retained for deployment maintenance and historical reference.
+
+These systems are not the starting point for new Mellow deployments and should not be used to define Mellow's current product category. Core Vaults are the current architecture.
