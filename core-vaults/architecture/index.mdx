@@ -9,11 +9,11 @@ description: "Full technical architecture: Deposit Queue, Redeem Queue, Signatur
 
 The DeFi market continues to expand with an increasing number of yield opportunities and protocols, each with its own level of decentralization, permissionlessness, and risk. Navigating this landscape is becoming challenging – even for advanced users.
 
-Meanwhile, the latest wave of adoption is bringing thousands of new participants from traditional markets into crypto. These users aren't looking for raw protocols – they expect structured, accessible, and compliant financial products.
+Meanwhile, the latest wave of adoption is bringing thousands of new participants from traditional markets into crypto. These users aren't looking for raw protocols – they expect products that are structured, accessible, and configurable to meet their compliance requirements.
 
 To meet this demand, the onchain financial stack must evolve. It needs to be productized, abstracted and made composable.
 
-Mellow's response is our **Core Vaults** – infrastructure purpose-built for curators and asset managers to design, deploy, and scale structured products onchain.
+Mellow's response is **Core Vaults** – infrastructure purpose-built for curators and asset managers to design, deploy, and scale structured products onchain.
 
 ### Vaults Architecture
 
@@ -370,22 +370,9 @@ Responsibilities include:
 
 ### Supported protocols and integrations
 
-Core Vaults architecture supports integration with a wide range of apps, including both DeFi protocols and centralized exchanges. Most of the protocol integrations can work out of the box. Below is a brief example of potential connections to subvaults.
+Core Vaults architecture supports integration with a wide range of apps, including both DeFi protocols and centralized exchanges. Most of the protocol integrations can work out of the box. For the current, canonical list of supported execution venues, see [Execution venues](/mellow-vaults-overview#execution-venues).
 
-#### Major protocols:
-
-* Aave (leverage & supply side LPing)
-* Gearbox (leverage & supply side LPing)
-* Curve, Uniswap (DEX liquidity provisioning)
-* Cowswap (limit orders)
-* Symbiotic, EigenLayer (provide liquidity for restaking rewards)
-* Pendle (splitting and selling future yield or holding for boosted returns)
-* Morpho (leverage & supply side LPing)
-* Euler (leverage & supply side LPing)
-* Fluid (leverage & supply side LPing)
-* Hyperliquid
-
-#### **CEXes** via custodial off-exchange solutions (Copper and Ceffu)
+#### **CEXes** via custodial off-exchange solutions (Copper ClearLoop and Ceffu)
 
 * Deribit
 * Bybit
@@ -427,7 +414,7 @@ _Process Flow for Curator Allocation:_
 
 1. Curator asks Admin to add 2 subvaults with correct verifier configs:
 
-* First one allowing liquidity transfer into a Copper or Ceffu account
+* First one allowing liquidity transfer into a Copper ClearLoop or Ceffu account
 * Second one allowing deposits, withdrawals, withdrawal claims and reward claims & swaps from Symbiotic
 
 1. Curator pushes unallocated funds: `Vault.pushAssets(USDC, *500000*)`.
