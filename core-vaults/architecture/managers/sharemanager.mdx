@@ -60,11 +60,11 @@ Controlled through roles defined as:
 * `setFlags(...)`: Updates global bitmask configuration.
 * `setWhitelistMerkleRoot(…)`: Updates whitelist merkle root.
 * `setAccountInfo(...)`: Sets access rights for an individual address.
-* `claimShares(...)`: Claims shares from the vault’s `IShareModule`.
+* `claimShares(...)`: Claims shares from the vault's `IShareModule`.
 * `allocateShares(...)`: Allocates shares for future minting (only callable by a queue).
 * `mintAllocatedShares(...)`: Mints shares from allocated pool to user.
 * `mint(...)`: Mints shares to a user with optional lockup.
-* `burn(...)`: Burns a user’s shares (only queue).
+* `burn(...)`: Burns a user's shares (only queue).
 * `__ShareManager_init(...)`: Sets Merkle root at construction or upgrade.
 
 ### Internal Hooks (Implemented by Child)

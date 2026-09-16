@@ -9,11 +9,11 @@ description: "Full technical architecture: Deposit Queue, Redeem Queue, Signatur
 
 The DeFi market continues to expand with an increasing number of yield opportunities and protocols, each with its own level of decentralization, permissionlessness, and risk. Navigating this landscape is becoming challenging – even for advanced users.
 
-Meanwhile, the latest wave of adoption is bringing thousands of new participants from traditional markets into crypto. These users aren’t looking for raw protocols – they expect structured, accessible, and compliant financial products.
+Meanwhile, the latest wave of adoption is bringing thousands of new participants from traditional markets into crypto. These users aren't looking for raw protocols – they expect structured, accessible, and compliant financial products.
 
 To meet this demand, the onchain financial stack must evolve. It needs to be productized, abstracted and made composable.
 
-Mellow’s response is our **Core Vaults** – infrastructure purpose-built for curators and asset managers to design, deploy, and scale structured products onchain.
+Mellow's response is our **Core Vaults** – infrastructure purpose-built for curators and asset managers to design, deploy, and scale structured products onchain.
 
 ### Vaults Architecture
 
@@ -44,9 +44,7 @@ The result is infrastructure that supports scalable, curated access to onchain y
   <img src="/images/EL%20Flow%20-%20Frame%205%20(1).jpg" alt="Vault system architecture overview" />
 </Frame>
 
-####
-
-#### 📥 Deposit Queue
+#### Deposit Queue
 
 Manages user deposits through a time-buffered queuing system. This delay helps prevent front-running and price manipulation by ensuring deposits are not executed based on stale or externally influenced oracle price data.
 
@@ -67,8 +65,8 @@ The deposit queue is also responsible for issuing receipt tokens.
         * It must be called by the `Vault`.
         * Provided `timestamp` must be in the past (usually `request.timestamp - depositInterval`).
         * `priceD18` must be non-zero.
-      * The queue handles deposit requests that are pending for at least `depositInterval` seconds (the interval is specified in the oracle’s security parameters).
-      * The contract stores a `(timestamp, reducedByDepositFeePriceD18)` pair in the `prices` array. This value is used to convert accumulated assets into shares based on the user’s request timestamp. The `reducedByDepositFeePriceD18` is derived by applying the deposit fee to the actual reported `priceD18`.
+      * The queue handles deposit requests that are pending for at least `depositInterval` seconds (the interval is specified in the oracle's security parameters).
+      * The contract stores a `(timestamp, reducedByDepositFeePriceD18)` pair in the `prices` array. This value is used to convert accumulated assets into shares based on the user's request timestamp. The `reducedByDepositFeePriceD18` is derived by applying the deposit fee to the actual reported `priceD18`.
       * The corresponding shares are allocated but not yet minted.
       * Emits the `ReportHandled` event.
     * Step 3: **User Claims**
@@ -88,21 +86,21 @@ The deposit queue is also responsible for issuing receipt tokens.
     2.  Delayed Execution
 
         Deposit processing requires an Oracle report submitted after a configured `depositInterval`.
-    3. Lazy Claiming Deposits are converted into shares during oracle processing, but users must call the claim function (in `ShareModule`, `ShareManager` or in each `DepositQueue` separately) to receive them. However, even without explicitly claiming, the user's full share balance — including all claimable shares across all deposit queues — is accurately reflected in `shareManager.sharesOf(user)`.
+    3. Lazy Claiming Deposits are converted into shares during oracle processing, but users must call the claim function (in `ShareModule`, `ShareManager` or in each `DepositQueue` separately) to receive them. However, even without explicitly claiming, the user's full share balance - including all claimable shares across all deposit queues - is accurately reflected in `shareManager.sharesOf(user)`.
     4.  Whitelist Enforcement
 
         Deposits may require Merkle proof for depositor whitelisting.\
         \
         <br/>
 
-#### 📤 Redeem Queue
+#### Redeem Queue
 
 Serving as the counterpart to the Deposit Queue, it manages withdrawal requests.
 
 Redemptions are processed in two phases:
 
 1. Oracle pricing – reports are processed in batches, with each batch assigned a specific conversion price derived from its corresponding Oracle report.
-2. Liquidity settlement — Vault liquidity is pulled asynchronously, allowing the curator to finalize withdrawals and perform asset swaps before processing user redemption requests.
+2. Liquidity settlement - Vault liquidity is pulled asynchronously, allowing the curator to finalize withdrawals and perform asset swaps before processing user redemption requests.
 
 This separation allows asynchronous liquidity management, gas efficiency, and protection against griefing. Unlike deposit requests, withdrawal requests in the Redeem Queue cannot be canceled to prevent yield-griefing.
 
@@ -123,12 +121,12 @@ This separation allows asynchronous liquidity management, gas efficiency, and pr
     #### Assumptions & Properties
 
     1. Non-Cancellable Requests Prevents griefing where a user requests redemption, causing curator to pull liquidity, then cancels.
-    2. Time-sensitive request handling Oracle reports can only process a redemption request if at least `redeemInterval` seconds have passed since the request was submitted — i.e., `report.timestamp` must be greater than or equal to `request.timestamp + redeemInterval`.
+    2. Time-sensitive request handling Oracle reports can only process a redemption request if at least `redeemInterval` seconds have passed since the request was submitted - i.e., `report.timestamp` must be greater than or equal to `request.timestamp + redeemInterval`.
     3. Asynchronous Fulfillment Liquidity can be managed independently of oracle report submission.\
        \
        <br/>
 
-#### 🔏 Signature Deposit and Redeem Queues
+#### Signature Deposit and Redeem Queues
 
 Signature Queues allow deposits and redemptions to be processed instantly, bypassing the standard time-buffered flow. That happens when a trusted consensus group issues offchain-signed approvals.
 
@@ -163,7 +161,7 @@ Key Features:
       \
       <br/>
 
-#### 💼 Vault
+#### Vault
 
 The Vault contract serves as the central entry point into the Core Vault system. It is configured by four internal modules:
 
@@ -174,7 +172,7 @@ The Vault contract serves as the central entry point into the Core Vault system.
   \
   <br/>
 
-#### 🗃️ Subvault
+#### Subvault
 
 The Subvault contract is a vault component designed to manage delegated asset strategies, acting as a controlled execution unit within a system. Like the Vault contract, it is configured by modules:
 
@@ -185,7 +183,7 @@ The Subvault contract is a vault component designed to manage delegated asset st
   \
   <br/>
 
-#### 👁️ Verifier
+#### Verifier
 
 Each Subvault is paired with a Verifier contract, which validates function calls and ensures only pre-approved actions from valid actors are permitted across vault-connected modules.
 
@@ -208,7 +206,7 @@ While each Subvault is expected to have its own dedicated Verifier contract, it 
     \
     <br/>
 
-#### 🔮 Oracle
+#### Oracle
 
 The Oracle contract handles secure and configurable price reporting for supported assets. Closely integrated with the `ShareModule`, it provides price validation, deviation monitoring, and time-restricted report submissions.
 
@@ -266,7 +264,7 @@ Key considerations:
       \
       <br/>
 
-#### 📊 Share Manager
+#### Share Manager
 
 The Share Manager is an upgradeable contract responsible for managing vault share issuance, allocation, whitelisting, permissions, and lockups within a modular vault system.
 
@@ -300,7 +298,7 @@ Share Manager operates under the control of defined roles:
 * `SET_WHITELIST_MERKLE_ROOT_ROLE`: Grants permission to set new whitelist merkle root.\
   <br/>
 
-#### 💰 Fee Manager
+#### Fee Manager
 
 The Fee Manager oversees the calculation and management of multiple fee types within the vault system. Currently, it supports four fee-acquiring methods:
 
@@ -329,7 +327,7 @@ Performance and Protocol fees are activated by a fresh Oracle report on the base
 * **Protocol fee** – a continuously accruing time-based fee calculated as `totalShares * protocolFee * (block.timestamp - timestamps[vault]) / (365 * 24 * 3600 * 1e6)`, proportional to both share supply and elapsed time since the last timestamp update.\
   <br/>
 
-#### 🎯 Risk Manager
+#### Risk Manager
 
 The Risk Manager contract defines and enforces asset deposit limits across the Vault and its associated Subvaults. It maintains internal accounting of balances, limits, and approved assets for each subvault.
 
@@ -350,7 +348,7 @@ This module is responsible for:
 
 All vault and subvault-level limits are treated as **approximate** and computed using the most recent Oracle report available **at the time of the state update** (on Subvault pull/push event or Deposit/Redeem operations).
 
-If actual balances deviate significantly from the stored `balance` values due to oracle drift, delayed execution, or protocol-side changes, a **trusted actor** can apply a ‘corrections’ to mitigate the difference:
+If actual balances deviate significantly from the stored `balance` values due to oracle drift, delayed execution, or protocol-side changes, a **trusted actor** can apply a 'corrections' to mitigate the difference:
 
 * `modifyVaultBalance` for the Vault, or
 * `modifySubvaultBalance` for individual Subvaults.
@@ -358,7 +356,7 @@ If actual balances deviate significantly from the stored `balance` values due to
 Since the system is expected to hold only correlated assets, such manual adjustments are assumed to be **rare** under normal operating conditions.\
 <br/>
 
-#### 🔐Access Control
+#### Access Control
 
 Granular Access Control (MellowACL) is a lightweight yet extensible layer built on an OpenZeppelin contract. It adds automatic tracking and enumeration of _active roles_ to enhance governance transparency and enable dynamic role management.
 
@@ -390,7 +388,7 @@ Core Vaults architecture supports integration with a wide range of apps, includi
 #### **CEXes** via custodial off-exchange solutions (Copper and Ceffu)
 
 * Deribit
-* ByBit
+* Bybit
 * Binance
 * Most of tier 1 and 2 CEXes
 
@@ -433,9 +431,9 @@ _Process Flow for Curator Allocation:_
 * Second one allowing deposits, withdrawals, withdrawal claims and reward claims & swaps from Symbiotic
 
 1. Curator pushes unallocated funds: `Vault.pushAssets(USDC, *500000*)`.
-2.  Allocates assets in Subvault 1 (Delta-Neutral strategy on ByBit via Copper ClearLoop).
+2.  Allocates assets in Subvault 1 (Delta-Neutral strategy on Bybit via Copper ClearLoop).
 
-    * In UI, Curator clicks **New Call** → sets target to **Copper Subvault** → selects **USDC** asset and B**ybit Clearloop** as destination.
+    * In UI, Curator clicks **New Call** → sets target to **Copper Subvault** → selects **USDC** asset and **Bybit** as destination.
     * Generate `VerificationPayload` via Mellow API.
     * Executes call:
 
@@ -444,10 +442,10 @@ _Process Flow for Curator Allocation:_
     	asset,                          // address of the asset (USDC) to be sent to the Copper account
     	0,                              // eth value
     	abi.encodeCall(
-    		IERC20.tranfer,               // transfer call encoding
+    		IERC20.transfer,               // transfer call encoding
     		(copperAccountAddress, 5e11)  // (recipient, amount)
     	),
-    	verificationPayload             // extra data for Verifer contract
+    	verificationPayload             // extra data for Verifier contract
     )
     ```
 
@@ -466,7 +464,7 @@ _Process Flow for Curator Allocation:_
        		ISymbioticVault.deposit, // deposit call encoding
        		(subvault, 5e11)         // (onBehalfOf, amount)
        	),
-       	verificationPayload        // extra data for Verifer contract
+       	verificationPayload        // extra data for Verifier contract
        )
        ```
 4. Curator regularly claims rewards from Symbiotic Restaking and swaps them into assets before depositing them using `subvault2.call`

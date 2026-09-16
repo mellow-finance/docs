@@ -8,7 +8,7 @@ Unlike derivative oracles, which estimate the value of tokens such as `aUSDC` or
 
 ### Tokens Scope
 
-As mentioned above, spot oracles provide price estimations for tokens that are tradable on DEXes (e.g. governance tokens like `UNI`), which _have no underlying tokens_. For example, Wrapped Staked Ether (`wstETH`), despite being traded on UniSwap, would not be estimated by a Spot Oracle, as it’s value is based on Staked Ether.
+As mentioned above, spot oracles provide price estimations for tokens that are tradable on DEXes (e.g. governance tokens like `UNI`), which _have no underlying tokens_. For example, Wrapped Staked Ether (`wstETH`), despite being traded on UniSwap, would not be estimated by a Spot Oracle, as it's value is based on Staked Ether.
 
 We estimate token values using oracles that leverage historical data, like the UniSwap TWAP oracle. Instead of a simple average, these oracles utilize historical data for more accurate price estimations (see below for details).
 
@@ -28,7 +28,7 @@ When a token is listed, occasionally the pool used for token estimations require
     **or**
 3. The old pool no longer meets the Listing Criteria.
 
-There’s also a **Delisting Criteria** for the token:
+There's also a **Delisting Criteria** for the token:
 
 1. Liquidity equivalent less than `$100 000`.
 2. No more than three LPs, each contributing a minimum liquidity of `$20 000`.
@@ -55,7 +55,7 @@ In contrast, the Delisting process automatically removes a token from the list.
 
 Meanwhile, the Warning process alerts protocol members about potential upcoming delistings of certain oracles, allowing them to take appropriate actions in advance.
 
-\<aside> 💡 When utilizing the Spot Oracle, it's important to always be aware that the token in question could potentially be delisted.
+\<aside> When utilizing the Spot Oracle, it's important to always be aware that the token in question could potentially be delisted.
 
 \</aside>
 
@@ -99,7 +99,7 @@ To detect Market Anomaly we sort `$d\_0, ..., d\_{n-1}$` in ascending order. If 
 
 The protocol parameters are determined on the basis of historical assessment.
 
-\<aside> 💡 This mechanism, while effective, still permits a degree of price manipulation, which varies across different pools. It is crucial for the protocol to explicitly indicate the expected maximum extent of manipulation. Users of this oracle should be aware of this factor when using it as price provider.
+\<aside> This mechanism, while effective, still permits a degree of price manipulation, which varies across different pools. It is crucial for the protocol to explicitly indicate the expected maximum extent of manipulation. Users of this oracle should be aware of this factor when using it as price provider.
 
 \</aside>
 
@@ -108,9 +108,9 @@ The protocol parameters are determined on the basis of historical assessment.
 The oracle's price determination follows two scenarios:
 
 1. **No Prior Swaps in Current Block:** If the oracle's latest observation timestamp differs from the current block's timestamp, it implies that no swaps occurred prior to the current transaction in this block. In such a scenario, where a flashloan or sandwich attack is unlikely (or absent), the current spot price is deemed the most accurate and is returned.
-2. **Existence of Prior Swaps in Current Block:** Conversely, if swaps have occurred earlier in the current block (latest observation timestamp doens’t match current block timestamp), a more cautious approach is adopted. In this case, the oracle returns the last observed price `$\overline{p}\_0$` (see section above). While this price may not account for the very latest swaps within the current block, it's a fair choice given the arbitrary nature of transaction ordering within a block.
+2. **Existence of Prior Swaps in Current Block:** Conversely, if swaps have occurred earlier in the current block (latest observation timestamp doens't match current block timestamp), a more cautious approach is adopted. In this case, the oracle returns the last observed price `$\overline{p}\_0$` (see section above). While this price may not account for the very latest swaps within the current block, it's a fair choice given the arbitrary nature of transaction ordering within a block.
 
-\<aside> 💡 If the risk of cross-block sandwich attacks is negligible, relying solely on this oracle is sufficient. However, for enhanced security against such scenarios, integrating Market Anomaly Detection offers an additional layer of protection.
+\<aside> If the risk of cross-block sandwich attacks is negligible, relying solely on this oracle is sufficient. However, for enhanced security against such scenarios, integrating Market Anomaly Detection offers an additional layer of protection.
 
 \</aside>
 

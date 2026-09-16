@@ -16,7 +16,7 @@ For example, token X might be WETH, token Y might be USDC and the Curve pool mig
 
 ### Deposits and withdrawals
 
-Gearbox V2 doesn’t have an option of a partial withdrawal of funds from its credit accounts. Hence, there is a new RootVault (named GearboxRootVault) that uses the following scheme:
+Gearbox V2 doesn't have an option of a partial withdrawal of funds from its credit accounts. Hence, there is a new RootVault (named GearboxRootVault) that uses the following scheme:
 
 * A deposit into the RootVault goes directly to the gearboxVault, without going through the ERC20Vault (as it's usually done). After the deposit, a depositor is given an LP tokens amount proportional to his share of the vault funds.
 * An instant withdrawal is not permitted. Instead, the vault collects requests for withdrawals from users willing to withdraw. Every two weeks, the existing credit account in Gearbox V2 is closing and sends tokens corresponding to the sum of all withdrawal requests to the ERC20Vault, where users can claim them back at any moment. Then, the credit account on Gearbox V2 is reopened back, and the process repeats.
@@ -24,23 +24,23 @@ Gearbox V2 doesn’t have an option of a partial withdrawal of funds from its cr
 
 ### Gearbox vault internal logic
 
-The vault has a parameter _marginalFactor_ (let’s call it `$$M > 1$$` for simplicity). If the vault has `$$x$$` USD of pure capital (total assets - total debts), it’s supposed the vault should generally have `$$x \cdot M$$` USD of assets (so, `$$x \cdot (M - 1)$$` USD of debts). This parameter can be changed by the admin or an approved address in the vault
+The vault has a parameter _marginalFactor_ (let's call it `$$M > 1$$` for simplicity). If the vault has `$$x$$` USD of pure capital (total assets - total debts), it's supposed the vault should generally have `$$x \cdot M$$` USD of assets (so, `$$x \cdot (M - 1)$$` USD of debts). This parameter can be changed by the admin or an approved address in the vault
 
-Here are the main functions’ logic of the vault:
+Here are the main functions' logic of the vault:
 
 * _openCreditAccount()_ opens a new credit account (required to be called to start using Gearbox). Gearbox requires a min limit cap of borrowing which has always to be fulfilled during using the credit account (which means, we have to already have some funds in our vault before this call to be able to borrow). Typically, supposed to be called by our external bot which is responsible for having enough funds
 * _tvl()_ returns tvl = total assets - total debts. Here, minTvl always equals maxTvl
 * \__push()_ simply deposits all received collateral into the credit account
-* \__pull()_ closes the credit account, sends the required amount of money to the ERC20Vault, and the remaining funds remain in the vault. Either pays the required amount of money or sends all funds to the ERC20Vault (if the request can’t be fulfilled fully)
-* _adjustPosition()_ adjusts the amount of total assets to `$$M \cdot x$$`. This means, if the amount of the current assets is smaller, the vault takes additional debt of token Y and puts it into Curve and then Curve LP tokens to Convex. If in opposition, it’s greater, it repays exceeding debt (if necessary, taking some amounts back from Convex or from deposited collateral). The external bot is supposed to call this function (for example, every day)
+* \__pull()_ closes the credit account, sends the required amount of money to the ERC20Vault, and the remaining funds remain in the vault. Either pays the required amount of money or sends all funds to the ERC20Vault (if the request can't be fulfilled fully)
+* _adjustPosition()_ adjusts the amount of total assets to `$$M \cdot x$$`. This means, if the amount of the current assets is smaller, the vault takes additional debt of token Y and puts it into Curve and then Curve LP tokens to Convex. If in opposition, it's greater, it repays exceeding debt (if necessary, taking some amounts back from Convex or from deposited collateral). The external bot is supposed to call this function (for example, every day)
 * _updateTargetMarginalFactor_() changes target _marginalFactor_ and adjusts the amount of the assets to the new marginal factor
 
 Calls to Gearbox V2 go mainly through [multicalls](https://dev.gearbox.fi/docs/documentation/credit/multicall) feature.
 
 We maintain the following invariants for the Gearbox Vault:
 
-* If the vault’s token doesn’t equal the token of the credit account, we maintain that _amount ≤ tvl,_ where _amount_ is how many vault’s tokens are in the credit account. If false, some amount of tokens are swapped to the tokens of the credit account at the first stage of the _adjustPosition()_ function to fulfill this requirement
-* Before _pull()_, tokens of the credit account are not swapped to the tokens of the vault if it’s not necessary. After closing the credit account, both tokens may return to the vault in some amount (and be swapped afterward if needed)
+* If the vault's token doesn't equal the token of the credit account, we maintain that _amount ≤ tvl,_ where _amount_ is how many vault's tokens are in the credit account. If false, some amount of tokens are swapped to the tokens of the credit account at the first stage of the _adjustPosition()_ function to fulfill this requirement
+* Before _pull()_, tokens of the credit account are not swapped to the tokens of the vault if it's not necessary. After closing the credit account, both tokens may return to the vault in some amount (and be swapped afterward if needed)
 
 ### Risks
 

@@ -68,7 +68,7 @@ There is a parameter `erc20TokenRatio`, which is what share of the capital of th
 
 If the current ratio and the desired ratio differ less than by `minErc20TokenRatioDeviation`, we don't do anything.
 
-In the other case, we have to swap some amount of an excessively presented token to get the second token and align the ratio. We do swaps using Cowswap. At first, a preorder is placed on-chain by the operator. Then, an off-chain bot submits the actual Cowswap order using preorder parameters and calls the `signOrder()` function. This function verifies that the actual order matches the preorder's requirements and signs the orders using the Cowswap `setPresignature()` function.
+In the other case, we have to swap some amount of an excessively presented token to get the second token and align the ratio. We do swaps using Cowswap. At first, a preorder is placed onchain by the operator. Then, an off-chain bot submits the actual Cowswap order using preorder parameters and calls the `signOrder()` function. This function verifies that the actual order matches the preorder's requirements and signs the orders using the Cowswap `setPresignature()` function.
 
 ### Parameters
 

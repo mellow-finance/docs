@@ -2,7 +2,7 @@
 title: "Architecture"
 ---
 
-SimpleLRT is a modular “liquid restaking primitive” built on a series of vault contracts tailored to different risk profiles.
+SimpleLRT is a modular "liquid restaking primitive" built on a series of vault contracts tailored to different risk profiles.
 
 The system is based on the following key contracts:
 
@@ -30,11 +30,11 @@ In the vault contract, several key functions help to manage assets, withdrawals,
 4. **convertToShares(amount)**: Calculates the number of LP tokens (shares) you would receive when depositing a specified `amount` of the underlying `asset` into the vault.
 5. **convertToAssets(shares)**: Converts a given number of LP tokens (shares) back into the equivalent amount of the underlying `asset`.
 6. **previewDeposit / previewWithdraw / previewMint / previewRedeem**: These functions provide information on expected outcomes from various operations (deposits, withdrawals, minting, or redeeming shares). They are useful for estimating returns or required amounts.
-7. **getBalances(userAddress)**: Returns four parameters related to the user’s holdings:
+7. **getBalances(userAddress)**: Returns four parameters related to the user's holdings:
    * `accountAssets`: The total assets (underlying tokens) that the user holds in the vault.
-   * `accountInstantAssets`: The portion of the user’s assets that can be instantly withdrawn from the vault.
+   * `accountInstantAssets`: The portion of the user's assets that can be instantly withdrawn from the vault.
    * `accountShares`: The total shares (LP tokens) the user holds in the vault.
-   * `accountInstantShares`: The portion of the user’s shares that can be instantly withdrawn.
+   * `accountInstantShares`: The portion of the user's shares that can be instantly withdrawn.
 
 #### Withdrawal Queue Functions:
 
@@ -66,7 +66,7 @@ There is a factory contract for permissionless deployments of the vault.
 
 #### Deposit process
 
-1. User transfers ETH/WETH/STETH/WSTETH to `EthWrapper`, where it’s wrapped into the WSTETH. In case of other base asset, skip to step 2.
+1. User transfers ETH/WETH/STETH/WSTETH to `EthWrapper`, where it's wrapped into the WSTETH. In case of other base asset, skip to step 2.
 2. `MellowSymbioticVault` mints LRT to the user
 3. Base asset is pushed into `SymbioticVault`
 
@@ -78,10 +78,10 @@ This withdrawal is a 2-step process. First a call to `withdraw` or `redeem` that
 
 1. User calls `withdraw` or `redeem` method of the `MellowSymbioticVault`.
 2. This eventually delegates to internal `_withdraw` method that takes as input `assets` - the amount of assets the user wants to withdraw.
-3. If there’s some WSTETH on the vault balance then it’s immediately used to fulfill the request
+3. If there's some WSTETH on the vault balance then it's immediately used to fulfill the request
 4. If there is still some assets (`staked` variable) that needs to be withdrawn, then a withdrawal request for a `staked`amount is made into Symbiotic vault. The receiver of the a`staked` amount is `SymbioticWithdrawalQueue`
 5. A `request` call to `SymbioticWithdrawalQueue` is made that puts a record that it owes. This call uses `shares` of symbiotic corresponding to `staked` rather than assets. This is because shares can be slashed while being withdrawn.
-6. `SymbioticWithdrawalQueue` checks the last epoch the user claimed assets (`epoch` variable). It then updates the data for account’s available funds to claim (`_handlePendingEpoch` method) for `epoch` and `epoch` - 1 and then claims (if possible) funds from symbiotic and stores the record that epoch was claimed and funds are ready for distribution (`_pullFromSymbioticForEpoch` method).
+6. `SymbioticWithdrawalQueue` checks the last epoch the user claimed assets (`epoch` variable). It then updates the data for account's available funds to claim (`_handlePendingEpoch` method) for `epoch` and `epoch` - 1 and then claims (if possible) funds from symbiotic and stores the record that epoch was claimed and funds are ready for distribution (`_pullFromSymbioticForEpoch` method).
 
 **Claim call**
 

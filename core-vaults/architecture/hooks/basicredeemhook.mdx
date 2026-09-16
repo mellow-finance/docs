@@ -6,7 +6,7 @@ title: "BasicRedeemHook"
 
 `BasicRedeemHook` is a minimal hook implementation for `IHook`, designed to dynamically fetch liquidity from subvaults during redemption processing in a `VaultModule`. It ensures that enough assets are available for user redemptions by pulling liquidity from a set of registered subvaults.
 
-This hook is typically invoked by a vault’s redemption queue or during `redeem()` operations when assets must be made liquid.
+This hook is typically invoked by a vault's redemption queue or during `redeem()` operations when assets must be made liquid.
 
 ### Purpose
 
@@ -55,4 +55,4 @@ Returns the **total liquid amount of a given asset** available across the vault 
 ### Security Considerations
 
 * Hook only pulls assets using vault-controlled `hookPullAssets()`, ensuring controlled asset flow.
-* Assumes vault validates which hook is active — no permissioning within the hook itself.
+* Assumes vault validates which hook is active - no permissioning within the hook itself.

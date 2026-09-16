@@ -28,10 +28,10 @@ Handles conversion of an input asset into `wstETH` and optionally delegates the 
 
 **Supported Input Types:**
 
-1. `wstETH` — forwarded directly
-2. `stETH` — wrapped into `wstETH` via `IWSTETH(wsteth).wrap()`
-3. `WETH` — unwrapped into ETH via `IWETH(weth).withdraw()`, then deposited into `wstETH`
-4. `ETH` (i.e. `address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)`) — directly deposited into `wstETH`
+1. `wstETH` - forwarded directly
+2. `stETH` - wrapped into `wstETH` via `IWSTETH(wsteth).wrap()`
+3. `WETH` - unwrapped into ETH via `IWETH(weth).withdraw()`, then deposited into `wstETH`
+4. `ETH` (i.e. `address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)`) - directly deposited into `wstETH`
 
 **Execution Steps:**
 
@@ -50,7 +50,7 @@ Handles conversion of an input asset into `wstETH` and optionally delegates the 
 
 ### Errors
 
-* `UnsupportedAsset(address asset)` — Thrown if the provided asset is neither `wstETH`, `stETH`, `WETH`, nor `ETH`
+* `UnsupportedAsset(address asset)` - Thrown if the provided asset is neither `wstETH`, `stETH`, `WETH`, nor `ETH`
 
 ### Assumptions:
 

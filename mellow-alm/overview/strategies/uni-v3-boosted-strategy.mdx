@@ -6,13 +6,13 @@ title: "Uni V3 Boosted strategy"
 
 UniV3 Boosted strategy provides a risk profile very similar to a fixed UniV3 position but with higher returns.
 
-Consider UniV3 ETH/USDC 0.05% pool and assume we’d like to put our liquidity into the \[1000, 2000] price range (we refer to it as the Domain price range). How can we do better than just providing it directly into the pool?
+Consider UniV3 ETH/USDC 0.05% pool and assume we'd like to put our liquidity into the \[1000, 2000] price range (we refer to it as the Domain price range). How can we do better than just providing it directly into the pool?
 
 The trick is to put only a tiny portion of liquidity into a really narrow price range earning the same fees as direct providing. As soon as the price risks going out of the narrow range, rebalance the interval to cover the price safely.
 
 The liquidity requirements for UniV3, in this case, are significantly lower. The rest of the liquidity can be put into some yield protocols like Yearn. Thus the overall returns are higher for the UniV3 Boosted strategy.
 
-UniV3 Boosted strategy is a strategy for a pair of tokens X and Y, for example — WBTC/WETH or USDC/WETH. The entire capital of the strategy is divided into three parts:
+UniV3 Boosted strategy is a strategy for a pair of tokens X and Y, for example - WBTC/WETH or USDC/WETH. The entire capital of the strategy is divided into three parts:
 
 1. A special buffer vault through which all deposits, withdrawals, and rebalancings take place in the strategy to reduce gas consumption
 2. Uniswap V3 position
@@ -56,7 +56,7 @@ The rebalance function consists of two functions: `_partialRebalanceOfUniV3Posit
 2. Rebalancing capitals via `_capitalRebalance` method:
    1. Calculates current amounts of tokens on each vault
    2. Calculates expected amounts of tokens after rebalancing with the formulas above
-   3. If the deviation between current amounts and expected amounts is large enough, then the following transfers are done. “enough” is determined by the actual deviation and `ratioParams` parameters of the strategy
+   3. If the deviation between current amounts and expected amounts is large enough, then the following transfers are done. "enough" is determined by the actual deviation and `ratioParams` parameters of the strategy
    4. Pulls extra tokens from Uniswap V3 position and yield protocols compared to the expected number to erc20Vault (special buffer vault)
    5. Swaps tokens on Uniswap V3 via the SwapRouter on erc20Vault (if needed)
    6. Pulls missing (relative to expected values) tokens to Uniswap V3 position and yield protocols from erc20Vault (special buffer vault)
@@ -67,15 +67,15 @@ _Note:_ to calculate the expected amount of tokens in uniV3 we need to know, how
 
 Below are the formulas that determine the portion of the capital that should be directed to the Uniswap V3 position (short interval) and the yield protocols for both tokens.
 
-`$$u_{1}= 1 - u_2 - u_3 =\frac{2\sqrt{c}-\sqrt{a}-\frac{c}{\sqrt{b}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` — fraction of capital to Uniswap V3;
+`$$u_{1}= 1 - u_2 - u_3 =\frac{2\sqrt{c}-\sqrt{a}-\frac{c}{\sqrt{b}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` - fraction of capital to Uniswap V3;
 
-`$$u_{2}=\frac{\frac{c}{\sqrt{b}}-\frac{c}{\sqrt{b_{0}}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` — fraction of capital to the yield protocol in token X;
+`$$u_{2}=\frac{\frac{c}{\sqrt{b}}-\frac{c}{\sqrt{b_{0}}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` - fraction of capital to the yield protocol in token X;
 
-`$$u_{3}=\frac{\sqrt{a}-\sqrt{a_{0}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` — fraction of capital to the yield protocol in token Y. where:
+`$$u_{3}=\frac{\sqrt{a}-\sqrt{a_{0}}}{2\sqrt{c}-\sqrt{a_{0}}-\frac{c}{\sqrt{b_{0}}}}$$` - fraction of capital to the yield protocol in token Y. where:
 
-* `$$a_0$$`, `$$b_0$$` — domain interval in Uniswap V3
-* `$$a$$`, `$$b$$` — short interval in Uniswap V3
-* `$$c$$` — current price
+* `$$a_0$$`, `$$b_0$$` - domain interval in Uniswap V3
+* `$$a$$`, `$$b$$` - short interval in Uniswap V3
+* `$$c$$` - current price
 
 ### Appendix 2
 
@@ -85,13 +85,13 @@ To calculate the expected number of tokens in a Uniswap V3 position, we will use
 
 Where:
 
-* `$$x$$` — the amount of token X weis
-* `$$y$$`— the amount of token Y weis
-* `$$\sqrt{P}$$` — square root of the current price
-* `$$\sqrt{p_a}$$` — square root of the price at the left border of the position interval
-* `$$\sqrt{p_b}$$` — square root of the price at the right border of the position interval
+* `$$x$$` - the amount of token X weis
+* `$$y$$` - the amount of token Y weis
+* `$$\sqrt{P}$$` - square root of the current price
+* `$$\sqrt{p_a}$$` - square root of the price at the left border of the position interval
+* `$$\sqrt{p_b}$$` - square root of the price at the right border of the position interval
 
-Thus, if we have `$$x_0$$` amount of weis in token X and we’d like to calculate how much we need to convert to token Y, we are solving the following system:
+Thus, if we have `$$x_0$$` amount of weis in token X and we'd like to calculate how much we need to convert to token Y, we are solving the following system:
 
 `$$\begin{cases}x_1 + y_1/P &= x_0\\x_1\dfrac{\sqrt{P}\cdot\sqrt{p_b}}{\sqrt{p_b} - \sqrt{P}} &= \dfrac{y_1}{\sqrt{P} - \sqrt{p_a}}\end{cases}$$`
 
@@ -159,19 +159,19 @@ The strategy has the same risk as the underlying UniV3 position with the domain 
 
     `$$profit = 100\% * (strategyCapital / uniswapCapital - 1)$$`, where:
 
-    1. `$$strategyCapital = L(c (\sqrt{b_0} - \sqrt{b}) / \sqrt{b b_0} + \sqrt{b} - \sqrt{a_0})$$` — capital of the strategy in token Y if there has not been a rebalance since the price equal to `$$b$$`
-    2. `$$uniswapCapital = L (c(\sqrt{b_0} - \sqrt{c}) / \sqrt{c b_0} + \sqrt{c} - \sqrt{a_0})$$` — capital of uniswap position in token Y
-    3. `$$L$$`— liquidity of the uniswap position in terms of UniswapV3
+    1. `$$strategyCapital = L(c (\sqrt{b_0} - \sqrt{b}) / \sqrt{b b_0} + \sqrt{b} - \sqrt{a_0})$$` - capital of the strategy in token Y if there has not been a rebalance since the price equal to `$$b$$`
+    2. `$$uniswapCapital = L (c(\sqrt{b_0} - \sqrt{c}) / \sqrt{c b_0} + \sqrt{c} - \sqrt{a_0})$$` - capital of uniswap position in token Y
+    3. `$$L$$` - liquidity of the uniswap position in terms of UniswapV3
 2.  Fees paid for swap:
 
     `$$loss = 0.05\% * (strategyRatioX - uniswapRatioX)$$`, where:
 
-    1. `$$strategyRatioX = c(\sqrt{b_0} - \sqrt{b}) / (\sqrt{b b_0} * (\sqrt{b} - \sqrt{a_0}) + c(\sqrt{b_0} - \sqrt{b}))$$` — the ratio of token X to the total capital of the strategy if there has not been a rebalance since the price equal to `$$b$$`
-    2. `$$uniswapRatioX = c(\sqrt{b_0} - \sqrt{c}) / (\sqrt{c b_0} * (\sqrt{c} - \sqrt{a_0}) + c(\sqrt{b_0} - \sqrt{c}))$$` — the ratio of token X to the total capital of the uniswap position
+    1. `$$strategyRatioX = c(\sqrt{b_0} - \sqrt{b}) / (\sqrt{b b_0} * (\sqrt{b} - \sqrt{a_0}) + c(\sqrt{b_0} - \sqrt{b}))$$` - the ratio of token X to the total capital of the strategy if there has not been a rebalance since the price equal to `$$b$$`
+    2. `$$uniswapRatioX = c(\sqrt{b_0} - \sqrt{c}) / (\sqrt{c b_0} * (\sqrt{c} - \sqrt{a_0}) + c(\sqrt{b_0} - \sqrt{c}))$$` - the ratio of token X to the total capital of the uniswap position
 3.  Fees foregone not providing in the `$$[b, c]$$` range:
 
     `$$loss = 100\% * possibleFees / uniswapCapital$$`, where:
 
     1. `$$possibleFees = poolFees / (1 - poolFees) * L (\sqrt{c} - \sqrt{b})$$` - the amount of fees that the uniswap position receives when the price moves from `$$b$$` to `$$c$$` in token Y
-    2. `$$uniswapCapital = L (c(\sqrt{b_0} - \sqrt{c}) / \sqrt{c b_0} + \sqrt{c} - \sqrt{a_0})$$` — capital of uniswap position in token Y
-    3. `$$L$$` — liquidity of the uniswap position in terms of UniswapV3
+    2. `$$uniswapCapital = L (c(\sqrt{b_0} - \sqrt{c}) / \sqrt{c b_0} + \sqrt{c} - \sqrt{a_0})$$` - capital of uniswap position in token Y
+    3. `$$L$$` - liquidity of the uniswap position in terms of UniswapV3

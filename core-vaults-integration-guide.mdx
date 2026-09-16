@@ -9,7 +9,7 @@ This guide covers the full lifecycle for integrating deposits and redemptions wi
 
 A **Mellow Core Vault** is a programmable, modular asset management contract. It serves as the central hub for capital management, risk control, and composable logic. **Depositors** provide capital; **Curators** manage that capital within guardrails set by the vault configuration.
 
-All deposit and redemption flows are time-buffered through an off-chain oracle — protecting depositors against flash-loan attacks and front-running by design.
+All deposit and redemption flows are time-buffered through an off-chain oracle - protecting depositors against flash-loan attacks and front-running by design.
 
 ### Core Components
 
@@ -357,7 +357,7 @@ const REDEEM_QUEUE_ABI = [
 ] as const
 ```
 
-### 5.3 ERC20 ABI (subset — for approval)
+### 5.3 ERC20 ABI (subset - for approval)
 
 ```typescript
 const ERC20_ABI = [
@@ -391,7 +391,7 @@ const ERC20_ABI = [
 ] as const
 ```
 
-### 5.4 Vault ABI (subset — for share balance lookup)
+### 5.4 Vault ABI (subset - for share balance lookup)
 
 ```typescript
 const VAULT_ABI = [
@@ -483,7 +483,7 @@ interface ShareManagerFlags {
 
 ### Overview
 
-Depositing submits tokens to a `DepositQueue` contract. For **async** queues the shares are not immediately available — an oracle processes the batch and sets a price, after which the user calls `claim` to receive their shares.
+Depositing submits tokens to a `DepositQueue` contract. For **async** queues the shares are not immediately available - an oracle processes the batch and sets a price, after which the user calls `claim` to receive their shares.
 
 ```
 Step 1 — approve token spend (ERC20 only)
@@ -692,7 +692,7 @@ async function deposit(
 </Info>
 
 <Warning>
-**Merkle proof & whitelisting:** Pass `[]` for public vaults. When `shareManager.flags().hasWhitelist === true`, the vault is permissioned — `deposit()` will revert with `DepositNotAllowed` if the proof is invalid or empty. Contact the Mellow team or query the Mellow API to obtain a valid proof for whitelisted addresses.
+**Merkle proof & whitelisting:** Pass `[]` for public vaults. When `shareManager.flags().hasWhitelist === true`, the vault is permissioned - `deposit()` will revert with `DepositNotAllowed` if the proof is invalid or empty. Contact the Mellow team or query the Mellow API to obtain a valid proof for whitelisted addresses.
 </Warning>
 
 ## 7. Cancel Deposit
@@ -701,21 +701,21 @@ async function deposit(
 
 A pending async deposit request can be cancelled before the oracle processes it. Cancelling returns the deposited tokens to the user.
 
-You **cannot** cancel once the request is claimable — call `claim` instead.
+You **cannot** cancel once the request is claimable - call `claim` instead.
 
 ### Steps
 
 <Steps>
 <Step title="Check for a pending request">
-Call `requestOf(userAddress)` on the deposit queue. Check `timestamp > 0n` — if zero, there is no pending request.
+Call `requestOf(userAddress)` on the deposit queue. Check `timestamp > 0n` - if zero, there is no pending request.
 </Step>
 
 <Step title="Check whether it is already claimable">
-Call `claimableOf(userAddress)`. If `> 0n`, the oracle has already processed the request — you must claim it, not cancel it.
+Call `claimableOf(userAddress)`. If `> 0n`, the oracle has already processed the request - you must claim it, not cancel it.
 </Step>
 
 <Step title="Cancel the request">
-Call `cancelDepositRequest()`. This function takes no arguments — it cancels the caller's own request.
+Call `cancelDepositRequest()`. This function takes no arguments - it cancels the caller's own request.
 </Step>
 </Steps>
 
@@ -770,7 +770,7 @@ Call `claimableOf(userAddress)`. If `> 0n`, shares are ready to claim.
 </Step>
 
 <Step title="Check whether the request is still pending">
-If `claimableOf` returns `0n`, call `requestOf(userAddress)`. If `timestamp > 0n`, the oracle has not yet processed the request — wait and retry later.
+If `claimableOf` returns `0n`, call `requestOf(userAddress)`. If `timestamp > 0n`, the oracle has not yet processed the request - wait and retry later.
 </Step>
 
 <Step title="Claim the shares">
@@ -821,7 +821,7 @@ async function claimDeposit(queueAddress: string) {
 
 ### Overview
 
-Redemption burns vault shares and, after oracle processing, returns the underlying asset to the user. Redeem queues are **always async** — there is always a separate claim step.
+Redemption burns vault shares and, after oracle processing, returns the underlying asset to the user. Redeem queues are **always async** - there is always a separate claim step.
 
 ```
 Step 1 — call redeem(shares)
@@ -844,11 +844,11 @@ Check `queue.is_paused === false`.
 
 <Step title="Fetch the user's redeemable share balance">
 * Call `vault.shareManager()` to get the share manager address.
-* Call `shareManager.activeSharesOf(userAddress)` — this returns only shares that are **not** currently locked in a pending redeem request. Use `sharesOf` if you want the total including locked shares.
+* Call `shareManager.activeSharesOf(userAddress)` - this returns only shares that are **not** currently locked in a pending redeem request. Use `sharesOf` if you want the total including locked shares.
 </Step>
 
 <Step title="Parse the share amount with vault decimals">
-Parse the share amount using **vault decimals** (`vault.decimals`), **not** the token's decimals. This is a common mistake — the share token uses the vault's decimal precision.
+Parse the share amount using **vault decimals** (`vault.decimals`), **not** the token's decimals. This is a common mistake - the share token uses the vault's decimal precision.
 </Step>
 
 <Step title="Validate the amount">
@@ -856,7 +856,7 @@ Validate `parsedShares > 0n` and `parsedShares <= activeShareBalance`.
 </Step>
 
 <Step title="Submit the redeem request">
-Call `redeem(parsedShares)`. No ETH value, no ERC20 approval — the vault contract locks shares directly from the caller.
+Call `redeem(parsedShares)`. No ETH value, no ERC20 approval - the vault contract locks shares directly from the caller.
 </Step>
 
 <Step title="Wait for settlement and claim later">
@@ -869,11 +869,11 @@ Wait for oracle processing and `handleBatches()`, then call `claimRedeem` (see S
 </Info>
 
 <Warning>
-**Requests cannot be cancelled.** Once submitted, a redemption request is permanent. This is intentional — cancellable redemptions would allow yield-griefing (requesting redemption to force liquidity pulls from external protocols, then withdrawing the request). The locked shares remain locked until claimed.
+**Requests cannot be cancelled.** Once submitted, a redemption request is permanent. This is intentional - cancellable redemptions would allow yield-griefing (requesting redemption to force liquidity pulls from external protocols, then withdrawing the request). The locked shares remain locked until claimed.
 </Warning>
 
 <Info>
-**Settlement flow:** After `redeem()`, two off-chain steps must happen before you can claim: (1) the oracle calls `handleReport()` to price the batch, then (2) the Curator calls `handleBatches()` on the RedeemQueue to pull the required liquidity from subvaults. Listen for the `RedeemRequestsHandled` event — it fires when `handleBatches()` settles one or more batches and requests become claimable. The timing depends on vault configuration (`redeemInterval`) and curator activity, typically ranging from minutes to hours.
+**Settlement flow:** After `redeem()`, two off-chain steps must happen before you can claim: (1) the oracle calls `handleReport()` to price the batch, then (2) the Curator calls `handleBatches()` on the RedeemQueue to pull the required liquidity from subvaults. Listen for the `RedeemRequestsHandled` event - it fires when `handleBatches()` settles one or more batches and requests become claimable. The timing depends on vault configuration (`redeemInterval`) and curator activity, typically ranging from minutes to hours.
 </Info>
 
 ### Code Example
@@ -945,7 +945,7 @@ Filter to requests where `isClaimable === true`.
 </Step>
 
 <Step title="Extract timestamps">
-Extract the `timestamp` field from each claimable request. Cast to `number` — timestamps are `uint32` values, safely representable as JavaScript numbers until year 2106.
+Extract the `timestamp` field from each claimable request. Cast to `number` - timestamps are `uint32` values, safely representable as JavaScript numbers until year 2106.
 </Step>
 
 <Step title="Batch-claim the requests">
@@ -954,7 +954,7 @@ Call `claim(userAddress, timestamps)`. Returns the total `assets` transferred.
 </Steps>
 
 <Info>
-**`claim()` is idempotent.** Non-claimable or already-claimed timestamps are silently skipped — the contract does not revert. You may safely pass all known timestamps and let the contract filter them.
+**`claim()` is idempotent.** Non-claimable or already-claimed timestamps are silently skipped - the contract does not revert. You may safely pass all known timestamps and let the contract filter them.
 </Info>
 
 ### Code Example
@@ -1018,7 +1018,7 @@ async function claimRedeem(vault: VaultData, queueAddress: string) {
 
 ## 11. Fees
 
-Fees in Mellow Core Vaults are paid in **vault shares**, not in underlying assets. The `FeeManager` contract calculates and deducts fees automatically during oracle report handling — integrators do not call fee functions directly.
+Fees in Mellow Core Vaults are paid in **vault shares**, not in underlying assets. The `FeeManager` contract calculates and deducts fees automatically during oracle report handling - integrators do not call fee functions directly.
 
 | Fee Type            | When Applied                   | Effect on Integrator                                                                                   |
 | ------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
@@ -1034,26 +1034,26 @@ Fees in Mellow Core Vaults are paid in **vault shares**, not in underlying asset
 | Error                    | Contract     | When it occurs                                                                        | What to do                                                                          |
 | ------------------------ | ------------ | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | `PendingRequestExists`   | DepositQueue | `deposit()` called when a pending request already exists                              | Call `cancelDepositRequest()` first, or wait for oracle and then `claim()`          |
-| `ClaimableRequestExists` | DepositQueue | `cancelDepositRequest()` called when request is already claimable                     | The oracle processed the request — call `claim()` instead                           |
+| `ClaimableRequestExists` | DepositQueue | `cancelDepositRequest()` called when request is already claimable                     | The oracle processed the request - call `claim()` instead                           |
 | `NoPendingRequest`       | DepositQueue | `cancelDepositRequest()` called with no pending request                               | Nothing to cancel                                                                   |
 | `QueuePaused`            | Both         | Queue is temporarily suspended                                                        | Check `queue.is_paused` before submitting; wait for it to re-open                   |
-| `DepositNotAllowed`      | DepositQueue | Deposit rejected — queue paused, or vault has a whitelist and address is not included | Check `flags.hasWhitelist`; if true, obtain a valid Merkle proof via the Mellow API |
+| `DepositNotAllowed`      | DepositQueue | Deposit rejected - queue paused, or vault has a whitelist and address is not included | Check `flags.hasWhitelist`; if true, obtain a valid Merkle proof via the Mellow API |
 | `ZeroValue`              | RedeemQueue  | `redeem()` called with `shares = 0`                                                   | Validate amount > 0 before calling                                                  |
-| `InsufficientBalance`    | Both         | Token or share balance too low                                                        | Validate balance on-chain before submitting                                         |
+| `InsufficientBalance`    | Both         | Token or share balance too low                                                        | Validate balance onchain before submitting                                         |
 | `Forbidden`              | Both         | Caller does not have the required role for the called function                        | This is a contract-operator error; user-facing code should not hit this             |
 
 ## 13. Events Reference
 
-Listen for these events to drive UI state or index on-chain activity.
+Listen for these events to drive UI state or index onchain activity.
 
 | Event                                                        | Contract     | Emitted when                                                                                                                |
 | ------------------------------------------------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
 | `DepositRequested(account, referral, assets, timestamp)`     | DepositQueue | `deposit()` succeeds                                                                                                        |
-| `DepositRequestClaimed(account, shares, timestamp)`          | DepositQueue | `claim()` succeeds — user received vault shares                                                                             |
-| `DepositRequestCanceled(account, assets, timestamp)`         | DepositQueue | `cancelDepositRequest()` succeeds — tokens returned                                                                         |
+| `DepositRequestClaimed(account, shares, timestamp)`          | DepositQueue | `claim()` succeeds - user received vault shares                                                                             |
+| `DepositRequestCanceled(account, assets, timestamp)`         | DepositQueue | `cancelDepositRequest()` succeeds - tokens returned                                                                         |
 | `RedeemRequested(account, shares, timestamp)`                | RedeemQueue  | `redeem()` succeeds                                                                                                         |
-| `RedeemRequestsHandled(counter, demand)`                     | RedeemQueue  | Curator called `handleBatches()` and settled one or more batches — **listen for this to know when claims become available** |
-| `RedeemRequestClaimed(account, receiver, assets, timestamp)` | RedeemQueue  | `claim()` succeeds — user received underlying assets                                                                        |
+| `RedeemRequestsHandled(counter, demand)`                     | RedeemQueue  | Curator called `handleBatches()` and settled one or more batches - **listen for this to know when claims become available** |
+| `RedeemRequestClaimed(account, receiver, assets, timestamp)` | RedeemQueue  | `claim()` succeeds - user received underlying assets                                                                        |
 
 ### Example: watching for claim events with viem
 
