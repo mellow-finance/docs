@@ -1,19 +1,19 @@
 ---
 title: "Welcome to Mellow"
-description: "Mellow is vault infrastructure for onchain asset management. Fintechs, exchanges, and asset issuers launch Earn, treasury, and managed yield products on Core Vaults, with risk enforced onchain."
+description: "Mellow is vault infrastructure for onchain yield and treasury products. Fintechs, exchanges, and asset issuers launch Earn, treasury, and managed yield products on Core Vaults, with risk enforced onchain."
 ---
 
 Mellow provides vault smart contract primitives for deploying curated onchain products with explicit risk constraints and defined execution surfaces. Vaults define how capital moves, which actions are permitted, and which venues a strategy can use, with enforcement handled by smart contracts.
 
 Mellow vaults operate under a curated model. Depositors provide capital, while designated curators define and operate the strategy within predefined onchain constraints. Curators cannot arbitrarily change strategy behavior. Their actions are bounded by the vault's configuration, permissions, and limits. This separation of roles allows strategies to be actively managed while keeping risk parameters explicit and enforced at the vault level.
 
-Core Vaults are the primary architecture for current structured product deployments, while other vault types cover specialized use cases such as DVT-oriented staking exposure, restaking, crosschain orchestration, queued-withdrawal LRT flows, and active liquidity management.
+Core Vaults are Mellow's current vault architecture. Earlier vault types covered specialized use cases now superseded by Core Vaults - see [historical architectures](/mellow-vaults-overview#historical-architectures) for details.
 
 <CardGroup cols={2}>
   <Card title="Core Vaults" icon="vault" href="/core-vaults/overview">
-    Mellow's primary architecture for curated onchain structured products.
+    Mellow's current vault architecture for curated onchain structured products.
   </Card>
   <Card title="Security" icon="shield-check" href="/security">
-    Audit reports across Core Vaults, MultiVault, Interoperable Vault, Simple LRT, and DVV.
+    Audit reports for Core Vaults and earlier vault architectures.
   </Card>
 </CardGroup>
