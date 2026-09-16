@@ -2,6 +2,10 @@
 title: "VaultConfigurator"
 ---
 
+<Info>
+**Legacy architecture.** Mellow-LRT is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 ### Overview
 
 `VaultConfigurator` is contract that manages the configuration and access control for a vault system. This contract specifies parameters for the main `Vault` contract, enabling secure updates through a two-stage process: staging and committing. Each parameter update is subjected to a specified delay to ensure stability and secure updates.

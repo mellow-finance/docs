@@ -2,6 +2,10 @@
 title: "LStrategy"
 ---
 
+<Info>
+**Legacy architecture.** Mellow ALM is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 LStrategy is a strategy for the WSTETH/WETH pair of tokens, which works on top of the corresponding Uniswap V3 pool. It holds two positions in this pool, changing them and rebalancing liquidity between them depending on the price in the pool.
 
 _**Note for future understanding**._ Some strategy parameters, which are typically from 0 to 1, need to be multiplied by a special constant `DENOMINATOR` (typically `$$10^9$$`) in order to be saved as integers in the code. Hence, when we mention parameters as is, it's mentioned as is, whereas we mention them multiplied by `DENOMINATOR,` we mention them with the letter D at the end. For example, `erc20UniV3CapitalRatio` = `$$0.5$$`, whereas`erc20UniV3CapitalRatioD` = `$$5 \cdot 10^8$$`.
