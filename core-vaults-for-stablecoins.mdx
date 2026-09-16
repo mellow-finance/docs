@@ -17,7 +17,7 @@ Building a stablecoin vault product from scratch requires smart contracts, secur
 
 **Mandate**
 
-A mandate is the set of rules that defines how a vault may operate. It includes eligible depositors, supported assets, approved venues, allocation caps, liquidity requirements, verifier rules, and oracle constraints. The mandate is encoded at the contract level and enforced by onchain verifiers. Operations that fall outside the mandate revert.
+A mandate is the set of rules that defines how a vault may operate. It includes eligible depositors, supported assets, approved venues, allocation caps, liquidity requirements, verifier rules, and oracle constraints. The mandate is encoded at the contract level and enforced by onchain verifiers. Operations that fall outside the mandate cannot be executed.
 
 **Roles**
 
@@ -109,7 +109,7 @@ Different products on the same platform enforce different compliance perimeters 
 
 As autonomous agents take on more asset management responsibilities, the infrastructure they operate in matters as much as the models behind them. Autonomous agents need execution environments with hard constraints that prevent unauthorized actions at the contract level.
 
-Core Vaults provide this through the verifier model – approved targets, functions, assets, allocation bands, NAV constraints, and time-locked operations are enforced before execution. Operations outside the mandate revert without requiring human oversight.
+Core Vaults provide this through the verifier model – approved targets, functions, assets, allocation bands, NAV constraints, and time-locked operations are enforced before execution. Operations outside the mandate cannot be executed, without requiring human oversight.
 
 Agents operating stablecoin vaults can rebalance, manage liquidity, and react to strategy conditions at frequencies impractical for human operators – while the vault ensures they never exceed their mandate.<br/>
 

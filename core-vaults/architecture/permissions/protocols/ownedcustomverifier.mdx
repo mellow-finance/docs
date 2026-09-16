@@ -13,7 +13,7 @@ This verifier is designed to be used in **`Verifier.sol`** as a custom verifier,
 ### Inherits:
 
 * `ICustomVerifier`: Interface used by the `Verifier` contract for permission checks
-* `MellowACL`: Upgradeable, role-based access control module compatible with OpenZeppelin’s `AccessControl`
+* `MellowACL`: Upgradeable, role-based access control module compatible with OpenZeppelin's `AccessControl`
 
 ### Constructor
 
@@ -37,7 +37,7 @@ function initialize(bytes calldata data) external initializer
     (address admin, address[] memory holders, bytes32[] memory roles)
     ```
 * Logic:
-  * Sets `admin` as the contract’s `DEFAULT_ADMIN_ROLE`
+  * Sets `admin` as the contract's `DEFAULT_ADMIN_ROLE`
   * Grants each `roles[i]` to `holders[i]`
 * Reverts with `ZeroValue` if:
   * `admin == address(0)`

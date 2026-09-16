@@ -2,11 +2,15 @@
 title: "Contracts API"
 ---
 
+<Info>
+**Legacy architecture.** Mellow ALM is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 ## ContractRegistry
 
 _Inherits from_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.82M
+1.82M
 
 ### Functions
 
@@ -77,7 +81,7 @@ Latest version of the contract
 
 #### registerContract
 
-⛽ 256K (254K - 259K)
+256K (254K - 259K)
 
 ```solidity
   function registerContract(address target) external
@@ -93,21 +97,21 @@ Register a new contract
 
 **Specs**
 
-* ✅ registers IContractMeta compatible contract and updates respective view methods - #addresses - #versions - #names - #latestVersion - #versionAddress
+* registers IContractMeta compatible contract and updates respective view methods - #addresses - #versions - #names - #latestVersion - #versionAddress
 
 _Access control_
 
-* ✅ allowed: operator (deployer)
-* ✅ denied with FRB: random address
-* ✅ allowed: protocol admin
+* allowed: operator (deployer)
+* denied with FRB: random address
+* allowed: protocol admin
 
 _Edge cases_
 
-* ✅ when new contract major version differs more, than on one reverts with INVA
-* ✅ when new contract version lower or equal existing one reverts with INVA
-* ✅ when contract has invalid version reverts with INVA
-* ✅ when contract name is not alphanumeric reverts with INV
-* ✅ when address is already registered reverts with DUP
+* when new contract major version differs more, than on one reverts with INVA
+* when new contract version lower or equal existing one reverts with INVA
+* when contract has invalid version reverts with INVA
+* when contract name is not alphanumeric reverts with INV
+* when address is already registered reverts with DUP
 
 ### Events
 
@@ -121,7 +125,7 @@ _Edge cases_
 
 _Inherits from_ [_Multicall_](api#multicall)_,_ [_UnitPricesGovernance_](api#unitpricesgovernance)_,_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 4.68M
+4.68M
 
 Governance that manages all params common for Mellow Permissionless Vaults protocol.
 
@@ -143,7 +147,7 @@ Creates a new contract
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### stagedParams
 
@@ -155,19 +159,19 @@ Staged pending protocol parameters.
 
 **Specs**
 
-* ✅ imestamp timestamp equals #stageParams's block.timestamp + governanceDelay
-* ✅ imestamp clears by #commitParams
-* ✅ imestamp edge cases when nothing is set returns zero
-* ✅ imestamp access control allowed: any address
+* imestamp timestamp equals #stageParams's block.timestamp + governanceDelay
+* imestamp clears by #commitParams
+* imestamp edge cases when nothing is set returns zero
+* imestamp access control allowed: any address
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ updates by #stageParams
-* ✅ clears by #commitParams
+* updates by #stageParams
+* clears by #commitParams
 
 #### params
 
@@ -213,10 +217,10 @@ Address that has validators.
 
 **Specs**
 
-* ✅ returns correct value
-* ✅ s properties @property: updates when committed validator grant for a new address
-* ✅ s properties @property: doesn't update when committed validator grant for an existing address
-* ✅ s access control allowed: any address
+* returns correct value
+* s properties @property: updates when committed validator grant for a new address
+* s properties @property: doesn't update when committed validator grant for an existing address
+* s access control allowed: any address
 
 #### permissionAddresses
 
@@ -256,17 +260,17 @@ Return all addresses where rawPermissionMask bit for permissionId is set to 1.
 
 **Specs**
 
-* ✅ returns addresses that has the given permission set to true
+* returns addresses that has the given permission set to true
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ updates by #stagePermissionGrants + #commitPermissionGrants or #revokePermissions
-* ✅ is not affected by forceAllowMask
-* ✅ returns empty array on unknown permissionId
+* updates by #stagePermissionGrants + #commitPermissionGrants or #revokePermissions
+* is not affected by forceAllowMask
+* returns empty array on unknown permissionId
 
 #### hasPermission
 
@@ -300,22 +304,22 @@ Checks if address has all permissions.
 
 **Specs**
 
-* ✅ checks if an address has all permissions set to true
+* checks if an address has all permissions set to true
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ returns false on random address
-* ✅ is not affected by staged permissions
-* ✅ is affected by committed permissions
-* ✅ returns true for any address when forceAllowMask is set to true
+* returns false on random address
+* is not affected by staged permissions
+* is affected by committed permissions
+* returns true for any address when forceAllowMask is set to true
 
 _Edge cases_
 
-* ✅ on unknown permission id returns false
+* on unknown permission id returns false
 
 #### maxTokensPerVault
 
@@ -327,7 +331,7 @@ Max different ERC20 token addresses that could be managed by the protocol.
 
 **Specs**
 
-* ✅ returns correct value
+* returns correct value
 
 #### governanceDelay
 
@@ -339,7 +343,7 @@ The delay for committing any governance params.
 
 **Specs**
 
-* ✅ returns correct value
+* returns correct value
 
 #### protocolTreasury
 
@@ -351,7 +355,7 @@ The address of the protocol treasury.
 
 **Specs**
 
-* ✅ returns correct value
+* returns correct value
 
 #### forceAllowMask
 
@@ -363,7 +367,7 @@ Permissions mask which defines if ordinary permission should be reverted. This b
 
 **Specs**
 
-* ✅ returns correct value
+* returns correct value
 
 #### withdrawLimit
 
@@ -387,7 +391,7 @@ Withdraw limit per token per block.
 
 **Specs**
 
-* ✅ returns correct value
+* returns correct value
 
 #### supportsInterface
 
@@ -397,13 +401,13 @@ Withdraw limit per token per block.
 
 **Specs**
 
-* ✅ returns true for IProtocolGovernance interface (0xca11fe03)
-* ✅ access control: allowed: any address
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true for IProtocolGovernance interface (0xca11fe03)
+* access control: allowed: any address
+* edge cases: when contract does not support the given interface returns false
 
 #### stageValidator
 
-⛽ 129K (43K - 142K)
+129K (43K - 142K)
 
 ```solidity
   function stageValidator(address target, address validator) external
@@ -420,22 +424,22 @@ Stages a new validator for the given address
 
 **Specs**
 
-* ✅ emits ValidatorStaged event
+* emits ValidatorStaged event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 _Edge cases_
 
-* ✅ when attempting to stage grant to zero address reverts with AZ when target has zero address
-* ✅ when attempting to stage grant to zero address reverts with AZ when validator has zero address
+* when attempting to stage grant to zero address reverts with AZ when target has zero address
+* when attempting to stage grant to zero address reverts with AZ when validator has zero address
 
 #### rollbackStagedValidators
 
-⛽ 39K (28K - 42K)
+39K (28K - 42K)
 
 ```solidity
   function rollbackStagedValidators() external
@@ -445,18 +449,18 @@ Rollback all staged validators.
 
 **Specs**
 
-* ✅ rolls back all staged validators
-* ✅ emits AllStagedValidatorsRolledBack event
+* rolls back all staged validators
+* emits AllStagedValidatorsRolledBack event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 #### commitValidator
 
-⛽ 86K (47K - 117K)
+86K (47K - 117K)
 
 ```solidity
   function commitValidator(address stagedAddress) external
@@ -464,7 +468,7 @@ _Access control_
 
 Commits validator for the given address.
 
-📕 Reverts if governance delay has not passed yet.
+Reverts if governance delay has not passed yet.
 
 **Parameters:**
 
@@ -474,24 +478,24 @@ Commits validator for the given address.
 
 **Specs**
 
-* ✅ commits staged validators
-* ✅ emits ValidatorCommitted event
+* commits staged validators
+* emits ValidatorCommitted event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 _Edge cases_
 
-* ✅ when attempting to commit validator for zero address reverts with NULL
-* ✅ when nothing is staged for the given address reverts with NULL
-* ✅ when attempting to commit validator too early reverts with TS
+* when attempting to commit validator for zero address reverts with NULL
+* when nothing is staged for the given address reverts with NULL
+* when attempting to commit validator too early reverts with TS
 
 #### commitAllValidatorsSurpassedDelay
 
-⛽ 132K (27K - 463K)
+132K (27K - 463K)
 
 ```solidity
   function commitAllValidatorsSurpassedDelay() external returns (address[] addressesCommitted)
@@ -507,27 +511,27 @@ Commites all staged validators for which governance delay passed
 
 **Specs**
 
-* ✅ emits ValidatorCommitted event
+* emits ValidatorCommitted event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ commits all staged validators
-* ✅ commits all staged validators after delay
+* commits all staged validators
+* commits all staged validators after delay
 
 _Edge cases_
 
-* ✅ when attempting to commit a single validator too early does not commit validator
-* ✅ when attempting to commit multiple validators too early does not commit these validators
+* when attempting to commit a single validator too early does not commit validator
+* when attempting to commit multiple validators too early does not commit these validators
 
 #### revokeValidator
 
-⛽ 38K
+38K
 
 ```solidity
   function revokeValidator(address target) external
@@ -543,15 +547,15 @@ Revoke validator instantly from the given address.
 
 **Specs**
 
-* ✅ emits ValidatorRevoked event
+* emits ValidatorRevoked event
 
 _Edge cases_
 
-* ✅ when attempting to revoke from zero address reverts with NULL
+* when attempting to revoke from zero address reverts with NULL
 
 #### rollbackStagedPermissionGrants
 
-⛽ 37K (28K - 42K)
+37K (28K - 42K)
 
 ```solidity
   function rollbackStagedPermissionGrants() external
@@ -561,18 +565,18 @@ Rollback all staged granted permission grant.
 
 **Specs**
 
-* ✅ rolls back all staged permission grants
-* ✅ emits AllStagedPermissionGrantsRolledBack event
+* rolls back all staged permission grants
+* emits AllStagedPermissionGrantsRolledBack event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 #### commitPermissionGrants
 
-⛽ 71K (46K - 117K)
+71K (46K - 117K)
 
 ```solidity
   function commitPermissionGrants(address stagedAddress) external
@@ -580,7 +584,7 @@ _Access control_
 
 Commits permission grants for the given address.
 
-📕 Reverts if governance delay has not passed yet.
+Reverts if governance delay has not passed yet.
 
 **Parameters:**
 
@@ -590,24 +594,24 @@ Commits permission grants for the given address.
 
 **Specs**
 
-* ✅ commits staged permission grants
-* ✅ emits PermissionGrantsCommitted event
+* commits staged permission grants
+* emits PermissionGrantsCommitted event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 _Edge cases_
 
-* ✅ when attempting to commit permissions for zero address reverts with NULL
-* ✅ when nothing is staged for the given address reverts with NULL
-* ✅ when attempting to commit permissions too early reverts with TS
+* when attempting to commit permissions for zero address reverts with NULL
+* when nothing is staged for the given address reverts with NULL
+* when attempting to commit permissions too early reverts with TS
 
 #### commitAllPermissionGrantsSurpassedDelay
 
-⛽ 145K (27K - 248K)
+145K (27K - 248K)
 
 ```solidity
   function commitAllPermissionGrantsSurpassedDelay() external returns (address[] addresses)
@@ -623,27 +627,27 @@ Commites all staged permission grants for which governance delay passed.
 
 **Specs**
 
-* ✅ emits PermissionGrantsCommitted event
+* emits PermissionGrantsCommitted event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ commits all staged permission grants
-* ✅ commits all staged permission grants after delay
+* commits all staged permission grants
+* commits all staged permission grants after delay
 
 _Edge cases_
 
-* ✅ when attempting to commit a single permission too early does not commit permission
-* ✅ when attempting to commit multiple permissions too early does not commit these permissions
+* when attempting to commit a single permission too early does not commit permission
+* when attempting to commit multiple permissions too early does not commit these permissions
 
 #### revokePermissions
 
-⛽ 62K (32K - 275K)
+62K (32K - 275K)
 
 ```solidity
   function revokePermissions(address target, uint8[] permissionIds) external
@@ -660,15 +664,15 @@ Revoke permission instantly from the given address.
 
 **Specs**
 
-* ✅ emits PermissionRevoked event
+* emits PermissionRevoked event
 
 _Edge cases_
 
-* ✅ when attempting to revoke from zero address reverts with NULL
+* when attempting to revoke from zero address reverts with NULL
 
 #### commitParams
 
-⛽ 66K (54K - 81K)
+66K (54K - 81K)
 
 ```solidity
   function commitParams() external
@@ -678,22 +682,22 @@ Commits staged protocol params. Reverts if governance delay has not passed yet.
 
 **Specs**
 
-* ✅ emits ParamsCommitted event
+* emits ParamsCommitted event
 
 _Access control_
 
-* ✅ allowed: protocol admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: protocol admin
+* denied: deployer
+* denied: random address
 
 _Edge cases_
 
-* ✅ when attempting to commit params too early reverts with TS
-* ✅ when attempting to commit params without setting pending params reverts with NULL
+* when attempting to commit params too early reverts with TS
+* when attempting to commit params without setting pending params reverts with NULL
 
 #### stagePermissionGrants
 
-⛽ 166K (44K - 383K)
+166K (44K - 383K)
 
 ```solidity
   function stagePermissionGrants(address target, uint8[] permissionIds) external
@@ -710,21 +714,21 @@ Stage granted permissions that could have been committed after governance delay 
 
 **Specs**
 
-* ✅ emits PermissionGrantsStaged event
+* emits PermissionGrantsStaged event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: admin
+* denied: deployer
+* denied: random address
 
 _Edge cases_
 
-* ✅ when attempting to stage grant to zero address reverts with NULL
+* when attempting to stage grant to zero address reverts with NULL
 
 #### stageParams
 
-⛽ 140K (62K - 165K)
+140K (62K - 165K)
 
 ```solidity
   function stageParams(struct IProtocolGovernance.Params newParams) external
@@ -740,19 +744,19 @@ Sets new pending params that could have been committed after governance delay ex
 
 **Specs**
 
-* ✅ emits ParamsStaged event
+* emits ParamsStaged event
 
 _Access control_
 
-* ✅ allowed: admin
-* ✅ denied: random address
+* allowed: admin
+* denied: random address
 
 _Edge cases_
 
-* ✅ when given invalid params when maxTokensPerVault is zero reverts with NULL
-* ✅ when given invalid params when governanceDelay is zero reverts with NULL
-* ✅ when given invalid params when governanceDelay exceeds MAX\_GOVERNANCE\_DELAY reverts with LIMO
-* ✅ when given invalid params when withdrawLimit less than MIN\_WITHDRAW\_LIMIT reverts with LIMO
+* when given invalid params when maxTokensPerVault is zero reverts with NULL
+* when given invalid params when governanceDelay is zero reverts with NULL
+* when given invalid params when governanceDelay exceeds MAX\_GOVERNANCE\_DELAY reverts with LIMO
+* when given invalid params when withdrawLimit less than MIN\_WITHDRAW\_LIMIT reverts with LIMO
 
 ### Structs
 
@@ -943,7 +947,7 @@ Emitted when pending parameters are committed
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-⛽ 1.82M
+1.82M
 
 ### Functions
 
@@ -959,11 +963,11 @@ _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessCo
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### stageUnitPrice
 
-⛽ 72K (54K - 74K)
+72K (54K - 74K)
 
 ```solidity
   function stageUnitPrice(address token, uint256 value) external
@@ -980,7 +984,7 @@ Stage estimated amount of token worth 1 USD staged for commit.
 
 #### rollbackUnitPrice
 
-⛽ 31K (30K - 31K)
+31K (30K - 31K)
 
 ```solidity
   function rollbackUnitPrice(address token) external
@@ -996,7 +1000,7 @@ Reset staged value
 
 #### commitUnitPrice
 
-⛽ 50K
+50K
 
 ```solidity
   function commitUnitPrice(address token) external
@@ -1075,7 +1079,7 @@ UnitPrice committed
 
 _Inherits from_ [_ERC721_](api#erc721)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 3.07M
+3.07M
 
 This contract is used to manage ERC721 NFT for all Vaults.
 
@@ -1099,10 +1103,10 @@ Creates a new contract.
 
 **Specs**
 
-* ✅ creates VaultRegistry
-* ✅ initializes ProtocolGovernance address
-* ✅ initializes ERC721 token name
-* ✅ initializes ERC721 token symbol
+* creates VaultRegistry
+* initializes ProtocolGovernance address
+* initializes ERC721 token name
+* initializes ERC721 token symbol
 
 #### vaults
 
@@ -1112,11 +1116,11 @@ Creates a new contract.
 
 **Specs**
 
-* ✅ returns all registered vaults
-* ✅ access control: allowed: any address
-* ✅ ount returns the number of registered vaults
-* ✅ ount access control: allowed: any address
-* ✅ ount properties @property: when N new vaults have been registered, vaults count will be increased by N
+* returns all registered vaults
+* access control: allowed: any address
+* ount returns the number of registered vaults
+* ount access control: allowed: any address
+* ount properties @property: when N new vaults have been registered, vaults count will be increased by N
 
 #### vaultForNft
 
@@ -1140,12 +1144,12 @@ Get Vault for the giver NFT ID.
 
 **Specs**
 
-* ✅ resolves Vault address by VaultRegistry NFT
-* ✅ access control: allowed: any address
+* resolves Vault address by VaultRegistry NFT
+* access control: allowed: any address
 
 _Edge cases_
 
-* ✅ when Vault NFT is not registered in VaultRegistry returns zero address
+* when Vault NFT is not registered in VaultRegistry returns zero address
 
 #### nftForVault
 
@@ -1169,12 +1173,12 @@ Get NFT ID for given Vault contract address.
 
 **Specs**
 
-* ✅ resolves VaultRegistry NFT by Vault address
-* ✅ access control: allowed: any address
+* resolves VaultRegistry NFT by Vault address
+* access control: allowed: any address
 
 _Edge cases_
 
-* ✅ when Vault is not registered in VaultRegistry returns zero
+* when Vault is not registered in VaultRegistry returns zero
 
 #### isLocked
 
@@ -1198,12 +1202,12 @@ Checks if the nft is locked for all transfers
 
 **Specs**
 
-* ✅ checks if token is locked (not transferable)
-* ✅ access control: allowed: any address
+* checks if token is locked (not transferable)
+* access control: allowed: any address
 
 _Edge cases_
 
-* ✅ when VaultRegistry NFT is not registered in VaultRegistry returns false
+* when VaultRegistry NFT is not registered in VaultRegistry returns false
 
 #### protocolGovernance
 
@@ -1215,8 +1219,8 @@ Address of the ProtocolGovernance.
 
 **Specs**
 
-* ✅ returns ProtocolGovernance address
-* ✅ access control: allowed: any address
+* returns ProtocolGovernance address
+* access control: allowed: any address
 
 #### stagedProtocolGovernance
 
@@ -1228,17 +1232,17 @@ Address of the staged ProtocolGovernance.
 
 **Specs**
 
-* ✅ returns ProtocolGovernance address staged for commit
-* ✅ access control: allowed: any address
-* ✅ imestamp returns timestamp after which #commitStagedProtocolGovernance can be called
-* ✅ imestamp access control: allowed: any address
-* ✅ imestamp edge cases when nothing is staged returns 0
-* ✅ imestamp edge cases right after #commitStagedProtocolGovernance was called returns 0
+* returns ProtocolGovernance address staged for commit
+* access control: allowed: any address
+* imestamp returns timestamp after which #commitStagedProtocolGovernance can be called
+* imestamp access control: allowed: any address
+* imestamp edge cases when nothing is staged returns 0
+* imestamp edge cases right after #commitStagedProtocolGovernance was called returns 0
 
 _Edge cases_
 
-* ✅ when nothing is staged returns zero address
-* ✅ right after #commitStagedProtocolGovernance was called returns zero address
+* when nothing is staged returns zero address
+* right after #commitStagedProtocolGovernance was called returns zero address
 
 #### stagedProtocolGovernanceTimestamp
 
@@ -1250,13 +1254,13 @@ Minimal timestamp when staged ProtocolGovernance can be applied.
 
 **Specs**
 
-* ✅ returns timestamp after which #commitStagedProtocolGovernance can be called
-* ✅ access control: allowed: any address
+* returns timestamp after which #commitStagedProtocolGovernance can be called
+* access control: allowed: any address
 
 _Edge cases_
 
-* ✅ when nothing is staged returns 0
-* ✅ right after #commitStagedProtocolGovernance was called returns 0
+* when nothing is staged returns 0
+* right after #commitStagedProtocolGovernance was called returns 0
 
 #### vaultsCount
 
@@ -1268,12 +1272,12 @@ Number of Vaults registered.
 
 **Specs**
 
-* ✅ returns the number of registered vaults
-* ✅ access control: allowed: any address
+* returns the number of registered vaults
+* access control: allowed: any address
 
 _Properties_
 
-* ✅ when N new vaults have been registered, vaults count will be increased by N
+* when N new vaults have been registered, vaults count will be increased by N
 
 #### supportsInterface
 
@@ -1283,13 +1287,13 @@ _Properties_
 
 **Specs**
 
-* ✅ returns true if this contract supports a certain interface
-* ✅ access control: allowed: any address
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true if this contract supports a certain interface
+* access control: allowed: any address
+* edge cases: when contract does not support the given interface returns false
 
 #### registerVault
 
-⛽ 167K (154K - 188K)
+167K (154K - 188K)
 
 ```solidity
   function registerVault(address vault, address owner) external returns (uint256 nft)
@@ -1312,25 +1316,25 @@ Register new Vault and mint NFT.
 
 **Specs**
 
-* ✅ binds minted ERC721 NFT to Vault address and transfers minted NFT to owner specified in args
-* ✅ emits VaultRegistered event
-* ✅ access control: allowed: any account with Register Vault permissions
-* ✅ access control: denied: any other address
-* ✅ access control: denied: protocol governance admin
+* binds minted ERC721 NFT to Vault address and transfers minted NFT to owner specified in args
+* emits VaultRegistered event
+* access control: allowed: any account with Register Vault permissions
+* access control: denied: any other address
+* access control: denied: protocol governance admin
 
 _Properties_
 
-* ✅ minted NFT equals to vaultRegistry#vaultsCount
+* minted NFT equals to vaultRegistry#vaultsCount
 
 _Edge cases_
 
-* ✅ when address doesn't conform to IVault interface (IERC165) reverts with INVI
-* ✅ when vault has already been registered reverts with DUP
-* ✅ when owner address is zero reverts with AZ
+* when address doesn't conform to IVault interface (IERC165) reverts with INVI
+* when vault has already been registered reverts with DUP
+* when owner address is zero reverts with AZ
 
 #### stageProtocolGovernance
 
-⛽ 75K (43K - 80K)
+75K (43K - 80K)
 
 ```solidity
   function stageProtocolGovernance(contract IProtocolGovernance newProtocolGovernance) external
@@ -1346,19 +1350,19 @@ Stage new ProtocolGovernance.
 
 **Specs**
 
-* ✅ stages new ProtocolGovernance for commit
-* ✅ sets the stagedProtocolGovernanceTimestamp after which #commitStagedProtocolGovernance can be called
-* ✅ access control: allowed: ProtocolGovernance Admin
-* ✅ access control: denied: any other address
-* ✅ access control: denied: deployer
+* stages new ProtocolGovernance for commit
+* sets the stagedProtocolGovernanceTimestamp after which #commitStagedProtocolGovernance can be called
+* access control: allowed: ProtocolGovernance Admin
+* access control: denied: any other address
+* access control: denied: deployer
 
 _Edge cases_
 
-* ✅ when new ProtocolGovernance is a zero address reverts with AZ
+* when new ProtocolGovernance is a zero address reverts with AZ
 
 #### commitStagedProtocolGovernance
 
-⛽ 34K
+34K
 
 ```solidity
   function commitStagedProtocolGovernance() external
@@ -1368,21 +1372,21 @@ Commit new ProtocolGovernance.
 
 **Specs**
 
-* ✅ commits staged ProtocolGovernance
-* ✅ resets staged ProtocolGovernanceTimestamp
-* ✅ resets staged ProtocolGovernance
-* ✅ access control: allowed: ProtocolGovernance Admin
-* ✅ access control: denied: any other address
+* commits staged ProtocolGovernance
+* resets staged ProtocolGovernanceTimestamp
+* resets staged ProtocolGovernance
+* access control: allowed: ProtocolGovernance Admin
+* access control: denied: any other address
 
 _Edge cases_
 
-* ✅ when nothing is staged reverts with INIT
-* ✅ when called before stagedProtocolGovernanceTimestamp reverts with TS
-* ✅ when called before stagedProtocolGovernanceTimestamp reverts with TS
+* when nothing is staged reverts with INIT
+* when called before stagedProtocolGovernanceTimestamp reverts with TS
+* when called before stagedProtocolGovernanceTimestamp reverts with TS
 
 #### lockNft
 
-⛽ 46K (29K - 49K)
+46K (29K - 49K)
 
 ```solidity
   function lockNft(uint256 nft) external
@@ -1390,15 +1394,15 @@ _Edge cases_
 
 **Specs**
 
-* ✅ locks NFT (disables any transfer)
-* ✅ emits TokenLocked event
-* ✅ access control: allowed: NFT owner
-* ✅ access control: denied: any other address
-* ✅ access control: denied: protocol admin
+* locks NFT (disables any transfer)
+* emits TokenLocked event
+* access control: allowed: NFT owner
+* access control: denied: any other address
+* access control: denied: protocol admin
 
 _Edge cases_
 
-* ✅ when NFT has already been locked succeeds
+* when NFT has already been locked succeeds
 
 ### Events
 
@@ -1483,7 +1487,7 @@ Stores permission ids for addresses
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 2.77M
+2.77M
 
 Contract for getting chainlink data
 
@@ -1517,8 +1521,8 @@ Checks if token has chainlink oracle
 
 **Specs**
 
-* ✅ returns true if oracle is supported
-* ✅ edge cases: when oracle is not supported returns false
+* returns true if oracle is supported
+* edge cases: when oracle is not supported returns false
 
 #### supportedTokens
 
@@ -1530,7 +1534,7 @@ A list of supported tokens
 
 **Specs**
 
-* ✅ returns list of supported tokens
+* returns list of supported tokens
 
 #### priceX96
 
@@ -1540,7 +1544,7 @@ A list of supported tokens
 
 Oracle price for tokens as a Q64.96 value. Returns pricing information based on the indexes of non-zero bits in safetyIndicesSet. It is possible that not all indices will have their respective prices returned.
 
-📕 The price is token1 / token0 i.e. how many weis of token1 required for 1 wei of token0. The safety indexes are:
+The price is token1 / token0 i.e. how many weis of token1 required for 1 wei of token0. The safety indexes are:
 
 1 - unsafe, this is typically a spot price that can be easily manipulated,
 
@@ -1569,16 +1573,16 @@ Oracle price for tokens as a Q64.96 value. Returns pricing information based on 
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true for ChainlinkOracle interface (0x8e3bd5d7)
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true for ChainlinkOracle interface (0x8e3bd5d7)
+* edge cases: when contract does not support the given interface returns false
 
 #### addChainlinkOracles
 
-⛽ 82K (81K - 83K)
+82K (81K - 83K)
 
 ```solidity
   function addChainlinkOracles(address[] tokens, address[] oracles) external
@@ -1595,10 +1599,10 @@ Add a Chainlink price feed for a token
 
 **Specs**
 
-* ✅ emits OraclesAdded event
-* ✅ when oracles have set by addChainLinkOracles function returns prices
-* ✅ edge cases: when arrays have different lengths reverts with INV
-* ✅ edge cases: when sender has no admin righs reverts with FRB
+* emits OraclesAdded event
+* when oracles have set by addChainLinkOracles function returns prices
+* edge cases: when arrays have different lengths reverts with INV
+* edge cases: when sender has no admin righs reverts with FRB
 
 ### Structs
 
@@ -1632,7 +1636,7 @@ Emitted when new Chainlink oracle is added
 
 _Inherits from_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 783K
+783K
 
 #### constructor
 
@@ -1652,18 +1656,18 @@ _Inherits from_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true for IUniV3Oracle interface (0x6d80125b)
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true for IUniV3Oracle interface (0x6d80125b)
+* edge cases: when contract does not support the given interface returns false
 
 ## UniV2Oracle
 
 _Inherits from_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 671K
+671K
 
 #### constructor
 
@@ -1679,7 +1683,7 @@ _Inherits from_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
 Oracle price for tokens as a Q64.96 value. Returns pricing information based on the indexes of non-zero bits in safetyIndicesSet. It is possible that not all indices will have their respective prices returned.
 
-📕 The price is token1 / token0 i.e. how many weis of token1 required for 1 wei of token0. The safety indexes are:
+The price is token1 / token0 i.e. how many weis of token1 required for 1 wei of token0. The safety indexes are:
 
 1 - unsafe, this is typically a spot price that can be easily manipulated,
 
@@ -1708,18 +1712,18 @@ Oracle price for tokens as a Q64.96 value. Returns pricing information based on 
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true for IUniV2Oracle interface (0x2748645e)
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true for IUniV2Oracle interface (0x2748645e)
+* edge cases: when contract does not support the given interface returns false
 
 ## UniV3Oracle
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 3.44M
+3.44M
 
 ### Functions
 
@@ -1737,7 +1741,7 @@ _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessCo
 
 Oracle price for tokens as a Q64.96 value. Returns pricing information based on the indexes of non-zero bits in safetyIndicesSet. It is possible that not all indices will have their respective prices returned.
 
-📕 Logic of this function is next: If there is no initialized pool for the passed tokens, empty arrays will be returned. Depending on safetyIndicesSet if the 1st bit in safetyIndicesSet is non-zero, then the response will contain the spot price. If there is a non-zero 2nd bit in the safetyIndicesSet and the corresponding position in the pool was created no later than LOW\_OBS\_DELTA seconds ago, then the average price for the last LOW\_OBS\_DELTA seconds will be returned. The same logic exists for the 3rd and MID\_OBS\_DELTA, and 4th index and HIGH\_OBS\_DELTA.
+Logic of this function is next: If there is no initialized pool for the passed tokens, empty arrays will be returned. Depending on safetyIndicesSet if the 1st bit in safetyIndicesSet is non-zero, then the response will contain the spot price. If there is a non-zero 2nd bit in the safetyIndicesSet and the corresponding position in the pool was created no later than LOW\_OBS\_DELTA seconds ago, then the average price for the last LOW\_OBS\_DELTA seconds will be returned. The same logic exists for the 3rd and MID\_OBS\_DELTA, and 4th index and HIGH\_OBS\_DELTA.
 
 **Parameters:**
 
@@ -1760,16 +1764,16 @@ Oracle price for tokens as a Q64.96 value. Returns pricing information based on 
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true for IUniV3Oracle interface (0x2a3602d6)
-* ✅ when contract does not support the given interface returns false
+* returns true for IUniV3Oracle interface (0x2a3602d6)
+* when contract does not support the given interface returns false
 
 #### addUniV3Pools
 
-⛽ 73K (39K - 89K)
+73K (39K - 89K)
 
 ```solidity
   function addUniV3Pools(contract IUniswapV3Pool[] pools) external
@@ -1785,9 +1789,9 @@ Add UniV3 pools for prices.
 
 **Specs**
 
-* ✅ when adding \[weth, usdc] pools with fee = 500 adds pools
-* ✅ when adding \[weth, usdc] pools with fee = 3000 adds pools
-* ✅ when adding \[weth, usdc] pools with fee = 10000 does not return prices
+* when adding \[weth, usdc] pools with fee = 500 adds pools
+* when adding \[weth, usdc] pools with fee = 3000 adds pools
+* when adding \[weth, usdc] pools with fee = 10000 does not return prices
 
 ### Structs
 
@@ -1821,7 +1825,7 @@ Emitted when new pool is added or updated and become available for oracle prices
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 7.59M
+7.59M
 
 ### Functions
 
@@ -1844,7 +1848,7 @@ constructs a strategy
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### initialize
 
@@ -1867,7 +1871,7 @@ initializes the strategy
 
 #### createStrategy
 
-⛽ 536K (536K - 539K)
+536K (536K - 539K)
 
 ```solidity
   function createStrategy(address[] tokens_, contract IERC20Vault erc20Vault_, contract IIntegrationVault moneyVault_, contract IUniV3Vault uniV3Vault_, uint24 fee_, address admin_) external returns (contract HStrategy strategy)
@@ -1894,11 +1898,11 @@ creates the clone of the strategy
 
 **Specs**
 
-* ✅ creates a new strategy and initializes it
+* creates a new strategy and initializes it
 
 #### updateStrategyParams
 
-⛽ 48K (44K - 51K)
+48K (44K - 51K)
 
 ```solidity
   function updateStrategyParams(struct HStrategy.StrategyParams newStrategyParams) external
@@ -1942,7 +1946,7 @@ updates oracle parameters. Can be called only by admin
 
 #### updateRatioParams
 
-⛽ 39K (38K - 40K)
+39K (38K - 40K)
 
 ```solidity
   function updateRatioParams(struct HStrategy.RatioParams newRatioParams) external
@@ -1972,7 +1976,7 @@ updates swap fees for uniswapV3Pool swaps
 
 #### manualPull
 
-⛽ 468K (256K - 517K)
+468K (256K - 517K)
 
 ```solidity
   function manualPull(contract IIntegrationVault fromVault, contract IIntegrationVault toVault, uint256[] tokenAmounts, bytes vaultOptions) external
@@ -1991,11 +1995,11 @@ manual pulling tokens from vault. Can be called only by admin
 
 **Specs**
 
-* ✅ pulls token amounts from fromVault to toVault
+* pulls token amounts from fromVault to toVault
 
 #### rebalance
 
-⛽ 1.44M (352K - 1.75M)
+1.44M (352K - 1.75M)
 
 ```solidity
   function rebalance(struct HStrategy.RebalanceTokenAmounts restrictions, bytes moneyVaultOptions) external returns (struct HStrategy.RebalanceTokenAmounts actualPulledAmounts, uint256[] burnedAmounts)
@@ -2019,7 +2023,7 @@ rebalance method. Need to be called if the new position is needed
 
 **Specs**
 
-* ✅ performs a rebalance according to strategy params
+* performs a rebalance according to strategy params
 
 ### Structs
 
@@ -2254,7 +2258,7 @@ Emitted when new swap fees for UniV3Pool swaps are set.
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-⛽ 7.65M
+7.65M
 
 ### Functions
 
@@ -2282,7 +2286,7 @@ Target liquidity ratio for UniV3 vaults
 
 #### rebalanceERC20UniV3Vaults
 
-⛽ 505K (326K - 1.69M)
+505K (326K - 1.69M)
 
 ```solidity
   function rebalanceERC20UniV3Vaults(uint256[] minLowerVaultTokens, uint256[] minUpperVaultTokens, uint256 deadline) public returns (uint256[] totalPulledAmounts, bool isNegativeCapitalDelta, uint256 percentageIncreaseD)
@@ -2308,7 +2312,7 @@ Make a rebalance between ERC20 and UniV3 Vaults
 
 #### rebalanceUniV3Vaults
 
-⛽ 432K (138K - 900K)
+432K (138K - 900K)
 
 ```solidity
   function rebalanceUniV3Vaults(uint256[] minWithdrawTokens, uint256[] minDepositTokens, uint256 deadline) external returns (uint256[] pulledAmounts, uint256[] pushedAmounts, uint128 depositLiquidity, uint128 withdrawLiquidity, bool lowerToUpper)
@@ -2336,7 +2340,7 @@ Make a rebalance of UniV3 vaults
 
 #### postPreOrder
 
-⛽ 144K (140K - 180K)
+144K (140K - 180K)
 
 ```solidity
   function postPreOrder(uint256 minAmountOut) external returns (struct LStrategy.PreOrder preOrder_)
@@ -2358,7 +2362,7 @@ Post preorder for ERC20 vault rebalance.
 
 #### signOrder
 
-⛽ 210K (103K - 233K)
+210K (103K - 233K)
 
 ```solidity
   function signOrder(struct GPv2Order.Data order, bytes uuid, bool signed) external
@@ -2376,7 +2380,7 @@ Sign offchain cowswap order onchain
 
 #### resetCowswapAllowance
 
-⛽ 117K (116K - 118K)
+117K (116K - 118K)
 
 ```solidity
   function resetCowswapAllowance(uint8 tokenNumber) external
@@ -2392,7 +2396,7 @@ Reset cowswap allowance to 0
 
 #### collectUniFees
 
-⛽ 279K (239K - 320K)
+279K (239K - 320K)
 
 ```solidity
   function collectUniFees() external returns (uint256[] totalCollectedEarnings)
@@ -2408,7 +2412,7 @@ Collect Uniswap pool fees to erc20 vault
 
 #### manualPull
 
-⛽ 345K (297K - 487K)
+345K (297K - 487K)
 
 ```solidity
   function manualPull(contract IIntegrationVault fromVault, contract IIntegrationVault toVault, uint256[] tokenAmounts, uint256[] minTokensAmounts, uint256 deadline) external returns (uint256[] actualTokenAmounts)
@@ -2428,7 +2432,7 @@ Manually pull tokens from fromVault to toVault
 
 #### updateTradingParams
 
-⛽ 68K (42K - 119K)
+68K (42K - 119K)
 
 ```solidity
   function updateTradingParams(struct LStrategy.TradingParams newTradingParams) external
@@ -2444,7 +2448,7 @@ Sets new trading params
 
 #### updateRatioParams
 
-⛽ 37K (36K - 53K)
+37K (36K - 53K)
 
 ```solidity
   function updateRatioParams(struct LStrategy.RatioParams newRatioParams) external
@@ -2460,7 +2464,7 @@ Sets new ratio params
 
 #### updateOtherParams
 
-⛽ 41K (33K - 94K)
+41K (33K - 94K)
 
 ```solidity
   function updateOtherParams(struct LStrategy.OtherParams newOtherParams) external
@@ -2696,7 +2700,7 @@ Emitted when other params were updated
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 6.64M
+6.64M
 
 ### Functions
 
@@ -2717,12 +2721,12 @@ Deploys a new contract
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 _Edge cases_
 
-* ✅ when positionManager\_ address is zero reverts with AZ
-* ✅ when router\_ address is zero passes
+* when positionManager\_ address is zero reverts with AZ
+* when router\_ address is zero passes
 
 #### getAverageTick
 
@@ -2741,7 +2745,7 @@ UniV3 pool price stats
 
 **Specs**
 
-* ✅ returns average UniswapV3Pool price tick
+* returns average UniswapV3Pool price tick
 
 #### initialize
 
@@ -2751,7 +2755,7 @@ UniV3 pool price stats
 
 Set initial values.
 
-📕 Can be only called once.
+Can be only called once.
 
 **Parameters:**
 
@@ -2767,7 +2771,7 @@ Set initial values.
 
 #### createStrategy
 
-⛽ 571K (570K - 573K)
+571K (570K - 573K)
 
 ```solidity
   function createStrategy(address[] tokens_, contract IERC20Vault erc20Vault_, contract IIntegrationVault moneyVault_, uint24 fee_, address admin_) external returns (contract MStrategy strategy)
@@ -2787,22 +2791,22 @@ Deploy a new strategy.
 
 **Specs**
 
-* ✅ creates a new strategy and initializes it
+* creates a new strategy and initializes it
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Edge cases_
 
-* ✅ when tokens.length is not equal 2 reverts with INVL
-* ✅ when erc20Vault vaultTokens do not match tokens\_ reverts with INVA
-* ✅ when moneyVault vaultTokens do not match tokens\_ reverts with INVA
-* ✅ when UniSwapV3 pool for tokens does not exist reverts with AZ
+* when tokens.length is not equal 2 reverts with INVL
+* when erc20Vault vaultTokens do not match tokens\_ reverts with INVA
+* when moneyVault vaultTokens do not match tokens\_ reverts with INVA
+* when UniSwapV3 pool for tokens does not exist reverts with AZ
 
 #### rebalance
 
-⛽ 725K (240K - 851K)
+725K (240K - 851K)
 
 ```solidity
   function rebalance(uint256[] minTokensAmount, bytes vaultOptions) external returns (int256[] poolAmounts, uint256[] tokenAmounts, bool zeroToOne)
@@ -2827,21 +2831,21 @@ Perform a rebalance according to target ratios
 
 **Specs**
 
-* ✅ performs a rebalance according to target ratios when token0/token1 ratio is greater than required
-* ✅ performs a rebalance according to target ratios when token0/token1 ratio is less than required
+* performs a rebalance according to target ratios when token0/token1 ratio is greater than required
+* performs a rebalance according to target ratios when token0/token1 ratio is less than required
 
 _Access control_
 
-* ✅ allowed: MStrategy admin
-* ✅ allowed: MStrategy operator
-* ✅ denied: any other address
+* allowed: MStrategy admin
+* allowed: MStrategy operator
+* denied: any other address
 
 _Edge cases_
 
-* ✅ when absolute tick deviation >= oracle.maxTickDeviation reverts with INVA
-* ✅ when tick is greater than tickMax - tickNeiborhood the upper bound of the interval is expanded by tickIncrease amount
-* ✅ when tick is less than tickMin + tickNeiborhood the lower bound of the interval is expanded by tickIncrease amount
-* ✅ when current tick has not deviated from the previous rebalance tick reverts with LIMU
+* when absolute tick deviation >= oracle.maxTickDeviation reverts with INVA
+* when tick is greater than tickMax - tickNeiborhood the upper bound of the interval is expanded by tickIncrease amount
+* when tick is less than tickMin + tickNeiborhood the lower bound of the interval is expanded by tickIncrease amount
+* when current tick has not deviated from the previous rebalance tick reverts with LIMU
 
 #### manualPull
 
@@ -2861,20 +2865,20 @@ Manually pull tokens from fromVault to toVault
 
 **Specs**
 
-* ✅ pulls token amounts from fromVault to toVault
+* pulls token amounts from fromVault to toVault
 
 _Access control_
 
-* ✅ allowed: MStrategy admin
-* ✅ denied: any other address
+* allowed: MStrategy admin
+* denied: any other address
 
 _Edge cases_
 
-* ✅ when token pull amounts are 0 passes
+* when token pull amounts are 0 passes
 
 #### setOracleParams
 
-⛽ 64K (41K - 75K)
+64K (41K - 75K)
 
 ```solidity
   function setOracleParams(struct MStrategy.OracleParams params) external
@@ -2890,17 +2894,17 @@ Set new Oracle params
 
 **Specs**
 
-* ✅ sets new params for oracle
-* ✅ edge cases: when maxSlippageD is more than DENOMINATOR reverts with INVA
+* sets new params for oracle
+* edge cases: when maxSlippageD is more than DENOMINATOR reverts with INVA
 
 _Access control_
 
-* ✅ allowed: MStrategy admin
-* ✅ denied: any other address
+* allowed: MStrategy admin
+* denied: any other address
 
 #### setRatioParams
 
-⛽ 65K (44K - 124K)
+65K (44K - 124K)
 
 ```solidity
   function setRatioParams(struct MStrategy.RatioParams params) external
@@ -2916,15 +2920,15 @@ Set new Ratio params
 
 **Specs**
 
-* ✅ sets new ratio params
-* ✅ edge cases: tickMin is greater than tickMax reverts with INVA
-* ✅ edge cases: when erc20MoneyRatioD is more than DENOMINATOR reverts with INVA
-* ✅ edge cases: when minErc20MoneyRatioDeviationD is more than DENOMINATOR reverts with INVA
+* sets new ratio params
+* edge cases: tickMin is greater than tickMax reverts with INVA
+* edge cases: when erc20MoneyRatioD is more than DENOMINATOR reverts with INVA
+* edge cases: when minErc20MoneyRatioDeviationD is more than DENOMINATOR reverts with INVA
 
 _Access control_
 
-* ✅ allowed: MStrategy admin
-* ✅ denied: any other address
+* allowed: MStrategy admin
+* denied: any other address
 
 ### Structs
 
@@ -3036,7 +3040,7 @@ Emitted when Ratio params are set.
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 5.84M
+5.84M
 
 ### Functions
 
@@ -3066,7 +3070,7 @@ initializes the strategy
 
 #### createStrategy
 
-⛽ 1.2M (1.18M - 1.25M)
+1.2M (1.18M - 1.25M)
 
 ```solidity
   function createStrategy(struct MultiPoolHStrategy.ImmutableParams immutableParams_, struct MultiPoolHStrategy.MutableParams mutableParams_, address admin) external returns (contract MultiPoolHStrategy strategy)
@@ -3104,7 +3108,7 @@ updates parameters of the strategy. Can be called only by admin
 
 #### rebalance
 
-⛽ 3.41M
+3.41M
 
 ```solidity
   function rebalance(struct MultiPoolHStrategyRebalancer.Restrictions restrictions) external returns (struct MultiPoolHStrategyRebalancer.Restrictions actualAmounts)
@@ -3126,7 +3130,7 @@ rebalance method. Need to be called if the new position is needed
 
 **Specs**
 
-* ✅ works correctly
+* works correctly
 
 #### checkMutableParams
 
@@ -3257,7 +3261,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function updateMutableParams(struct PulseRouteStrategy.MutableParams mutableParams_) external
 ```
 
-📕 updates mutable params of the strategy. Only the admin can call the function
+updates mutable params of the strategy. Only the admin can call the function
 
 **Parameters:**
 
@@ -3271,7 +3275,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function rebalance(uint256 deadline) external
 ```
 
-📕 Rebalancing goes like this:
+Rebalancing goes like this:
 
 1. Function checks the current states of the pools, and if the volatility is significant, the transaction reverts.
 2. If necessary, a new position is minted on uniV3Vault, and the previous one is burned.
@@ -3290,7 +3294,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateNewInterval(struct PulseRouteStrategy.MutableParams mutableParams_, int24 tick, contract IUniswapV3Pool pool) public returns (int24 lowerTick, int24 upperTick)
 ```
 
-📕 calculates a new interval according to the mutable params, the tickSpacing of the pool and the spot tick
+calculates a new interval according to the mutable params, the tickSpacing of the pool and the spot tick
 
 **Parameters:**
 
@@ -3313,7 +3317,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkMutableParams(struct PulseRouteStrategy.MutableParams params, struct PulseRouteStrategy.ImmutableParams immutableParams_) public
 ```
 
-📕 checks mutable params according to strategy restrictions
+checks mutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -3328,7 +3332,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkImmutableParams(struct PulseRouteStrategy.ImmutableParams params) public
 ```
 
-📕 checks immutable params according to strategy restrictions
+checks immutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -3356,7 +3360,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateTargetRatioOfToken1(struct PulseRouteStrategy.Interval interval, uint160 sqrtSpotPriceX96, uint256 spotPriceX96) public returns (uint256 targetRatioOfToken1X96)
 ```
 
-📕 calculate target ratio of token 1 to total capital after rebalance
+calculate target ratio of token 1 to total capital after rebalance
 
 **Parameters:**
 
@@ -3378,7 +3382,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateAmountsForSwap(struct PulseRouteStrategy.ImmutableParams immutableParams_, struct PulseRouteStrategy.MutableParams mutableParams_, uint256 priceX96, uint256 targetRatioOfToken1X96) public returns (uint256 tokenInIndex, uint256 amountIn)
 ```
 
-📕 notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
+notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
 
 **Parameters:**
 
@@ -3566,7 +3570,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function updateMutableParams(struct PulseStrategy.MutableParams mutableParams_) external
 ```
 
-📕 updates mutable params of the strategy. Only the admin can call the function
+updates mutable params of the strategy. Only the admin can call the function
 
 **Parameters:**
 
@@ -3580,7 +3584,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function rebalance(uint256 deadline, bytes swapData) external
 ```
 
-📕 Rebalancing goes like this:
+Rebalancing goes like this:
 
 1. Function checks the current states of the pools, and if the volatility is significant, the transaction reverts.
 2. If necessary, a new position is minted on uniV3Vault, and the previous one is burned.
@@ -3600,7 +3604,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkMutableParams(struct PulseStrategy.MutableParams params, struct PulseStrategy.ImmutableParams immutableParams_) public
 ```
 
-📕 checks mutable params according to strategy restrictions
+checks mutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -3615,7 +3619,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkImmutableParams(struct PulseStrategy.ImmutableParams params) public
 ```
 
-📕 checks immutable params according to strategy restrictions
+checks immutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -3629,7 +3633,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkTickDeviation(struct PulseStrategy.MutableParams mutableParams_, contract IUniswapV3Pool vaultPool) public
 ```
 
-📕 checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
+checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
 
 **Parameters:**
 
@@ -3666,7 +3670,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateTargetRatioOfToken1(struct PulseStrategy.Interval interval, uint160 sqrtSpotPriceX96, uint256 spotPriceX96) public returns (uint256 targetRatioOfToken1X96)
 ```
 
-📕 calculate target ratio of token 1 to total capital after rebalance
+calculate target ratio of token 1 to total capital after rebalance
 
 **Parameters:**
 
@@ -3688,7 +3692,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateAmountsForSwap(struct PulseStrategy.ImmutableParams immutableParams_, struct PulseStrategy.MutableParams mutableParams_, uint256 priceX96, uint256 targetRatioOfToken1X96) public returns (uint256 tokenInIndex, uint256 amountIn)
 ```
 
-📕 notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
+notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
 
 **Parameters:**
 
@@ -3888,7 +3892,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function updateMutableParams(struct PulseStrategyV2.MutableParams mutableParams_) external
 ```
 
-📕 updates mutable params of the strategy. Only the admin can call the function
+updates mutable params of the strategy. Only the admin can call the function
 
 **Parameters:**
 
@@ -3902,7 +3906,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function rebalance(uint256 deadline, bytes swapData, uint256 minAmountOutInCaseOfSwap) external
 ```
 
-📕 Rebalancing goes like this:
+Rebalancing goes like this:
 
 1. Function checks the current states of the pools, and if the volatility is significant, the transaction reverts.
 2. If necessary, a new position is minted on uniV3Vault, and the previous one is burned.
@@ -3922,7 +3926,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkMutableParams(struct PulseStrategyV2.MutableParams params, struct PulseStrategyV2.ImmutableParams immutableParams_) public
 ```
 
-📕 checks mutable params according to strategy restrictions
+checks mutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -3937,7 +3941,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkImmutableParams(struct PulseStrategyV2.ImmutableParams params) public
 ```
 
-📕 checks immutable params according to strategy restrictions
+checks immutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -3951,7 +3955,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkTickDeviation(struct PulseStrategyV2.MutableParams mutableParams_, contract IUniswapV3Pool vaultPool) public
 ```
 
-📕 checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
+checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
 
 **Parameters:**
 
@@ -3994,7 +3998,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateTargetRatioOfToken1(struct PulseStrategyV2.Interval interval, uint160 sqrtSpotPriceX96, uint256 spotPriceX96) public returns (uint256 targetRatioOfToken1X96)
 ```
 
-📕 calculate target ratio of token 1 to total capital after rebalance
+calculate target ratio of token 1 to total capital after rebalance
 
 **Parameters:**
 
@@ -4016,7 +4020,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateAmountsForSwap(struct PulseStrategyV2.ImmutableParams immutableParams_, struct PulseStrategyV2.MutableParams mutableParams_, uint256 priceX96, uint256 targetRatioOfToken1X96) public returns (uint256 tokenInIndex, uint256 amountIn)
 ```
 
-📕 notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
+notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
 
 **Parameters:**
 
@@ -4211,7 +4215,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function updateMutableParams(struct QuickPulseStrategy.MutableParams mutableParams_) external
 ```
 
-📕 updates mutable params of the strategy. Only the admin can call the function
+updates mutable params of the strategy. Only the admin can call the function
 
 **Parameters:**
 
@@ -4225,7 +4229,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function rebalance(uint256 deadline, bytes swapData) external
 ```
 
-📕 Rebalancing goes like this:
+Rebalancing goes like this:
 
 1. Function checks the current states of the pools, and if the volatility is significant, the transaction reverts.
 2. If necessary, a new position is minted on quickSwapVault, and the previous one is burned.
@@ -4245,7 +4249,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkMutableParams(struct QuickPulseStrategy.MutableParams params) public
 ```
 
-📕 checks mutable params according to strategy restrictions
+checks mutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -4259,7 +4263,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkImmutableParams(struct QuickPulseStrategy.ImmutableParams params) public
 ```
 
-📕 checks immutable params according to strategy restrictions
+checks immutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -4273,7 +4277,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkTickDeviation(struct QuickPulseStrategy.MutableParams mutableParams_, contract IAlgebraPool vaultPool) public
 ```
 
-📕 checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
+checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
 
 **Parameters:**
 
@@ -4310,7 +4314,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateTargetRatioOfToken1(struct QuickPulseStrategy.Interval interval, uint160 sqrtSpotPriceX96, uint256 spotPriceX96) public returns (uint256 targetRatioOfToken1X96)
 ```
 
-📕 calculate target ratio of token 1 to total capital after rebalance
+calculate target ratio of token 1 to total capital after rebalance
 
 **Parameters:**
 
@@ -4332,7 +4336,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateAmountsForSwap(struct QuickPulseStrategy.ImmutableParams immutableParams_, struct QuickPulseStrategy.MutableParams mutableParams_, uint256 priceX96, uint256 targetRatioOfToken1X96) public returns (uint256 tokenInIndex, uint256 amountIn)
 ```
 
-📕 notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
+notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
 
 **Parameters:**
 
@@ -4368,13 +4372,13 @@ Function, that ERC20RootVault calling after withdraw
 
 #### onERC721Received
 
-⛽ 105K
+105K
 
 ```solidity
   function onERC721Received(address, address, uint256, bytes) external returns (bytes4)
 ```
 
-📕 Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC721-safeTransferFrom` by `operator` from `from`, this function is called. It must return its Solidity selector to confirm the token transfer. If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted. The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
+Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC721-safeTransferFrom` by `operator` from `from`, this function is called. It must return its Solidity selector to confirm the token transfer. If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted. The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
 
 ### Structs
 
@@ -4532,7 +4536,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function updateMutableParams(struct SinglePositionQuickSwapStrategy.MutableParams mutableParams_) external
 ```
 
-📕 updates mutable params of the strategy. Only the admin can call the function
+updates mutable params of the strategy. Only the admin can call the function
 
 **Parameters:**
 
@@ -4546,7 +4550,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function rebalance(uint256 deadline) external
 ```
 
-📕 Rebalancing goes like this:
+Rebalancing goes like this:
 
 1. Function checks the current states of the pools, and if the volatility is significant, the transaction reverts.
 2. If necessary, a new position is minted on quickSwapVault, and the previous one is burned.
@@ -4565,7 +4569,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateNewInterval(struct SinglePositionQuickSwapStrategy.MutableParams mutableParams_, int24 tick, contract IAlgebraPool pool) public returns (int24 lowerTick, int24 upperTick)
 ```
 
-📕 calculates a new interval according to the mutable params, the tickSpacing of the pool and the spot tick
+calculates a new interval according to the mutable params, the tickSpacing of the pool and the spot tick
 
 **Parameters:**
 
@@ -4588,7 +4592,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkMutableParams(struct SinglePositionQuickSwapStrategy.MutableParams params) public
 ```
 
-📕 checks mutable params according to strategy restrictions
+checks mutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -4602,7 +4606,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkImmutableParams(struct SinglePositionQuickSwapStrategy.ImmutableParams params) public
 ```
 
-📕 checks immutable params according to strategy restrictions
+checks immutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -4616,7 +4620,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkTickDeviations(struct SinglePositionQuickSwapStrategy.ImmutableParams immutableParams_, struct SinglePositionQuickSwapStrategy.MutableParams mutableParams_, contract IAlgebraPool vaultPool) public
 ```
 
-📕 checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
+checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
 
 **Parameters:**
 
@@ -4632,7 +4636,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateTargetRatioOfToken1(struct SinglePositionQuickSwapStrategy.Interval interval, uint160 sqrtSpotPriceX96, uint256 spotPriceX96) public returns (uint256 targetRatioOfToken1X96)
 ```
 
-📕 calculate target ratio of token 1 to total capital after rebalance
+calculate target ratio of token 1 to total capital after rebalance
 
 **Parameters:**
 
@@ -4654,7 +4658,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateAmountsForSwap(struct SinglePositionQuickSwapStrategy.ImmutableParams immutableParams_, struct SinglePositionQuickSwapStrategy.MutableParams mutableParams_, uint256 priceX96, uint256 targetRatioOfToken1X96) public returns (uint256 tokenInIndex, uint256 amountIn)
 ```
 
-📕 notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
+notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
 
 **Parameters:**
 
@@ -4812,7 +4816,7 @@ Emited when a uniswap position is burned
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 7.31M
+7.31M
 
 ### Functions
 
@@ -4830,11 +4834,11 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
 
 **Specs**
 
-* ✅ creates contract
+* creates contract
 
 #### initialize
 
-⛽ 671K
+671K
 
 ```solidity
   function initialize(struct SinglePositionStrategy.ImmutableParams immutableParams_, address admin) external
@@ -4849,13 +4853,13 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
 
 #### updateMutableParams
 
-⛽ 120K (89K - 245K)
+120K (89K - 245K)
 
 ```solidity
   function updateMutableParams(struct SinglePositionStrategy.MutableParams mutableParams_) external
 ```
 
-📕 updates mutable params of the strategy. Only the admin can call the function
+updates mutable params of the strategy. Only the admin can call the function
 
 **Parameters:**
 
@@ -4865,13 +4869,13 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
 
 #### rebalance
 
-⛽ 1.16M (804K - 1.38M)
+1.16M (804K - 1.38M)
 
 ```solidity
   function rebalance(uint256 deadline) external
 ```
 
-📕 Rebalancing goes like this:
+Rebalancing goes like this:
 
 1. Function checks the current states of the pools, and if the volatility is significant, the transaction reverts.
 2. If necessary, a new position is minted on uniV3Vault, and the previous one is burned.
@@ -4886,7 +4890,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
 
 **Specs**
 
-* ✅ works correctly
+* works correctly
 
 #### calculateNewInterval
 
@@ -4894,7 +4898,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateNewInterval(struct SinglePositionStrategy.MutableParams mutableParams_, int24 tick, contract IUniswapV3Pool pool) public returns (int24 lowerTick, int24 upperTick)
 ```
 
-📕 calculates a new interval according to the mutable params, the tickSpacing of the pool and the spot tick
+calculates a new interval according to the mutable params, the tickSpacing of the pool and the spot tick
 
 **Parameters:**
 
@@ -4917,7 +4921,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkMutableParams(struct SinglePositionStrategy.MutableParams params, struct SinglePositionStrategy.ImmutableParams immutableParams_) public
 ```
 
-📕 checks mutable params according to strategy restrictions
+checks mutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -4932,7 +4936,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkImmutableParams(struct SinglePositionStrategy.ImmutableParams params) public
 ```
 
-📕 checks immutable params according to strategy restrictions
+checks immutable params according to strategy restrictions
 
 **Parameters:**
 
@@ -4946,7 +4950,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function checkTickDeviations(struct SinglePositionStrategy.ImmutableParams immutableParams_, struct SinglePositionStrategy.MutableParams mutableParams_, contract IUniswapV3Pool vaultPool) public
 ```
 
-📕 checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
+checks deviation of spot ticks of all pools in strategy from corresponding average ticks. If any deviation is large than maxDevation parameter for the pool, then the transaction will be reverted with a LIMIT\_OVERFLOW error. If there are no observations 10 seconds ago in any of the considered pools, then the transaction will be reverted with an INVALID\_STATE error.
 
 **Parameters:**
 
@@ -4962,7 +4966,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateTargetRatioOfToken1(struct SinglePositionStrategy.Interval interval, uint160 sqrtSpotPriceX96, uint256 spotPriceX96) public returns (uint256 targetRatioOfToken1X96)
 ```
 
-📕 calculate target ratio of token 1 to total capital after rebalance
+calculate target ratio of token 1 to total capital after rebalance
 
 **Parameters:**
 
@@ -4984,7 +4988,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
   function calculateAmountsForSwap(struct SinglePositionStrategy.ImmutableParams immutableParams_, struct SinglePositionStrategy.MutableParams mutableParams_, uint256 priceX96, uint256 targetRatioOfToken1X96) public returns (uint256 tokenInIndex, uint256 amountIn)
 ```
 
-📕 notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
+notion link: https://www.notion.so/mellowprotocol/Swap-formula-53807cbf5c5641eda937dd1847d70f43 calculates the token that needs to be swapped and its amount to get the target ratio of tokens in the erc20Vault.
 
 **Parameters:**
 
@@ -5140,11 +5144,11 @@ Emited when a uniswap position is burned
 
 ## BatchCall
 
-⛽ 435K
+435K
 
 #### batchcall
 
-⛽ 23K
+23K
 
 ```solidity
   function batchcall(address[] targets, bytes[] data) external returns (bytes[] results)
@@ -5152,9 +5156,9 @@ Emited when a uniswap position is burned
 
 **Specs**
 
-* ✅ returns results
-* ✅ edge cases: when arrays have different lengths reverts with INVL
-* ✅ edge cases: when targets arrays not only of contracts reverts with "Address: delegate call to non-contract"
+* returns results
+* edge cases: when arrays have different lengths reverts with INVL
+* edge cases: when targets arrays not only of contracts reverts with "Address: delegate call to non-contract"
 
 ## ContractMeta
 
@@ -5186,7 +5190,7 @@ Emited when a uniswap position is burned
 
 _Inherits from_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-⛽ 1.35M
+1.35M
 
 This is a default access control with 3 roles:
 
@@ -5263,7 +5267,7 @@ struct RoleData {
 
 _Inherits from_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-⛽ 1.25M
+1.25M
 
 This is a default access control with 3 roles:
 
@@ -5295,7 +5299,7 @@ Checks that the address is contract admin.
 
 **Specs**
 
-* ✅ returns `true` if sender is an admin, `false` otherwise
+* returns `true` if sender is an admin, `false` otherwise
 
 #### isOperator
 
@@ -5319,11 +5323,11 @@ Checks that the address is contract admin.
 
 **Specs**
 
-* ✅ returns `true` if sender is an operator, `false` otherwise
+* returns `true` if sender is an operator, `false` otherwise
 
 #### init
 
-⛽ 301K
+301K
 
 ```solidity
   function init(address admin) public
@@ -5362,7 +5366,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 ## ERC20RootVaultHelper
 
-⛽ 445K
+445K
 
 #### getTvlToken0
 
@@ -5372,7 +5376,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 ## ERC20Token
 
-⛽ 1.01M
+1.01M
 
 #### DOMAIN\_SEPARATOR
 
@@ -5382,7 +5386,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 **Specs**
 
-* ✅ returns domaint separator
+* returns domaint separator
 
 #### approve
 
@@ -5392,7 +5396,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 **Specs**
 
-* ✅ allows `sender` to transfer `spender` an `amount` and emits Approval
+* allows `sender` to transfer `spender` an `amount` and emits Approval
 
 #### transfer
 
@@ -5402,8 +5406,8 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 **Specs**
 
-* ✅ transfers `amount` from `msg.sender` to `to`
-* ✅ rom transfers `amount` from `from` to `to` if allowed
+* transfers `amount` from `msg.sender` to `to`
+* rom transfers `amount` from `from` to `to` if allowed
 
 #### transferFrom
 
@@ -5413,7 +5417,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 **Specs**
 
-* ✅ transfers `amount` from `from` to `to` if allowed
+* transfers `amount` from `from` to `to` if allowed
 
 #### permit
 
@@ -5423,9 +5427,9 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 **Specs**
 
-* ✅ emits Approval
-* ✅ edge cases: when deadline less than current timestamp reverts with TS
-* ✅ edge cases: when incorrect signature reverts with FRB
+* emits Approval
+* edge cases: when deadline less than current timestamp reverts with TS
+* edge cases: when incorrect signature reverts with FRB
 
 ## GearboxHelper
 
@@ -5569,7 +5573,7 @@ Emitted when an adjusment of the position made in Gearbox
 
 ## HStrategyHelper
 
-⛽ 3.26M
+3.26M
 
 #### calculateExpectedRatios
 
@@ -5863,7 +5867,7 @@ returns true if the rebalance between assets on different vaults is needed
 
 ## LStrategyHelper
 
-⛽ 1.5M
+1.5M
 
 #### constructor
 
@@ -5887,7 +5891,7 @@ returns true if the rebalance between assets on different vaults is needed
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-⛽ 7.09M
+7.09M
 
 ### Functions
 
@@ -6219,7 +6223,7 @@ Emitted when a swap is called on the router
 
 ## UniV3Helper
 
-⛽ 2.82M
+2.82M
 
 #### constructor
 
@@ -6235,7 +6239,7 @@ Emitted when a swap is called on the router
 
 **Specs**
 
-* ✅ returns correct vaulues for type(uint128).max
+* returns correct vaulues for type(uint128).max
 
 #### tokenAmountsToLiquidity
 
@@ -6255,7 +6259,7 @@ Emitted when a swap is called on the router
   function getPoolByNft(uint256 uniV3Nft) public returns (contract IUniswapV3Pool pool)
 ```
 
-📕 returns with "Invalid Token ID" for non-existent nfts
+returns with "Invalid Token ID" for non-existent nfts
 
 #### getFeesByNft
 
@@ -6263,7 +6267,7 @@ Emitted when a swap is called on the router
   function getFeesByNft(uint256 uniV3Nft) external returns (uint256 fees0, uint256 fees1)
 ```
 
-📕 returns with "Invalid Token ID" for non-existent nfts
+returns with "Invalid Token ID" for non-existent nfts
 
 #### calculateTvlBySqrtPriceX96
 
@@ -6271,7 +6275,7 @@ Emitted when a swap is called on the router
   function calculateTvlBySqrtPriceX96(uint256 uniV3Nft, uint160 sqrtPriceX96) public returns (uint256[] tokenAmounts)
 ```
 
-📕 returns with "Invalid Token ID" for non-existent nfts
+returns with "Invalid Token ID" for non-existent nfts
 
 #### calculateTvlByMinMaxPrices
 
@@ -6279,7 +6283,7 @@ Emitted when a swap is called on the router
   function calculateTvlByMinMaxPrices(uint256 uniV3Nft, uint256 minPriceX96, uint256 maxPriceX96) external returns (uint256[] minTokenAmounts, uint256[] maxTokenAmounts)
 ```
 
-📕 returns with "Invalid Token ID" for non-existent nfts
+returns with "Invalid Token ID" for non-existent nfts
 
 #### getTickDeviationForTimeSpan
 
@@ -6289,7 +6293,7 @@ Emitted when a swap is called on the router
 
 **Specs**
 
-* ✅ returns withFail=true if there is no observation in the pool that was not made before secondsAgo
+* returns withFail=true if there is no observation in the pool that was not made before secondsAgo
 
 #### getPositionTokenAmountsByCapitalOfToken0
 
@@ -6297,19 +6301,19 @@ Emitted when a swap is called on the router
   function getPositionTokenAmountsByCapitalOfToken0(uint256 lowerPriceSqrtX96, uint256 upperPriceSqrtX96, uint256 spotPriceForSqrtFormulasX96, uint256 spotPriceX96, uint256 capital) external returns (uint256 token0Amount, uint256 token1Amount)
 ```
 
-📕 calculates the distribution of tokens that can be added to the position after swap for given capital in token 0
+calculates the distribution of tokens that can be added to the position after swap for given capital in token 0
 
 **Specs**
 
-* ✅ test uniV3Helper, borders: -600 0
-* ✅ test uniV3Helper, borders: 600 1200
-* ✅ test uniV3Helper, borders: -600 600
+* test uniV3Helper, borders: -600 0
+* test uniV3Helper, borders: 600 1200
+* test uniV3Helper, borders: -600 600
 
 ## WhiteList
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-⛽ 2.49M
+2.49M
 
 ### Functions
 
@@ -6321,7 +6325,7 @@ _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessCo
 
 #### deposit
 
-⛽ 483K
+483K
 
 ```solidity
   function deposit(contract IERC20RootVault vault, uint256[] tokenAmounts, uint256 minLpTokens, bytes vaultOptions, bytes32[] proof) external returns (uint256[] actualTokenAmounts)
@@ -6329,12 +6333,12 @@ _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessCo
 
 **Specs**
 
-* ✅ works correctly
-* ✅ reverts on wrong address
+* works correctly
+* reverts on wrong address
 
 #### updateRoot
 
-⛽ 47K
+47K
 
 ```solidity
   function updateRoot(bytes32 root_) external
@@ -6372,7 +6376,7 @@ Emitted when liquidity is deposited
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 851K
+851K
 
 ### Functions
 
@@ -6384,7 +6388,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### validate
 
@@ -6394,7 +6398,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ successful validate
+* successful validate
 
 ### Structs
 
@@ -6507,7 +6511,7 @@ Emitted when new params are staged for commit
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 909K
+909K
 
 ### Functions
 
@@ -6519,7 +6523,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### validate
 
@@ -6529,8 +6533,8 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ successful validate
-* ✅ edge cases: when selector is not 0xec6cb13f reverts with INVS
+* successful validate
+* edge cases: when selector is not 0xec6cb13f reverts with INVS
 
 ### Structs
 
@@ -6544,7 +6548,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.14M
+1.14M
 
 ### Functions
 
@@ -6556,7 +6560,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### validate
 
@@ -6566,11 +6570,11 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ successful validate
-* ✅ edge cases: when selector is not 0x3df02124 reverts with INVS
-* ✅ edge cases: when token ids are equal reverts with INV
-* ✅ edge cases: when not a vault token reverts with INVTO
-* ✅ edge cases: when pool has no approve permission reverts with FRB
+* successful validate
+* edge cases: when selector is not 0x3df02124 reverts with INVS
+* edge cases: when token ids are equal reverts with INV
+* edge cases: when not a vault token reverts with INVTO
+* edge cases: when pool has no approve permission reverts with FRB
 
 ### Structs
 
@@ -6584,7 +6588,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.14M
+1.14M
 
 ### Functions
 
@@ -6596,7 +6600,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### validate
 
@@ -6606,12 +6610,12 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ successful validate, spender can approve
-* ✅ successful validate, sender is trusted strategy
-* ✅ edge cases: when value is not zero reverts with INV
-* ✅ edge cases: when selector is not 0x095ea7b3 reverts with INVS
-* ✅ edge cases: when no transfer permission reverts with FRB
-* ✅ edge cases: when no approve permission reverts with FRB
+* successful validate, spender can approve
+* successful validate, sender is trusted strategy
+* edge cases: when value is not zero reverts with INV
+* edge cases: when selector is not 0x095ea7b3 reverts with INVS
+* edge cases: when no transfer permission reverts with FRB
+* edge cases: when no approve permission reverts with FRB
 
 ### Structs
 
@@ -6651,7 +6655,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.58M
+1.58M
 
 ### Functions
 
@@ -6663,7 +6667,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### validate
 
@@ -6673,21 +6677,21 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 successful validate
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when addr is not swap reverts with INVTR
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when selector is wrong reverts with INVS
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when path is too small reverts with INVL
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when not a vault token reverts with INVTO
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when tokens are the same reverts with INVTO
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when pool has no approve permission reverts with FRB
-* ✅ selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when sender is not a reciever reverts
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee successful validate
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when value is not zero reverts with INV
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when sender is not reciever reverts
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when path too small reverts with INVL
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when not a vault token reverts with INVTO
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when tokens are the same reverts with INVTO
-* ✅ selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when pool has no approve permission reverts with FRB
+* selector is 0x7ff36ab5 or 0xfb3bdb41 successful validate
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when addr is not swap reverts with INVTR
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when selector is wrong reverts with INVS
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when path is too small reverts with INVL
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when not a vault token reverts with INVTO
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when tokens are the same reverts with INVTO
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when pool has no approve permission reverts with FRB
+* selector is 0x7ff36ab5 or 0xfb3bdb41 edge cases: when sender is not a reciever reverts
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee successful validate
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when value is not zero reverts with INV
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when sender is not reciever reverts
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when path too small reverts with INVL
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when not a vault token reverts with INVTO
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when tokens are the same reverts with INVTO
+* selector is one of: 0x4a25d94a, 0x18cbafe5, 0x38ed1739, 0x8803dbee edge cases: when pool has no approve permission reverts with FRB
 
 ### Structs
 
@@ -6720,7 +6724,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.75M
+1.75M
 
 ### Functions
 
@@ -6732,7 +6736,7 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ deploys a new contract
+* deploys a new contract
 
 #### validate
 
@@ -6742,29 +6746,29 @@ _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalida
 
 **Specs**
 
-* ✅ edge cases: if addr is not swap reverts with INVTR
-* ✅ edge cases: if value is not zero reverts with INV
-* ✅ edge cases: if selector is wrong reverts with INVS
-* ✅ selector is 0x414bf389 successful validate
-* ✅ selector is 0x414bf389 edge cases: if recipient is not sender reverts with INVTR
-* ✅ selector is 0x414bf389 edge cases: if not a vault token reverts with INVTO
-* ✅ selector is 0x414bf389 edge cases: if tokens are the same reverts with INVTO
-* ✅ selector is 0x414bf389 edge cases: if pool has no permisson reverts with FRB
-* ✅ selector is 0xdb3e2198 successfull validate
-* ✅ selector is 0xdb3e2198 edge cases: if recipient is not sender reverts with INVTR
-* ✅ selector is 0xdb3e2198 edge cases: if not a vault token reverts with INVTO
-* ✅ selector is 0xdb3e2198 edge cases: if tokens are the same reverts with INVTO
-* ✅ selector is 0xdb3e2198 edge cases: if pool has no permisson reverts with FRB
-* ✅ selector is 0xc04b8d59 successfull validate
-* ✅ selector is 0xc04b8d59 edge cases: if recipient is not sender reverts with INVTR
-* ✅ selector is 0xc04b8d59 edge cases: if tokens are the same reverts with INVTO
-* ✅ selector is 0xc04b8d59 edge cases: if pool has no approve permission reverts with FRB
-* ✅ selector is 0xc04b8d59 edge cases: if not a vault token reverts with INVTO
-* ✅ selector is 0xf28c0498 successfull validate
-* ✅ selector is 0xf28c0498 edge cases: if recipient is not sender reverts with INVTR
-* ✅ selector is 0xf28c0498 edge cases: if tokens are the same reverts with INVTO
-* ✅ selector is 0xf28c0498 edge cases: if pool has no approve permission reverts with FRB
-* ✅ selector is 0xf28c0498 edge cases: if not a vault token reverts with INVTO
+* edge cases: if addr is not swap reverts with INVTR
+* edge cases: if value is not zero reverts with INV
+* edge cases: if selector is wrong reverts with INVS
+* selector is 0x414bf389 successful validate
+* selector is 0x414bf389 edge cases: if recipient is not sender reverts with INVTR
+* selector is 0x414bf389 edge cases: if not a vault token reverts with INVTO
+* selector is 0x414bf389 edge cases: if tokens are the same reverts with INVTO
+* selector is 0x414bf389 edge cases: if pool has no permisson reverts with FRB
+* selector is 0xdb3e2198 successfull validate
+* selector is 0xdb3e2198 edge cases: if recipient is not sender reverts with INVTR
+* selector is 0xdb3e2198 edge cases: if not a vault token reverts with INVTO
+* selector is 0xdb3e2198 edge cases: if tokens are the same reverts with INVTO
+* selector is 0xdb3e2198 edge cases: if pool has no permisson reverts with FRB
+* selector is 0xc04b8d59 successfull validate
+* selector is 0xc04b8d59 edge cases: if recipient is not sender reverts with INVTR
+* selector is 0xc04b8d59 edge cases: if tokens are the same reverts with INVTO
+* selector is 0xc04b8d59 edge cases: if pool has no approve permission reverts with FRB
+* selector is 0xc04b8d59 edge cases: if not a vault token reverts with INVTO
+* selector is 0xf28c0498 successfull validate
+* selector is 0xf28c0498 edge cases: if recipient is not sender reverts with INVTR
+* selector is 0xf28c0498 edge cases: if tokens are the same reverts with INVTO
+* selector is 0xf28c0498 edge cases: if pool has no approve permission reverts with FRB
+* selector is 0xf28c0498 edge cases: if not a vault token reverts with INVTO
 
 ### Structs
 
@@ -6786,7 +6790,7 @@ _Inherits from_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 ### Structs
 
@@ -6800,11 +6804,11 @@ struct ValidatorParams {
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-⛽ 4.96M
+4.96M
 
 Vault that interfaces Aave protocol in the integration layer.
 
-📕 Notes: **TVL**
+Notes: **TVL**
 
 The TVL of the vault is cached and updated after each deposit withdraw. So essentially `tvl` call doesn't take into account accrued interest / donations to Aave since the last `deposit` / `withdraw`
 
@@ -6820,7 +6824,7 @@ The TVL of the vault is cached and updated after each deposit withdraw. So essen
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -6831,9 +6835,9 @@ Total value locked for this contract.
 
 **Specs**
 
-* ✅ returns total value locked
-* ✅ returns total value locked, no time passed from initialization
-* ✅ edge cases: when there are no initial funds returns zeroes
+* returns total value locked
+* returns total value locked, no time passed from initialization
+* edge cases: when there are no initial funds returns zeroes
 
 #### lendingPool
 
@@ -6845,8 +6849,8 @@ Reference to Aave protocol lending pool.
 
 **Specs**
 
-* ✅ returns ILendingPool
-* ✅ access control: allowed: any address
+* returns ILendingPool
+* access control: allowed: any address
 
 #### supportsInterface
 
@@ -6854,19 +6858,19 @@ Reference to Aave protocol lending pool.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x18026500 interface
-* ✅ access control: allowed: any address
-* ✅ returns true if this contract supports 0x7a63aa3a interface
-* ✅ access control: allowed: any address
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true if this contract supports 0x18026500 interface
+* access control: allowed: any address
+* returns true if this contract supports 0x7a63aa3a interface
+* access control: allowed: any address
+* edge cases: when contract does not support the given interface returns false
 
 #### updateTvls
 
-⛽ 94K (93K - 95K)
+94K (93K - 95K)
 
 ```solidity
   function updateTvls() external
@@ -6876,11 +6880,11 @@ Update all tvls to current aToken balances.
 
 **Specs**
 
-* ✅ updates total value locked
+* updates total value locked
 
 #### initialize
 
-⛽ 200K (159K - 245K)
+200K (159K - 245K)
 
 ```solidity
   function initialize(uint256 nft_, address[] vaultTokens_) external
@@ -6888,7 +6892,7 @@ Update all tvls to current aToken balances.
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -6899,20 +6903,20 @@ Initialized a new contract.
 
 **Specs**
 
-* ✅ emits Initialized event
-* ✅ initializes contract successfully
-* ✅ edge cases: when vault's nft is not 0 reverts with INIT
-* ✅ edge cases: when tokens are not sorted reverts with INVA
-* ✅ edge cases: when tokens are not unique reverts with INVA
-* ✅ edge cases: when setting zero nft reverts with VZ
-* ✅ edge cases: when setting token with address zero reverts with AZ
-* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+* emits Initialized event
+* initializes contract successfully
+* edge cases: when vault's nft is not 0 reverts with INIT
+* edge cases: when tokens are not sorted reverts with INVA
+* edge cases: when tokens are not unique reverts with INVA
+* edge cases: when setting zero nft reverts with VZ
+* edge cases: when setting token with address zero reverts with AZ
+* edge cases: when token has no permission to become a vault token reverts with FRB
 
 ## AaveVaultGovernance
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 2.31M
+2.31M
 
 Governance that manages all Aave Vaults params and can deploy a new Aave Vault.
 
@@ -6935,16 +6939,16 @@ Creates a new contract.
 
 **Specs**
 
-* ✅ deploys a new contract
-* ✅ initializes internalParams
+* deploys a new contract
+* initializes internalParams
 
 _Edge cases_
 
-* ✅ when lendingPool address is 0 reverts
-* ✅ when estimatedAaveAPY is 0 reverts
-* ✅ when estimatedAaaveAPY is larger than limit reverts
-* ✅ when protocolGovernance address is 0 reverts
-* ✅ when vaultRegistry address is 0 reverts
+* when lendingPool address is 0 reverts
+* when estimatedAaveAPY is 0 reverts
+* when estimatedAaaveAPY is larger than limit reverts
+* when protocolGovernance address is 0 reverts
+* when vaultRegistry address is 0 reverts
 
 #### delayedProtocolParams
 
@@ -6956,19 +6960,19 @@ Delayed Protocol Params, i.e. Params that could be changed by Protocol Governanc
 
 **Specs**
 
-* ✅ returns current DelayedProtocolParams
+* returns current DelayedProtocolParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+* staging DelayedProtocolParams doesn't change delayedProtocolParams
 
 _Edge cases_
 
-* ✅ when no params were committed returns non-zero params initialized in constructor
+* when no params were committed returns non-zero params initialized in constructor
 
 #### supportsInterface
 
@@ -6976,12 +6980,12 @@ _Edge cases_
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x2f8c3ff3 interface
-* ✅ access control: allowed: any address
+* returns true if this contract supports 0x2f8c3ff3 interface
+* access control: allowed: any address
 
 #### stagedDelayedProtocolParams
 
@@ -6993,24 +6997,24 @@ Delayed Protocol Params staged for commit after delay.
 
 **Specs**
 
-* ✅ returns DelayedProtocolParams staged for commit
+* returns DelayedProtocolParams staged for commit
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ always equals to params that were just staged
+* always equals to params that were just staged
 
 _Edge cases_
 
-* ✅ when no params are staged for commit returns zero struct
-* ✅ when params were just committed returns zero struct
+* when no params are staged for commit returns zero struct
+* when params were just committed returns zero struct
 
 #### stageDelayedProtocolParams
 
-⛽ 88K (52K - 129K)
+88K (52K - 129K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IAaveVaultGovernance.DelayedProtocolParams params) external
@@ -7018,7 +7022,7 @@ _Edge cases_
 
 Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedProtocolParamsTimestamp.
+Can only be called after delayedProtocolParamsTimestamp.
 
 **Parameters:**
 
@@ -7028,31 +7032,31 @@ Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Gov
 
 **Specs**
 
-* ✅ stages DelayedProtocolParams for commit
-* ✅ sets delay for commit
-* ✅ emits StageDelayedProtocolParams event
+* stages DelayedProtocolParams for commit
+* sets delay for commit
+* emits StageDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
+* cannot be called by random address
 
 _Edge cases_
 
-* ✅ when estimated Aave APY is larger than limit reverts
-* ✅ when called twice succeeds with the last value
-* ✅ when called with zero params reverts with zero params
+* when estimated Aave APY is larger than limit reverts
+* when called twice succeeds with the last value
+* when called with zero params reverts with zero params
 
 #### commitDelayedProtocolParams
 
-⛽ 50K (49K - 54K)
+50K (49K - 54K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -7062,33 +7066,33 @@ Commit Delayed Protocol Params, i.e. Params that could be changed by Protocol Go
 
 **Specs**
 
-* ✅ commits staged DelayedProtocolParams
-* ✅ resets delay for commit
-* ✅ emits CommitDelayedProtocolParams event
+* commits staged DelayedProtocolParams
+* resets delay for commit
+* emits CommitDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
-* ✅ reverts if called before the delay has elapsed
-* ✅ succeeds if called after the delay has elapsed
+* cannot be called by random address
+* reverts if called before the delay has elapsed
+* succeeds if called after the delay has elapsed
 
 _Edge cases_
 
-* ✅ when called twice reverts
-* ✅ when nothing is staged reverts
-* ✅ when delay has not elapsed reverts
+* when called twice reverts
+* when nothing is staged reverts
+* when delay has not elapsed reverts
 
 #### createVault
 
-⛽ 729K (665K - 942K)
+729K (665K - 942K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_) external returns (contract IAaveVault vault, uint256 nft)
@@ -7105,16 +7109,16 @@ Deploys a new vault.
 
 **Specs**
 
-* ✅ deploys a new vault
-* ✅ registers vault with vault registry and issues nft
-* ✅ the nft is owned by the owner from #createVault arguments
-* ✅ vault is initialized with nft
+* deploys a new vault
+* registers vault with vault registry and issues nft
+* the nft is owned by the owner from #createVault arguments
+* vault is initialized with nft
 
 _Access control_
 
-* ✅ when permissionless allowed: any address
-* ✅ when not permissionless allowed: protocol governance admin
-* ✅ when not permissionless denied: any address
+* when permissionless allowed: any address
+* when not permissionless allowed: protocol governance admin
+* when not permissionless denied: any address
 
 ### Structs
 
@@ -7256,7 +7260,7 @@ Get subvault by index
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -7271,13 +7275,13 @@ Total value locked for this contract.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 ## ERC20RootVault
 
 _Inherits from_ [_AggregateVault_](api#aggregatevault)_,_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)_,_ [_ERC20Token_](api#erc20token)
 
-⛽ 7.12M
+7.12M
 
 Contract that mints and burns LP tokens in exchange for ERC20 liquidity.
 
@@ -7293,8 +7297,8 @@ List of addresses of depositors from which interaction with private vaults is al
 
 **Specs**
 
-* ✅ returns non zero length of depositorsAllowlist
-* ✅ access control: allowed: any address
+* returns non zero length of depositorsAllowlist
+* access control: allowed: any address
 
 #### supportsInterface
 
@@ -7302,17 +7306,17 @@ List of addresses of depositors from which interaction with private vaults is al
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x23040f0a interface
-* ✅ edge cases: when contract does not support the given interface returns false
-* ✅ access control: allowed: any address
+* returns true if this contract supports 0x23040f0a interface
+* edge cases: when contract does not support the given interface returns false
+* access control: allowed: any address
 
 #### addDepositorsToAllowlist
 
-⛽ 112K (22K - 126K)
+112K (22K - 126K)
 
 ```solidity
   function addDepositorsToAllowlist(address[] depositors) external
@@ -7320,7 +7324,7 @@ List of addresses of depositors from which interaction with private vaults is al
 
 Add new depositors in the depositorsAllowlist
 
-📕 The action can be done only by user with admins, owners or by approved rights
+The action can be done only by user with admins, owners or by approved rights
 
 **Parameters:**
 
@@ -7330,14 +7334,14 @@ Add new depositors in the depositorsAllowlist
 
 **Specs**
 
-* ✅ adds depositor to allow list
-* ✅ access control: allowed: admin
-* ✅ access control: not allowed: deployer
-* ✅ access control: not allowed: any address
+* adds depositor to allow list
+* access control: allowed: admin
+* access control: not allowed: deployer
+* access control: not allowed: any address
 
 #### removeDepositorsFromAllowlist
 
-⛽ 50K (49K - 53K)
+50K (49K - 53K)
 
 ```solidity
   function removeDepositorsFromAllowlist(address[] depositors) external
@@ -7345,7 +7349,7 @@ Add new depositors in the depositorsAllowlist
 
 Remove depositors from the depositorsAllowlist
 
-📕 The action can be done only by user with admins, owners or by approved rights
+The action can be done only by user with admins, owners or by approved rights
 
 **Parameters:**
 
@@ -7355,10 +7359,10 @@ Remove depositors from the depositorsAllowlist
 
 **Specs**
 
-* ✅ removes depositor to allow list
-* ✅ access control: allowed: admin
-* ✅ access control: not allowed: deployer
-* ✅ access control: not allowed: any address
+* removes depositor to allow list
+* access control: allowed: admin
+* access control: not allowed: deployer
+* access control: not allowed: any address
 
 #### initialize
 
@@ -7368,7 +7372,7 @@ Remove depositors from the depositorsAllowlist
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -7381,13 +7385,13 @@ Initialized a new contract.
 
 **Specs**
 
-* ✅ edge cases: when root vault is not owner of subvault nft reverts with FRB
-* ✅ edge cases: when subVault index is 0 (rootVault has itself as subVaul) reverts with DUP
-* ✅ edge cases: when subVault index index is 0 reverts with DUP
+* edge cases: when root vault is not owner of subvault nft reverts with FRB
+* edge cases: when subVault index is 0 (rootVault has itself as subVaul) reverts with DUP
+* edge cases: when subVault index index is 0 reverts with DUP
 
 #### deposit
 
-⛽ 467K (357K - 750K)
+467K (357K - 750K)
 
 ```solidity
   function deposit(uint256[] tokenAmounts, uint256 minLpTokens, bytes vaultOptions) external returns (uint256[] actualTokenAmounts)
@@ -7411,26 +7415,26 @@ The function of depositing the amount of tokens in exchange
 
 **Specs**
 
-* ✅ rsAllowlist returns non zero length of depositorsAllowlist
-* ✅ rsAllowlist access control: allowed: any address
-* ✅ emits Deposit event
-* ✅ checking protocol fees charges fees
-* ✅ edge cases: when performance fee is zero do not charge performance fees
-* ✅ edge cases: when management fee is zero not charges management fees
-* ✅ edge cases: when deposit is disabled reverts with FRB
-* ✅ edge cases: when there is no depositor in allow list reverts with FRB
-* ✅ edge cases: when there is a private vault in delayedStrategyParams reverts with FRB
-* ✅ edge cases: when minLpTokens is greater than lpAmount reverts with LIMU
-* ✅ edge cases: when tokenAmounts is less than or equal to FIRST\_DEPOSIT\_LIMIT reverts with LIMU
-* ✅ edge cases: when depositCallback Address is set emits deposits callback called
-* ✅ edge cases: when lpAmount is zero reverts with VZ
-* ✅ edge cases: when sum of lpAmount and sender balance is greater than tokenLimitPerAddress reverts with LIMO
-* ✅ edge cases: when sum of lpAmount and totalSupply is greater than tokenLimit reverts with LIMO
-* ✅ access control: allowed: any address
+* rsAllowlist returns non zero length of depositorsAllowlist
+* rsAllowlist access control: allowed: any address
+* emits Deposit event
+* checking protocol fees charges fees
+* edge cases: when performance fee is zero do not charge performance fees
+* edge cases: when management fee is zero not charges management fees
+* edge cases: when deposit is disabled reverts with FRB
+* edge cases: when there is no depositor in allow list reverts with FRB
+* edge cases: when there is a private vault in delayedStrategyParams reverts with FRB
+* edge cases: when minLpTokens is greater than lpAmount reverts with LIMU
+* edge cases: when tokenAmounts is less than or equal to FIRST\_DEPOSIT\_LIMIT reverts with LIMU
+* edge cases: when depositCallback Address is set emits deposits callback called
+* edge cases: when lpAmount is zero reverts with VZ
+* edge cases: when sum of lpAmount and sender balance is greater than tokenLimitPerAddress reverts with LIMO
+* edge cases: when sum of lpAmount and totalSupply is greater than tokenLimit reverts with LIMO
+* access control: allowed: any address
 
 #### withdraw
 
-⛽ 499K (364K - 983K)
+499K (364K - 983K)
 
 ```solidity
   function withdraw(address to, uint256 lpTokenAmount, uint256[] minTokenAmounts, bytes[] vaultsOptions) external returns (uint256[] actualTokenAmounts)
@@ -7455,14 +7459,14 @@ The function of withdrawing the amount of tokens in exchange
 
 **Specs**
 
-* ✅ emits Withdraw event
-* ✅ edge cases: when total supply is 0 reverts with VZ
-* ✅ edge cases: when length of vaultsOptions and length of \_subvaultNfts are different reverts with INVL
-* ✅ edge cases: when withdrawn is larger than protocol governance withdraw limit for vault token reverts with LIMO
-* ✅ edge cases: When address of lpCallback is not null emits withdrawCallback
-* ✅ edge cases: When address of lpCallback is not null and lpCallback throws empty error emits WithdrawCallbackLog
-* ✅ edge cases: When address of lpCallback is not null and lpCallback throws non empty error emits WithdrawCallbackLog
-* ✅ access control: allowed: any address
+* emits Withdraw event
+* edge cases: when total supply is 0 reverts with VZ
+* edge cases: when length of vaultsOptions and length of \_subvaultNfts are different reverts with INVL
+* edge cases: when withdrawn is larger than protocol governance withdraw limit for vault token reverts with LIMO
+* edge cases: When address of lpCallback is not null emits withdrawCallback
+* edge cases: When address of lpCallback is not null and lpCallback throws empty error emits WithdrawCallbackLog
+* edge cases: When address of lpCallback is not null and lpCallback throws non empty error emits WithdrawCallbackLog
+* access control: allowed: any address
 
 ### Events
 
@@ -7580,7 +7584,7 @@ Emitted when callback in withdraw failed
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 4.53M
+4.53M
 
 Governance that manages all Lp Issuers params and can deploy a new LpIssuer Vault.
 
@@ -7603,13 +7607,13 @@ Creates a new contract.
 
 **Specs**
 
-* ✅ deploys a new contract
-* ✅ initializes internalParams
+* deploys a new contract
+* initializes internalParams
 
 _Edge cases_
 
-* ✅ when protocolGovernance address is 0 reverts
-* ✅ when vaultRegistry address is 0 reverts
+* when protocolGovernance address is 0 reverts
+* when vaultRegistry address is 0 reverts
 
 #### delayedProtocolParams
 
@@ -7621,19 +7625,19 @@ Delayed Protocol Params, i.e. Params that could be changed by Protocol Governanc
 
 **Specs**
 
-* ✅ returns current DelayedProtocolParams
+* returns current DelayedProtocolParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+* staging DelayedProtocolParams doesn't change delayedProtocolParams
 
 _Edge cases_
 
-* ✅ when no params were committed returns non-zero params initialized in constructor
+* when no params were committed returns non-zero params initialized in constructor
 
 #### stagedDelayedProtocolParams
 
@@ -7645,20 +7649,20 @@ Delayed Protocol Params staged for commit after delay.
 
 **Specs**
 
-* ✅ returns DelayedProtocolParams staged for commit
+* returns DelayedProtocolParams staged for commit
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ always equals to params that were just staged
+* always equals to params that were just staged
 
 _Edge cases_
 
-* ✅ when no params are staged for commit returns zero struct
-* ✅ when params were just committed returns zero struct
+* when no params are staged for commit returns zero struct
+* when params were just committed returns zero struct
 
 #### delayedProtocolPerVaultParams
 
@@ -7676,19 +7680,19 @@ Delayed Protocol Per Vault Params, i.e. Params that could be changed by Protocol
 
 **Specs**
 
-* ✅ returns current DelayedProtocolPerVaultParams
+* returns current DelayedProtocolPerVaultParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ staging DelayedProtocolPerVaultParams doesn't change delayedProtocolPerVaultParams
+* staging DelayedProtocolPerVaultParams doesn't change delayedProtocolPerVaultParams
 
 _Edge cases_
 
-* ✅ when no params were committed returns zero params
+* when no params were committed returns zero params
 
 #### stagedDelayedProtocolPerVaultParams
 
@@ -7706,20 +7710,20 @@ Delayed Protocol Per Vault Params staged for commit after delay.
 
 **Specs**
 
-* ✅ returns DelayedProtocolPerVaultParams staged for commit
+* returns DelayedProtocolPerVaultParams staged for commit
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ always equals to params that were just staged
+* always equals to params that were just staged
 
 _Edge cases_
 
-* ✅ when no params are staged for commit returns zero struct
-* ✅ when params were just committed returns zero struct
+* when no params are staged for commit returns zero struct
+* when params were just committed returns zero struct
 
 #### stagedDelayedStrategyParams
 
@@ -7737,20 +7741,20 @@ Delayed Strategy Params staged for commit after delay.
 
 **Specs**
 
-* ✅ returns DelayedStrategyParams staged for commit
+* returns DelayedStrategyParams staged for commit
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ always equals to params that were just staged
+* always equals to params that were just staged
 
 _Edge cases_
 
-* ✅ when no params are staged for commit returns zero struct
-* ✅ when params were just committed returns zero struct
+* when no params are staged for commit returns zero struct
+* when params were just committed returns zero struct
 
 #### operatorParams
 
@@ -7762,15 +7766,15 @@ Operator Params.
 
 **Specs**
 
-* ✅ returns operatorParams
+* returns operatorParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Edge cases_
 
-* ✅ when operatorParams have not been set returns zero params
+* when operatorParams have not been set returns zero params
 
 #### delayedStrategyParams
 
@@ -7788,19 +7792,19 @@ Delayed Strategy Params
 
 **Specs**
 
-* ✅ returns current DelayedStrategyParams
+* returns current DelayedStrategyParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ staging DelayedStrategyParams doesn't change delayedStrategyParams
+* staging DelayedStrategyParams doesn't change delayedStrategyParams
 
 _Edge cases_
 
-* ✅ when no params were committed returns zero params
+* when no params were committed returns zero params
 
 #### strategyParams
 
@@ -7824,12 +7828,12 @@ Strategy Params.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x6a2c3330 interface
-* ✅ access control: allowed: any address
+* returns true if this contract supports 0x6a2c3330 interface
+* access control: allowed: any address
 
 #### stageDelayedStrategyParams
 
-⛽ 160K (67K - 244K)
+160K (67K - 244K)
 
 ```solidity
   function stageDelayedStrategyParams(uint256 nft, struct IERC20RootVaultGovernance.DelayedStrategyParams params) external
@@ -7846,33 +7850,33 @@ Stage Delayed Strategy Params, i.e. Params that could be changed by Strategy or 
 
 **Specs**
 
-* ✅ stages DelayedStrategyParams for commit
-* ✅ sets zero delay for commit when #commitDelayedStrategyParams was called 0 times (init)
-* ✅ sets governance delay for commit after #commitDelayedStrategyParams was called at least once
-* ✅ emits StageDelayedStrategyParams event
+* stages DelayedStrategyParams for commit
+* sets zero delay for commit when #commitDelayedStrategyParams was called 0 times (init)
+* sets governance delay for commit after #commitDelayedStrategyParams was called at least once
+* emits StageDelayedStrategyParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ allowed: Vault NFT Approved (aka strategy)
-* ✅ allowed: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* allowed: Vault NFT Approved (aka strategy)
+* allowed: Vault NFT Owner (aka liquidity provider)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
+* cannot be called by random address
 
 _Edge cases_
 
-* ✅ when managementFee is exceeds MAX\_MANAGEMENT\_FEE reverts with LIMO
-* ✅ when performnaceFee is exceeds MAX\_PERFORMANCE\_FEE reverts with LIMO
-* ✅ when called twice succeeds with the last value
-* ✅ when called with zero params succeeds with zero params
+* when managementFee is exceeds MAX\_MANAGEMENT\_FEE reverts with LIMO
+* when performnaceFee is exceeds MAX\_PERFORMANCE\_FEE reverts with LIMO
+* when called twice succeeds with the last value
+* when called with zero params succeeds with zero params
 
 #### commitDelayedStrategyParams
 
-⛽ 118K (75K - 195K)
+118K (75K - 195K)
 
 ```solidity
   function commitDelayedStrategyParams(uint256 nft) external
@@ -7880,7 +7884,7 @@ _Edge cases_
 
 Commit Delayed Strategy Params, i.e. Params that could be changed by Strategy or Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedStrategyParamsTimestamp
+Can only be called after delayedStrategyParamsTimestamp
 
 **Parameters:**
 
@@ -7890,33 +7894,33 @@ Commit Delayed Strategy Params, i.e. Params that could be changed by Strategy or
 
 **Specs**
 
-* ✅ commits staged DelayedStrategyParams
-* ✅ resets delay for commit
-* ✅ emits CommitDelayedStrategyParams event
+* commits staged DelayedStrategyParams
+* resets delay for commit
+* emits CommitDelayedStrategyParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ allowed: Vault NFT Owner (aka liquidity provider)
-* ✅ allowed: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* allowed: Vault NFT Owner (aka liquidity provider)
+* allowed: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
-* ✅ reverts if called before the delay has elapsed (after commit was called initally)
-* ✅ succeeds if called after the delay has elapsed
+* cannot be called by random address
+* reverts if called before the delay has elapsed (after commit was called initally)
+* succeeds if called after the delay has elapsed
 
 _Edge cases_
 
-* ✅ when called twice reverts
-* ✅ when nothing is staged reverts
-* ✅ when delay has not elapsed (after initial commit call) reverts
+* when called twice reverts
+* when nothing is staged reverts
+* when delay has not elapsed (after initial commit call) reverts
 
 #### stageDelayedProtocolPerVaultParams
 
-⛽ 108K (54K - 108K)
+108K (54K - 108K)
 
 ```solidity
   function stageDelayedProtocolPerVaultParams(uint256 nft, struct IERC20RootVaultGovernance.DelayedProtocolPerVaultParams params) external
@@ -7933,31 +7937,31 @@ Stage Delayed Protocol Per Vault Params, i.e. Params that could be changed by Pr
 
 **Specs**
 
-* ✅ stages DelayedProtocolPerVaultParams for commit
-* ✅ sets delay for commit
-* ✅ emits StageDelayedProtocolPerVaultParams event
+* stages DelayedProtocolPerVaultParams for commit
+* sets delay for commit
+* emits StageDelayedProtocolPerVaultParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
+* cannot be called by random address
 
 _Edge cases_
 
-* ✅ when called twice succeeds with the last value
-* ✅ when called with zero params succeeds with zero params
-* ✅ when protocol fee is greater than MAX\_PROTOCOL\_FEE reverts
+* when called twice succeeds with the last value
+* when called with zero params succeeds with zero params
+* when protocol fee is greater than MAX\_PROTOCOL\_FEE reverts
 
 #### commitDelayedProtocolPerVaultParams
 
-⛽ 80K (44K - 80K)
+80K (44K - 80K)
 
 ```solidity
   function commitDelayedProtocolPerVaultParams(uint256 nft) external
@@ -7965,7 +7969,7 @@ _Edge cases_
 
 Commit Delayed Protocol Per Vault Params, i.e. Params that could be changed by Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedProtocolPerVaultParamsTimestamp
+Can only be called after delayedProtocolPerVaultParamsTimestamp
 
 **Parameters:**
 
@@ -7975,34 +7979,34 @@ Commit Delayed Protocol Per Vault Params, i.e. Params that could be changed by P
 
 **Specs**
 
-* ✅ commits staged DelayedProtocolPerVaultParams
-* ✅ resets delay for commit
-* ✅ emits CommitDelayedProtocolPerVaultParams event
+* commits staged DelayedProtocolPerVaultParams
+* resets delay for commit
+* emits CommitDelayedProtocolPerVaultParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
-* ✅ reverts if called before the delay has elapsed only if params have already been commited
-* ✅ succeeds if called after the delay has elapsed
+* cannot be called by random address
+* reverts if called before the delay has elapsed only if params have already been commited
+* succeeds if called after the delay has elapsed
 
 _Edge cases_
 
-* ✅ when called twice reverts
-* ✅ when nothing is staged reverts
-* ✅ when delay has not elapsed and params have not been commited reverts
-* ✅ when params have already been set and delay has not elapsed reverts
+* when called twice reverts
+* when nothing is staged reverts
+* when delay has not elapsed and params have not been commited reverts
+* when params have already been set and delay has not elapsed reverts
 
 #### setStrategyParams
 
-⛽ 113K (37K - 115K)
+113K (37K - 115K)
 
 ```solidity
   function setStrategyParams(uint256 nft, struct IERC20RootVaultGovernance.StrategyParams params) external
@@ -8019,7 +8023,7 @@ Set Strategy params, i.e. Params that could be changed by Strategy or Protocol G
 
 #### setOperatorParams
 
-⛽ 51K (35K - 77K)
+51K (35K - 77K)
 
 ```solidity
   function setOperatorParams(struct IERC20RootVaultGovernance.OperatorParams params) external
@@ -8035,17 +8039,17 @@ Set Operator params, i.e. Params that could be changed by Operator or Protocol G
 
 **Specs**
 
-* ✅ sets new operatorParams
-* ✅ access constrol allowed: ProtocolGovernance admin or Operator
-* ✅ access constrol denied: any other address
+* sets new operatorParams
+* access constrol allowed: ProtocolGovernance admin or Operator
+* access constrol denied: any other address
 
 _Properties_
 
-* ✅ setting new oprator params overwrites old params immediately
+* setting new oprator params overwrites old params immediately
 
 #### stageDelayedProtocolParams
 
-⛽ 88K (52K - 129K)
+88K (52K - 129K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IERC20RootVaultGovernance.DelayedProtocolParams params) external
@@ -8053,7 +8057,7 @@ _Properties_
 
 Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedProtocolParamsTimestamp.
+Can only be called after delayedProtocolParamsTimestamp.
 
 **Parameters:**
 
@@ -8063,30 +8067,30 @@ Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Gov
 
 **Specs**
 
-* ✅ stages DelayedProtocolParams for commit
-* ✅ sets delay for commit
-* ✅ emits StageDelayedProtocolParams event
+* stages DelayedProtocolParams for commit
+* sets delay for commit
+* emits StageDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
+* cannot be called by random address
 
 _Edge cases_
 
-* ✅ when called twice succeeds with the last value
-* ✅ when called with zero params reverts with zero params
+* when called twice succeeds with the last value
+* when called with zero params reverts with zero params
 
 #### commitDelayedProtocolParams
 
-⛽ 50K (49K - 54K)
+50K (49K - 54K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -8096,33 +8100,33 @@ Commit Delayed Protocol Params, i.e. Params that could be changed by Protocol Go
 
 **Specs**
 
-* ✅ commits staged DelayedProtocolParams
-* ✅ resets delay for commit
-* ✅ emits CommitDelayedProtocolParams event
+* commits staged DelayedProtocolParams
+* resets delay for commit
+* emits CommitDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
-* ✅ reverts if called before the delay has elapsed
-* ✅ succeeds if called after the delay has elapsed
+* cannot be called by random address
+* reverts if called before the delay has elapsed
+* succeeds if called after the delay has elapsed
 
 _Edge cases_
 
-* ✅ when called twice reverts
-* ✅ when nothing is staged reverts
-* ✅ when delay has not elapsed reverts
+* when called twice reverts
+* when nothing is staged reverts
+* when delay has not elapsed reverts
 
 #### createVault
 
-⛽ 915K (794K - 1.32M)
+915K (794K - 1.32M)
 
 ```solidity
   function createVault(address[] vaultTokens_, address strategy_, uint256[] subvaultNfts_, address owner_) external returns (contract IERC20RootVault vault, uint256 nft)
@@ -8141,16 +8145,16 @@ Deploys a new vault.
 
 **Specs**
 
-* ✅ deploys a new vault
-* ✅ registers vault with vault registry and issues nft
-* ✅ the nft is owned by the owner from #createVault arguments
-* ✅ vault is initialized with nft
+* deploys a new vault
+* registers vault with vault registry and issues nft
+* the nft is owned by the owner from #createVault arguments
+* vault is initialized with nft
 
 _Access control_
 
-* ✅ when permissionless allowed: any address
-* ✅ when not permissionless allowed: protocol governance admin
-* ✅ when not permissionless denied: any address
+* when permissionless allowed: any address
+* when not permissionless allowed: protocol governance admin
+* when not permissionless denied: any address
 
 ### Structs
 
@@ -8342,7 +8346,7 @@ Emitted when new DelayedProtocolParams are committed
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-⛽ 4.41M
+4.41M
 
 Vault that stores ERC20 tokens.
 
@@ -8354,7 +8358,7 @@ Vault that stores ERC20 tokens.
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -8365,8 +8369,8 @@ Total value locked for this contract.
 
 **Specs**
 
-* ✅ returns total value locked
-* ✅ edge cases: when there are no initial funds returns zeroes
+* returns total value locked
+* edge cases: when there are no initial funds returns zeroes
 
 #### initialize
 
@@ -8376,7 +8380,7 @@ Total value locked for this contract.
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -8387,15 +8391,15 @@ Initialized a new contract.
 
 **Specs**
 
-* ✅ emits Initialized event
-* ✅ initializes contract successfully
-* ✅ edge cases: when vault's nft is not 0 reverts with INIT
-* ✅ edge cases: not initialized when vault's nft is 0 returns false
-* ✅ edge cases: when tokens are not sorted reverts with INVA
-* ✅ edge cases: when tokens are not unique reverts with INVA
-* ✅ edge cases: when setting zero nft reverts with VZ
-* ✅ edge cases: when setting empty tokens array reverts with INV
-* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+* emits Initialized event
+* initializes contract successfully
+* edge cases: when vault's nft is not 0 reverts with INIT
+* edge cases: not initialized when vault's nft is 0 returns false
+* edge cases: when tokens are not sorted reverts with INVA
+* edge cases: when tokens are not unique reverts with INVA
+* edge cases: when setting zero nft reverts with VZ
+* edge cases: when setting empty tokens array reverts with INV
+* edge cases: when token has no permission to become a vault token reverts with FRB
 
 #### supportsInterface
 
@@ -8403,19 +8407,19 @@ Initialized a new contract.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x7a63aa3a interface
-* ✅ access control: allowed: any address
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true if this contract supports 0x7a63aa3a interface
+* access control: allowed: any address
+* edge cases: when contract does not support the given interface returns false
 
 ## ERC20VaultGovernance
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.59M
+1.59M
 
 Governance that manages all ERC20 Vaults params and can deploy a new ERC20 Vault.
 
@@ -8437,17 +8441,17 @@ Creates a new contract.
 
 **Specs**
 
-* ✅ deploys a new contract
-* ✅ initializes internalParams
+* deploys a new contract
+* initializes internalParams
 
 _Edge cases_
 
-* ✅ when protocolGovernance address is 0 reverts
-* ✅ when vaultRegistry address is 0 reverts
+* when protocolGovernance address is 0 reverts
+* when vaultRegistry address is 0 reverts
 
 #### createVault
 
-⛽ 475K (463K - 648K)
+475K (463K - 648K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_) external returns (contract IERC20Vault vault, uint256 nft)
@@ -8464,16 +8468,16 @@ Deploys a new vault.
 
 **Specs**
 
-* ✅ deploys a new vault
-* ✅ registers vault with vault registry and issues nft
-* ✅ the nft is owned by the owner from #createVault arguments
-* ✅ vault is initialized with nft
+* deploys a new vault
+* registers vault with vault registry and issues nft
+* the nft is owned by the owner from #createVault arguments
+* vault is initialized with nft
 
 _Access control_
 
-* ✅ when permissionless allowed: any address
-* ✅ when not permissionless allowed: protocol governance admin
-* ✅ when not permissionless denied: any address
+* when permissionless allowed: any address
+* when not permissionless allowed: protocol governance admin
+* when not permissionless denied: any address
 
 ### Structs
 
@@ -8507,7 +8511,7 @@ List of addresses of depositors from which interaction with private vaults is al
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### addDepositorsToAllowlist
 
@@ -8517,7 +8521,7 @@ List of addresses of depositors from which interaction with private vaults is al
 
 Add new depositors in the depositorsAllowlist
 
-📕 The action can be done only by user with admins, owners or by approved rights
+The action can be done only by user with admins, owners or by approved rights
 
 **Parameters:**
 
@@ -8533,7 +8537,7 @@ Add new depositors in the depositorsAllowlist
 
 Remove depositors from the depositorsAllowlist
 
-📕 The action can be done only by user with admins, owners or by approved rights
+The action can be done only by user with admins, owners or by approved rights
 
 **Parameters:**
 
@@ -8549,7 +8553,7 @@ Remove depositors from the depositorsAllowlist
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -8837,7 +8841,7 @@ _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGu
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -8852,7 +8856,7 @@ Total value locked for this contract.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### getCreditAccount
 
@@ -8892,7 +8896,7 @@ Returns value of rewards (CRV, CVX) we can obtain from Convex (nominated in prim
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -9018,7 +9022,7 @@ Delayed Protocol Params, i.e. Params that could be changed by Protocol Governanc
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### stagedDelayedProtocolParams
 
@@ -9072,7 +9076,7 @@ Delayed Protocol Per Vault Params, i.e. Params that could be changed by Protocol
 
 Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedProtocolParamsTimestamp.
+Can only be called after delayedProtocolParamsTimestamp.
 
 **Parameters:**
 
@@ -9102,7 +9106,7 @@ Commit Delayed Protocol Params, i.e. Params that could be changed by Protocol Go
 
 Commit Delayed Protocol Per Vault Params, i.e. Params that could be changed by Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedProtocolPerVaultParamsTimestamp
+Can only be called after delayedProtocolPerVaultParamsTimestamp
 
 **Parameters:**
 
@@ -9272,7 +9276,7 @@ _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGu
 
 Abstract contract that has logic common for every Vault.
 
-📕 Notes:
+Notes:
 
 #### ERC-721
 
@@ -9296,7 +9300,7 @@ Both NFT owner and approved person can call externalCall method which claims liq
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### push
 
@@ -9306,7 +9310,7 @@ Both NFT owner and approved person can call externalCall method which claims liq
 
 Pushes tokens on the vault balance to the underlying protocol. For example, for Yearn this operation will take USDC from the contract balance and convert it to yUSDC.
 
-📕 Tokens **must** be a subset of Vault Tokens. However, the convention is that if tokenAmount == 0 it is the same as token is missing.
+Tokens **must** be a subset of Vault Tokens. However, the convention is that if tokenAmount == 0 it is the same as token is missing.
 
 Also notice that this operation doesn't guarantee that tokenAmounts will be invested in full.
 
@@ -9354,7 +9358,7 @@ The same as `push` method above but transfers tokens to vault balance prior to c
 
 Pulls tokens from the underlying protocol to the `to` address.
 
-📕 Can only be called but Vault Owner or Strategy. Vault owner is the owner of NFT for this vault in VaultManager. Strategy is approved address for the vault NFT. When called by vault owner this method just pulls the tokens from the protocol to the `to` address When called by strategy on vault other than zero vault it pulls the tokens to zero vault (required `to` == zero vault) When called by strategy on zero vault it pulls the tokens to zero vault, pushes tokens on the `to` vault, and reclaims everything that's left. Thus any vault other than zero vault cannot have any tokens on it
+Can only be called but Vault Owner or Strategy. Vault owner is the owner of NFT for this vault in VaultManager. Strategy is approved address for the vault NFT. When called by vault owner this method just pulls the tokens from the protocol to the `to` address When called by strategy on vault other than zero vault it pulls the tokens to zero vault (required `to` == zero vault) When called by strategy on zero vault it pulls the tokens to zero vault, pushes tokens on the `to` vault, and reclaims everything that's left. Thus any vault other than zero vault cannot have any tokens on it
 
 Tokens **must** be a subset of Vault Tokens. However, the convention is that if tokenAmount == 0 it is the same as token is missing.
 
@@ -9383,7 +9387,7 @@ Pull is fulfilled on the best effort basis, i.e. if the tokenAmounts overflows a
 
 Claim ERC20 tokens from vault balance to zero vault.
 
-📕 Cannot be called from zero vault.
+Cannot be called from zero vault.
 
 **Parameters:**
 
@@ -9405,7 +9409,7 @@ Claim ERC20 tokens from vault balance to zero vault.
 
 Verifies offchain signature.
 
-📕 Should return whether the signature provided is valid for the provided hash
+Should return whether the signature provided is valid for the provided hash
 
 MUST return the bytes4 magic value 0x1626ba7e when function passes.
 
@@ -9434,7 +9438,7 @@ MUST allow external calls
 
 Execute one of whitelisted calls.
 
-📕 Can only be called by Vault Owner or Strategy. Vault owner is the owner of NFT for this vault in VaultManager. Strategy is approved address for the vault NFT.
+Can only be called by Vault Owner or Strategy. Vault owner is the owner of NFT for this vault in VaultManager. Strategy is approved address for the vault NFT.
 
 Since this method allows sending arbitrary transactions, the destinations of the calls are whitelisted by Protocol Governance.
 
@@ -9503,7 +9507,7 @@ Emitted when tokens are reclaimed
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-⛽ 4.91M
+4.91M
 
 Vault that stores ERC20 tokens.
 
@@ -9515,7 +9519,7 @@ Vault that stores ERC20 tokens.
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -9532,7 +9536,7 @@ Total value locked for this contract.
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -9546,7 +9550,7 @@ Initialized a new contract.
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 1.6M
+1.6M
 
 Governance that manages all Mellow Vaults params and can deploy a new Mellow Vault.
 
@@ -9614,7 +9618,7 @@ Vault that interfaces QuickSwap protocol in the integration layer.
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -9629,7 +9633,7 @@ Initialized a new contract.
   function onERC721Received(address operator, address from, uint256 tokenId, bytes) external returns (bytes4)
 ```
 
-📕 Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC721-safeTransferFrom` by `operator` from `from`, this function is called. It must return its Solidity selector to confirm the token transfer. If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted. The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
+Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC721-safeTransferFrom` by `operator` from `from`, this function is called. It must return its Solidity selector to confirm the token transfer. If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted. The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
 
 #### openFarmingPosition
 
@@ -9659,7 +9663,7 @@ Initialized a new contract.
 
 #### collectEarnings
 
-⛽ 135K (121K - 195K)
+135K (121K - 195K)
 
 ```solidity
   function collectEarnings() external returns (uint256[] collectedFees)
@@ -9691,7 +9695,7 @@ Initialized a new contract.
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -9706,7 +9710,7 @@ Total value locked for this contract.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### strategyParams
 
@@ -9798,7 +9802,7 @@ Delayed Strategy Params
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 #### setStrategyParams
 
@@ -9873,7 +9877,7 @@ Emitted when new StrategyParams are set
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-⛽ 6.61M
+6.61M
 
 Vault that interfaces UniswapV3 protocol in the integration layer.
 
@@ -9887,7 +9891,7 @@ Vault that interfaces UniswapV3 protocol in the integration layer.
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -9898,9 +9902,9 @@ Total value locked for this contract.
 
 **Specs**
 
-* ✅ returns total value locked
-* ✅ edge cases: when there are no initial funds returns zeroes
-* ✅ edge cases: when push was made but there was no minted position returns zeroes
+* returns total value locked
+* edge cases: when there are no initial funds returns zeroes
+* edge cases: when push was made but there was no minted position returns zeroes
 
 #### supportsInterface
 
@@ -9908,15 +9912,15 @@ Total value locked for this contract.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x88878d28 interface
-* ✅ access control: allowed: any address
-* ✅ returns true if this contract supports 0x7a63aa3a interface
-* ✅ access control: allowed: any address
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true if this contract supports 0x88878d28 interface
+* access control: allowed: any address
+* returns true if this contract supports 0x7a63aa3a interface
+* access control: allowed: any address
+* edge cases: when contract does not support the given interface returns false
 
 #### positionManager
 
@@ -9928,8 +9932,8 @@ Reference to INonfungiblePositionManager of UniswapV3 protocol.
 
 **Specs**
 
-* ✅ returns INonfungiblePositionManager
-* ✅ access control: allowed: any address
+* returns INonfungiblePositionManager
+* access control: allowed: any address
 
 #### liquidityToTokenAmounts
 
@@ -9953,7 +9957,7 @@ Returns tokenAmounts corresponding to liquidity, based on the current Uniswap po
 
 **Specs**
 
-* ✅ returns tokenAmounts corresponding to liquidity
+* returns tokenAmounts corresponding to liquidity
 
 #### tokenAmountsToLiquidity
 
@@ -9977,15 +9981,15 @@ Returns liquidity corresponding to token amounts, based on the current Uniswap p
 
 **Specs**
 
-* ✅ returns zero in case of zero amounts
-* ✅ returns more than zero in case of non-zero amounts
-* ✅ returns proportionally correct
-* ✅ returns correctly in case of tick being out of position by the left
-* ✅ returns correctly in case of tick being out of position by the right
+* returns zero in case of zero amounts
+* returns more than zero in case of non-zero amounts
+* returns proportionally correct
+* returns correctly in case of tick being out of position by the left
+* returns correctly in case of tick being out of position by the right
 
 #### initialize
 
-⛽ 186K
+186K
 
 ```solidity
   function initialize(uint256 nft_, address[] vaultTokens_, uint24 fee_, address uniV3Hepler_) external
@@ -9993,7 +9997,7 @@ Returns liquidity corresponding to token amounts, based on the current Uniswap p
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -10006,14 +10010,14 @@ Initialized a new contract.
 
 **Specs**
 
-* ✅ emits Initialized event
-* ✅ initializes contract successfully
-* ✅ edge cases: when vault's nft is not 0 reverts with INIT
-* ✅ edge cases: when tokens are not sorted reverts with INVA
-* ✅ edge cases: when tokens are not unique reverts with INVA
-* ✅ edge cases: when tokens length is not equal to 2 reverts with INV
-* ✅ edge cases: when setting zero nft reverts with VZ
-* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+* emits Initialized event
+* initializes contract successfully
+* edge cases: when vault's nft is not 0 reverts with INIT
+* edge cases: when tokens are not sorted reverts with INVA
+* edge cases: when tokens are not unique reverts with INVA
+* edge cases: when tokens length is not equal to 2 reverts with INV
+* edge cases: when setting zero nft reverts with VZ
+* edge cases: when token has no permission to become a vault token reverts with FRB
 
 #### onERC721Received
 
@@ -10021,17 +10025,17 @@ Initialized a new contract.
   function onERC721Received(address operator, address from, uint256 tokenId, bytes) external returns (bytes4)
 ```
 
-📕 Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC721-safeTransferFrom` by `operator` from `from`, this function is called. It must return its Solidity selector to confirm the token transfer. If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted. The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
+Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC721-safeTransferFrom` by `operator` from `from`, this function is called. It must return its Solidity selector to confirm the token transfer. If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted. The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
 
 **Specs**
 
-* ✅ updates vault's uniV3Nft
-* ✅ edge cases: when msg.sender is not a position manager reverts
-* ✅ edge cases: when operator is not a strategy reverts
-* ✅ edge cases: when UniV3 token is not valid reverts
-* ✅ edge cases: prevent from adding nft while liquidity is not empty reverts
-* ✅ access control: position manager: allowed
-* ✅ access control: any other address: not allowed
+* updates vault's uniV3Nft
+* edge cases: when msg.sender is not a position manager reverts
+* edge cases: when operator is not a strategy reverts
+* edge cases: when UniV3 token is not valid reverts
+* edge cases: prevent from adding nft while liquidity is not empty reverts
+* access control: position manager: allowed
+* access control: any other address: not allowed
 
 #### collectEarnings
 
@@ -10043,10 +10047,10 @@ Collect UniV3 fees to zero vault.
 
 **Specs**
 
-* ✅ emits CollectedEarnings event
-* ✅ collecting fees
-* ✅ edge cases: when there is no minted position reverts
-* ✅ access control: allowed: all addresses
+* emits CollectedEarnings event
+* collecting fees
+* edge cases: when there is no minted position reverts
+* access control: allowed: all addresses
 
 ### Structs
 
@@ -10089,7 +10093,7 @@ Emitted when earnings are collected
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 3.02M
+3.02M
 
 Governance that manages all UniV3 Vaults params and can deploy a new UniV3 Vault.
 
@@ -10112,15 +10116,15 @@ Creates a new contract.
 
 **Specs**
 
-* ✅ deploys a new contract
-* ✅ initializes internalParams
+* deploys a new contract
+* initializes internalParams
 
 _Edge cases_
 
-* ✅ when positionManager address is 0 reverts
-* ✅ when oracle address is 0 reverts
-* ✅ when protocolGovernance address is 0 reverts
-* ✅ when vaultRegistry address is 0 reverts
+* when positionManager address is 0 reverts
+* when oracle address is 0 reverts
+* when protocolGovernance address is 0 reverts
+* when vaultRegistry address is 0 reverts
 
 #### delayedProtocolParams
 
@@ -10132,19 +10136,19 @@ Delayed Protocol Params, i.e. Params that could be changed by Protocol Governanc
 
 **Specs**
 
-* ✅ returns current DelayedProtocolParams
+* returns current DelayedProtocolParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+* staging DelayedProtocolParams doesn't change delayedProtocolParams
 
 _Edge cases_
 
-* ✅ when no params were committed returns non-zero params initialized in constructor
+* when no params were committed returns non-zero params initialized in constructor
 
 #### stagedDelayedProtocolParams
 
@@ -10156,20 +10160,20 @@ Delayed Protocol Params staged for commit after delay.
 
 **Specs**
 
-* ✅ returns DelayedProtocolParams staged for commit
+* returns DelayedProtocolParams staged for commit
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ always equals to params that were just staged
+* always equals to params that were just staged
 
 _Edge cases_
 
-* ✅ when no params are staged for commit returns zero struct
-* ✅ when params were just committed returns zero struct
+* when no params are staged for commit returns zero struct
+* when params were just committed returns zero struct
 
 #### stagedDelayedStrategyParams
 
@@ -10205,16 +10209,16 @@ Delayed Strategy Params
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0xa2e9c513 interface
-* ✅ access control: allowed: any address
+* returns true if this contract supports 0xa2e9c513 interface
+* access control: allowed: any address
 
 #### stageDelayedProtocolParams
 
-⛽ 88K (52K - 129K)
+88K (52K - 129K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IUniV3VaultGovernance.DelayedProtocolParams params) external
@@ -10230,30 +10234,30 @@ Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Gov
 
 **Specs**
 
-* ✅ stages DelayedProtocolParams for commit
-* ✅ sets delay for commit
-* ✅ emits StageDelayedProtocolParams event
+* stages DelayedProtocolParams for commit
+* sets delay for commit
+* emits StageDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
+* cannot be called by random address
 
 _Edge cases_
 
-* ✅ when called twice succeeds with the last value
-* ✅ when called with zero params reverts with zero params
+* when called twice succeeds with the last value
+* when called with zero params reverts with zero params
 
 #### commitDelayedProtocolParams
 
-⛽ 50K (50K - 54K)
+50K (50K - 54K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -10263,33 +10267,33 @@ Commit Delayed Protocol Params, i.e. Params that could be changed by Protocol Go
 
 **Specs**
 
-* ✅ commits staged DelayedProtocolParams
-* ✅ resets delay for commit
-* ✅ emits CommitDelayedProtocolParams event
+* commits staged DelayedProtocolParams
+* resets delay for commit
+* emits CommitDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
-* ✅ reverts if called before the delay has elapsed
-* ✅ succeeds if called after the delay has elapsed
+* cannot be called by random address
+* reverts if called before the delay has elapsed
+* succeeds if called after the delay has elapsed
 
 _Edge cases_
 
-* ✅ when called twice reverts
-* ✅ when nothing is staged reverts
-* ✅ when delay has not elapsed reverts
+* when called twice reverts
+* when nothing is staged reverts
+* when delay has not elapsed reverts
 
 #### stageDelayedStrategyParams
 
-⛽ 121K
+121K
 
 ```solidity
   function stageDelayedStrategyParams(uint256 nft, struct IUniV3VaultGovernance.DelayedStrategyParams params) external
@@ -10306,7 +10310,7 @@ Stage Delayed Strategy Params, i.e. Params that could be changed by Strategy or 
 
 #### commitDelayedStrategyParams
 
-⛽ 94K
+94K
 
 ```solidity
   function commitDelayedStrategyParams(uint256 nft) external
@@ -10314,7 +10318,7 @@ Stage Delayed Strategy Params, i.e. Params that could be changed by Strategy or 
 
 Commit Delayed Strategy Params, i.e. Params that could be changed by Strategy or Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedStrategyParamsTimestamp
+Can only be called after delayedStrategyParamsTimestamp
 
 **Parameters:**
 
@@ -10324,7 +10328,7 @@ Commit Delayed Strategy Params, i.e. Params that could be changed by Strategy or
 
 #### createVault
 
-⛽ 563K (550K - 577K)
+563K (550K - 577K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_, uint24 fee_, address uniV3Helper_) external returns (contract IUniV3Vault vault, uint256 nft)
@@ -10343,20 +10347,20 @@ Deploys a new vault.
 
 **Specs**
 
-* ✅ deploys a new vault
-* ✅ registers vault with vault registry and issues nft
-* ✅ the nft is owned by the owner from #createVault arguments
-* ✅ vault is initialized with nft
+* deploys a new vault
+* registers vault with vault registry and issues nft
+* the nft is owned by the owner from #createVault arguments
+* vault is initialized with nft
 
 _Access control_
 
-* ✅ when permissionless allowed: any address
-* ✅ when not permissionless allowed: protocol governance admin
-* ✅ when not permissionless denied: any address
+* when permissionless allowed: any address
+* when not permissionless allowed: protocol governance admin
+* when not permissionless denied: any address
 
 _Edge cases_
 
-* ✅ when fee is not supported by uni v3 reverts
+* when fee is not supported by uni v3 reverts
 
 ### Structs
 
@@ -10457,7 +10461,7 @@ _Inherits from_ [_ERC165_](api#erc165)
 
 Abstract contract that has logic common for every Vault.
 
-📕 Notes:
+Notes:
 
 #### ERC-721
 
@@ -10535,7 +10539,7 @@ VaultRegistry NFT for this vault
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -10558,7 +10562,7 @@ Existential amounts for each token
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 ### Events
 
@@ -10585,7 +10589,7 @@ _Inherits from_ [_ERC165_](api#erc165)
 
 Internal contract for managing different params.
 
-📕 The contract should be overriden by the concrete VaultGovernance, define different params structs and use abi.decode / abi.encode to serialize to bytes in this contract. It also should emit events on params change.
+The contract should be overriden by the concrete VaultGovernance, define different params structs and use abi.decode / abi.encode to serialize to bytes in this contract. It also should emit events on params change.
 
 ### Functions
 
@@ -10649,7 +10653,7 @@ Internal Params of the contract.
 
 Staged new Internal Params.
 
-📕 The Internal Params could be committed after internalParamsTimestamp
+The Internal Params could be committed after internalParamsTimestamp
 
 #### supportsInterface
 
@@ -10748,11 +10752,11 @@ Emitted when New Vault is deployed
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-⛽ 4.81M
+4.81M
 
 Vault that interfaces Yearn protocol in the integration layer.
 
-📕 Notes: **TVL**
+Notes: **TVL**
 
 The TVL of the vault is updated after each deposit withdraw.
 
@@ -10772,7 +10776,7 @@ Yearn protocol vaults used by this contract
 
 **Specs**
 
-* ✅ returns list of yTokens
+* returns list of yTokens
 
 #### tvl
 
@@ -10782,7 +10786,7 @@ Yearn protocol vaults used by this contract
 
 Total value locked for this contract.
 
-📕 Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
+Generally it is the underlying token value of this contract in some other DeFi protocol. For example, for USDC Yearn Vault this would be total USDC balance that could be withdrawn for Yearn to this contract. The tvl itself is estimated in some range. Sometimes the range is exact, sometimes it's not
 
 **Return Values:**
 
@@ -10793,8 +10797,8 @@ Total value locked for this contract.
 
 **Specs**
 
-* ✅ returns total value locked
-* ✅ edge cases: when there are no initial funds returns zeroes
+* returns total value locked
+* edge cases: when there are no initial funds returns zeroes
 
 #### supportsInterface
 
@@ -10802,15 +10806,15 @@ Total value locked for this contract.
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x073ab565 interface
-* ✅ access control: allowed: any address
-* ✅ returns true if this contract supports 0x7a63aa3a interface
-* ✅ access control: allowed: any address
-* ✅ edge cases: when contract does not support the given interface returns false
+* returns true if this contract supports 0x073ab565 interface
+* access control: allowed: any address
+* returns true if this contract supports 0x7a63aa3a interface
+* access control: allowed: any address
+* edge cases: when contract does not support the given interface returns false
 
 #### initialize
 
@@ -10820,7 +10824,7 @@ Total value locked for this contract.
 
 Initialized a new contract.
 
-📕 Can only be initialized by vault governance
+Can only be initialized by vault governance
 
 **Parameters:**
 
@@ -10831,19 +10835,19 @@ Initialized a new contract.
 
 **Specs**
 
-* ✅ emits Initialized event
-* ✅ initializes contract successfully
-* ✅ edge cases: when vault's nft is not 0 reverts with INIT
-* ✅ edge cases: when tokens are not sorted reverts with INVA
-* ✅ edge cases: when tokens are not unique reverts with INVA
-* ✅ edge cases: when setting zero nft reverts with VZ
-* ✅ edge cases: when token has no permission to become a vault token reverts with FRB
+* emits Initialized event
+* initializes contract successfully
+* edge cases: when vault's nft is not 0 reverts with INIT
+* edge cases: when tokens are not sorted reverts with INVA
+* edge cases: when tokens are not unique reverts with INVA
+* edge cases: when setting zero nft reverts with VZ
+* edge cases: when token has no permission to become a vault token reverts with FRB
 
 ## YearnVaultGovernance
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-⛽ 2.4M
+2.4M
 
 Governance that manages all Aave Vaults params and can deploy a new Aave Vault.
 
@@ -10866,14 +10870,14 @@ Creates a new contract
 
 **Specs**
 
-* ✅ deploys a new contract
-* ✅ initializes internalParams
+* deploys a new contract
+* initializes internalParams
 
 _Edge cases_
 
-* ✅ when YearnVaultRegistry address is 0 reverts
-* ✅ when protocolGovernance address is 0 reverts
-* ✅ when vaultRegistry address is 0 reverts
+* when YearnVaultRegistry address is 0 reverts
+* when protocolGovernance address is 0 reverts
+* when vaultRegistry address is 0 reverts
 
 #### yTokenForToken
 
@@ -10897,17 +10901,17 @@ Determines a corresponding Yearn vault for token
 
 **Specs**
 
-* ✅ returns yToken (yVault) in yToken overrides (set by #setYTokenForToken) or corresponding to ERC20 token in YearnVaultRegistry
+* returns yToken (yVault) in yToken overrides (set by #setYTokenForToken) or corresponding to ERC20 token in YearnVaultRegistry
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Edge cases_
 
-* ✅ when yToken doesn't exist in overrides or YearnVaultRegistry returns 0
-* ✅ when yToken was not overridden by #setYTokenForToken returns token from YearnVaultRegistry
-* ✅ when yToken was overridden by #setYTokenForToken returns overridden token
+* when yToken doesn't exist in overrides or YearnVaultRegistry returns 0
+* when yToken was not overridden by #setYTokenForToken returns token from YearnVaultRegistry
+* when yToken was overridden by #setYTokenForToken returns overridden token
 
 #### stagedDelayedProtocolParams
 
@@ -10919,20 +10923,20 @@ Delayed Protocol Params staged for commit after delay.
 
 **Specs**
 
-* ✅ returns DelayedProtocolParams staged for commit
+* returns DelayedProtocolParams staged for commit
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ always equals to params that were just staged
+* always equals to params that were just staged
 
 _Edge cases_
 
-* ✅ when no params are staged for commit returns zero struct
-* ✅ when params were just committed returns zero struct
+* when no params are staged for commit returns zero struct
+* when params were just committed returns zero struct
 
 #### delayedProtocolParams
 
@@ -10944,19 +10948,19 @@ Delayed Protocol Params, i.e. Params that could be changed by Protocol Governanc
 
 **Specs**
 
-* ✅ returns current DelayedProtocolParams
+* returns current DelayedProtocolParams
 
 _Access control_
 
-* ✅ allowed: any address
+* allowed: any address
 
 _Properties_
 
-* ✅ staging DelayedProtocolParams doesn't change delayedProtocolParams
+* staging DelayedProtocolParams doesn't change delayedProtocolParams
 
 _Edge cases_
 
-* ✅ when no params were committed returns non-zero params initialized in constructor
+* when no params were committed returns non-zero params initialized in constructor
 
 #### supportsInterface
 
@@ -10964,16 +10968,16 @@ _Edge cases_
   function supportsInterface(bytes4 interfaceId) public returns (bool)
 ```
 
-📕 Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
+Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified\[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.
 
 **Specs**
 
-* ✅ returns true if this contract supports 0x15482137 interface
-* ✅ access control: allowed: any address
+* returns true if this contract supports 0x15482137 interface
+* access control: allowed: any address
 
 #### stageDelayedProtocolParams
 
-⛽ 75K (49K - 106K)
+75K (49K - 106K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IYearnVaultGovernance.DelayedProtocolParams params) external
@@ -10981,7 +10985,7 @@ _Edge cases_
 
 Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Governance with Protocol Governance delay.
 
-📕 Can only be called after delayedProtocolParamsTimestamp.
+Can only be called after delayedProtocolParamsTimestamp.
 
 **Parameters:**
 
@@ -10991,30 +10995,30 @@ Stage Delayed Protocol Params, i.e. Params that could be changed by Protocol Gov
 
 **Specs**
 
-* ✅ stages DelayedProtocolParams for commit
-* ✅ sets delay for commit
-* ✅ emits StageDelayedProtocolParams event
+* stages DelayedProtocolParams for commit
+* sets delay for commit
+* emits StageDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
+* cannot be called by random address
 
 _Edge cases_
 
-* ✅ when called twice succeeds with the last value
-* ✅ when called with zero params reverts with zero params
+* when called twice succeeds with the last value
+* when called with zero params reverts with zero params
 
 #### commitDelayedProtocolParams
 
-⛽ 43K (43K - 45K)
+43K (43K - 45K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -11024,33 +11028,33 @@ Commit Delayed Protocol Params, i.e. Params that could be changed by Protocol Go
 
 **Specs**
 
-* ✅ commits staged DelayedProtocolParams
-* ✅ resets delay for commit
-* ✅ emits CommitDelayedProtocolParams event
+* commits staged DelayedProtocolParams
+* resets delay for commit
+* emits CommitDelayedProtocolParams event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Properties_
 
-* ✅ cannot be called by random address
-* ✅ reverts if called before the delay has elapsed
-* ✅ succeeds if called after the delay has elapsed
+* cannot be called by random address
+* reverts if called before the delay has elapsed
+* succeeds if called after the delay has elapsed
 
 _Edge cases_
 
-* ✅ when called twice reverts
-* ✅ when nothing is staged reverts
-* ✅ when delay has not elapsed reverts
+* when called twice reverts
+* when nothing is staged reverts
+* when delay has not elapsed reverts
 
 #### setYTokenForToken
 
-⛽ 51K (35K - 56K)
+51K (35K - 56K)
 
 ```solidity
   function setYTokenForToken(address token, address yToken) external
@@ -11058,7 +11062,7 @@ _Edge cases_
 
 Sets the manual override for yToken vaults map
 
-📕 Can only be called by Protocol Admin
+Can only be called by Protocol Admin
 
 **Parameters:**
 
@@ -11069,25 +11073,25 @@ Sets the manual override for yToken vaults map
 
 **Specs**
 
-* ✅ sets a yToken override for a ERC20 token
-* ✅ emits SetYToken event
+* sets a yToken override for a ERC20 token
+* emits SetYToken event
 
 _Access control_
 
-* ✅ allowed: ProtocolGovernance admin
-* ✅ denied: Vault NFT Owner (aka liquidity provider)
-* ✅ denied: Vault NFT Approved (aka strategy)
-* ✅ denied: deployer
-* ✅ denied: random address
+* allowed: ProtocolGovernance admin
+* denied: Vault NFT Owner (aka liquidity provider)
+* denied: Vault NFT Approved (aka strategy)
+* denied: deployer
+* denied: random address
 
 _Edge cases_
 
-* ✅ when yToken is 0 succeeds
-* ✅ when called twice succeeds
+* when yToken is 0 succeeds
+* when called twice succeeds
 
 #### createVault
 
-⛽ 569K (559K - 810K)
+569K (559K - 810K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_) external returns (contract IYearnVault vault, uint256 nft)
@@ -11104,16 +11108,16 @@ Deploys a new vault.
 
 **Specs**
 
-* ✅ deploys a new vault
-* ✅ registers vault with vault registry and issues nft
-* ✅ the nft is owned by the owner from #createVault arguments
-* ✅ vault is initialized with nft
+* deploys a new vault
+* registers vault with vault registry and issues nft
+* the nft is owned by the owner from #createVault arguments
+* vault is initialized with nft
 
 _Access control_
 
-* ✅ when permissionless allowed: any address
-* ✅ when not permissionless allowed: protocol governance admin
-* ✅ when not permissionless denied: any address
+* when permissionless allowed: any address
+* when not permissionless allowed: protocol governance admin
+* when not permissionless denied: any address
 
 ### Structs
 

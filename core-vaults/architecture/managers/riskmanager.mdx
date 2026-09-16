@@ -2,7 +2,7 @@
 title: "RiskManager"
 ---
 
-**On-chain risk control and allocation policy manager for modular vaults.**
+**Onchain risk control and allocation policy manager for modular vaults.**
 
 The `RiskManager` contract defines and enforces asset deposit limits across a `Vault` and its associated `Subvaults`. It maintains internal accounting of balances, limits and allowed subvault assets.
 
@@ -37,7 +37,7 @@ The contract uses fine-grained access roles:
 * `DISALLOW_SUBVAULT_ASSETS_ROLE`: Can revoke asset approval from subvaults.
 * `MODIFY_PENDING_ASSETS_ROLE`: Can manipulate pending balance delta.
 * `MODIFY_VAULT_BALANCE_ROLE`: Can update the vault's live balance.
-* `MODIFY_SUBVAULT_BALANCE_ROLE`: Can update a subvault’s internal balance.
+* `MODIFY_SUBVAULT_BALANCE_ROLE`: Can update a subvault's internal balance.
 
 Roles are verified via the vault's ACL module (`IACLModule`) or allowed queues (`IShareModule`).
 
@@ -88,7 +88,7 @@ The system assumes that:
 
 Given this, all vault- and subvault-level limits are treated as **approximate** and are computed using the most recent oracle report available **at the time of the state update** (e.g., on pull/push or deposit/redeem operations).
 
-If actual balances deviate significantly from the stored `balance` values due to oracle drift, delayed execution, or protocol-side changes, a **trusted actor** can apply a ‘corrections’ to mitigate the difference:
+If actual balances deviate significantly from the stored `balance` values due to oracle drift, delayed execution, or protocol-side changes, a **trusted actor** can apply a 'corrections' to mitigate the difference:
 
 * `modifyVaultBalance` for the Vault, or
 * `modifySubvaultBalance` for individual Subvaults.

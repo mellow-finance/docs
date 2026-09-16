@@ -2,6 +2,10 @@
 title: "PulseStrategyModule"
 ---
 
+<Info>
+**Legacy architecture.** Mellow ALM is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 #### Overview
 
 The `PulseStrategyModule` provides liquidity management strategies within Automated Market Makers (AMMs). It supports various strategies tailored for different market trends, optimizing liquidity positioning through minimal yet effective rebalancing. Key components include managing penalty calculations and target setting to optimize the interval for liquidity deployment.
@@ -91,7 +95,7 @@ The `calculateTargetPulse` function efficiently determines if the current AMM po
 The `calculateTamperPosition` function determines the lower boundary and liquidity allocation for a position based on the current price, tick, and width parameters. It uses interpolation and the `TickMath` library to accurately place liquidity, allocating more to the lower range if the current price is near the bottom half of the target range. The function provides dynamic liquidity control, adjusting allocation smoothly as the price shifts within the specified boundaries.
 
 * **Purpose**:
-  * Calculates the lower boundary (`targetLower`) of the target position and the liquidity ratio for the lower range (`lowerLiquidityRatioX96`) based on the current price and a specified width around the position’s current tick.
+  * Calculates the lower boundary (`targetLower`) of the target position and the liquidity ratio for the lower range (`lowerLiquidityRatioX96`) based on the current price and a specified width around the position's current tick.
 * **Parameters**:
   * `sqrtPriceX96`: The current square root price in Q96 format, which helps determine where the current price lies within the target range.
   * `tick`: The current tick of the position, representing the closest price point.
@@ -159,4 +163,4 @@ The `validateStrategyParams` function ensures that the provided strategy paramet
        * `maxLiquidityRatioDeviationX96` should be a positive number less than `Q96` (representing 1 in Q96 format).
      * If any condition fails, the function reverts with `InvalidParams`.
    * **Non-Tamper Strategies**:
-     * Ensures `maxLiquidityRatioDeviationX96` is zero, as it’s only relevant to `Tamper`. Any non-zero value results in `InvalidParams`.
+     * Ensures `maxLiquidityRatioDeviationX96` is zero, as it's only relevant to `Tamper`. Any non-zero value results in `InvalidParams`.

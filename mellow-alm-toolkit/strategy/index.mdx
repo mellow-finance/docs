@@ -2,6 +2,10 @@
 title: "Strategy"
 ---
 
+<Info>
+**Legacy architecture.** Mellow ALM is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 `StrategyModule` defines essential functions for validating strategy parameters and determining the need for and direction of rebalancing within AMM pools. It interacts closely with the `ICore` contract, AMM modules, and oracles to optimize liquidity positions based on predefined strategies.
 
 #### `validateStrategyParams(bytes memory params)`

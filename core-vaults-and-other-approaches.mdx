@@ -51,7 +51,7 @@ Basic vault interfaces cover deposits, share issuance, and redemptions. Institut
 | ---------------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Settlement flexibility       | Sync-only or async-only, no mixed flows         | Async queues for deposits and redemptions. Sync and async strategies coexist. Signature queues for pre-approved participants                                                                 |
 | Strategy isolation           | Capital pools into a single execution context   | Each strategy operates in its own subvault with dedicated verifier constraints. Strategy isolation limits cross-strategy spillover                                                           |
-| Operation-level risk         | Permissions are external or vault-boundary-only | 60+ onchain permission types scoped by strategy, asset, operator, action. Verifiers revert unauthorized transactions before execution                                                        |
+| Operation-level risk         | Permissions are external or vault-boundary-only | 60+ onchain permission types scoped by strategy, asset, operator, action. Unauthorized transactions cannot be executed                                                        |
 | Multi-venue execution        | DeFi-only or CeFi-only, not both                | DeFi under verifier constraints. CeFi via Copper ClearLoop and Ceffu. One permission model across both                                                                                       |
 | Time to new venues           | Each integration is a code and audit cycle      | Verifier configuration rather than new vault code. For supported interaction patterns, new venues are added without expanding the core audit surface                                         |
 | NAV for externalized capital | Share price from onchain balances only          | Oracle-defined NAV with three-tier validation – normal, suspicious, rejected – and automatic escalation                                                                                      |
@@ -64,7 +64,7 @@ Basic vault interfaces cover deposits, share issuance, and redemptions. Institut
 
 The way a vault connects to yield sources determines its audit surface, maintenance cost, and how quickly it can support new venues. Traditional adapter-based architectures encode protocol-specific logic for every venue, so each new integration means new code, new audit surface, and new maintenance overhead.
 
-Core Vaults separate what the vault can do from what it is allowed to do. Execution is handled by shared vault logic. Permissions are defined by verifiers – declarative rules that specify which operations are allowed, scoped to target contracts, function selectors, asset whitelists, and parameter bounds. Any transaction outside those rules reverts before it executes.
+Core Vaults separate what the vault can do from what it is allowed to do. Execution is handled by shared vault logic. Permissions are defined by verifiers – declarative rules that specify which operations are allowed, scoped to target contracts, function selectors, asset whitelists, and parameter bounds. Any transaction outside those rules cannot be executed.
 
 The result is that integration becomes configuration. For supported interaction patterns, adding a new venue is primarily a mandate and verifier setup task rather than new vault code, so the core audit surface stays constant as venues are added.
 
@@ -106,7 +106,7 @@ For institutional onchain products that need to hold up across venues, asset typ
 * **Architecture:** Verifier-based – declarative rules, not protocol-specific adapters
 * **Permissions:** 60+ onchain permission types, operation-level scoping
 * **Strategy model:** Subvault isolation with independent execution contexts
-* **DeFi access:** Aave, Morpho, Euler, Fluid, Spark, Ethena, Gearbox, Curve, Uniswap, Cowswap, Pendle, Symbiotic, EigenLayer, and others
+* **DeFi access:** see the [canonical integration list](/mellow-vaults-overview#execution-venues) for supported venues
 * **CeFi access:** Binance, Bybit, Deribit, OKX, Coinbase, Gate.io, Kraken via off-exchange settlement rails – Copper ClearLoop and Ceffu
 * **NAV:** Oracle-defined, three-tier validation with automatic escalation
 * **Compliance:** Jurisdiction-aware mandates, allowlisted depositors, transfer-restricted shares

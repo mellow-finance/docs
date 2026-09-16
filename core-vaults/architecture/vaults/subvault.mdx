@@ -4,7 +4,7 @@ title: "Subvault"
 
 ## Overview
 
-The `Subvault` contract represents a modular, permissioned vault component designed to manage delegated asset strategies within a parent `Vault`. It enables curated logic for permissioned calls and asset management without exposing external deposit or redemption interfaces.
+The `Subvault` contract represents a modular, permissioned vault component designed to manage delegated asset strategies within a parent `Vault`. It enables curated logic for permissioned calls and delegated strategy execution without exposing external deposit or redemption interfaces.
 
 This contract combines callable and verifiable logic to serve as a secure, controlled execution unit within a system.
 
@@ -37,7 +37,7 @@ constructor(string memory name_, uint256 version_)
 
 ### Parameters:
 
-* `name_`: A unique string identifier for the deployment (e.g., “Mellow”).
+* `name_`: A unique string identifier for the deployment (e.g., "Mellow").
 * `version_`: A version number used to derive storage slots and allow upgradeable logic.
 
 ### Behavior:

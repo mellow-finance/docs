@@ -16,8 +16,8 @@ Computes and stores the custom storage slot used for verifier configuration base
 
 **Parameters:**
 
-* `name_` — Unique identifier used to namespace the storage slot.
-* `version_` — Version number used for slot derivation.
+* `name_` - Unique identifier used to namespace the storage slot.
+* `version_` - Version number used for slot derivation.
 
 ## Public & External Functions
 
@@ -31,7 +31,7 @@ Returns the address of the configured `Verifier` contract. It is retrieved from 
 
 **Returns:**
 
-* `IVerifier` — The verifier contract associated with the module.
+* `IVerifier` - The verifier contract associated with the module.
 
 ## Internal Functions
 
@@ -45,7 +45,7 @@ Initializes the verifier module with the given verifier contract address. Valida
 
 **Parameters:**
 
-* `verifier_` — Address of the verifier contract.
+* `verifier_` - Address of the verifier contract.
 
 **Reverts:**
 
@@ -63,4 +63,4 @@ Internal function to access the `VerifierModuleStorage` struct using the precomp
 
 **Returns:**
 
-* `VerifierModuleStorage` — Storage struct holding verifier address.
+* `VerifierModuleStorage` - Storage struct holding verifier address.

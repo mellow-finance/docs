@@ -11,7 +11,7 @@ The `SignatureQueue` enables **instant** user deposits or redemptions using **of
 * **Instant execution** without waiting for oracle price reports
 * **Nonce-based signature protection** to prevent replay attacks
 * **EIP-712/EIP-1271 compatible** signed orders
-* **Oracle price validation** enforced on-chain
+* **Oracle price validation** enforced onchain
 * **Stateless and removable** (i.e., does not accumulate shares or process claims)
 * **Fee-bypassed**: No `depositFee` or `redeemFee` is charged for actions via this queue
 
@@ -71,7 +71,7 @@ keccak256(
 
 ### Price Safety Check
 
-After signature verification, `SignatureQueue` uses the vault’s `Oracle` to validate the price:
+After signature verification, `SignatureQueue` uses the vault's `Oracle` to validate the price:
 
 * **Deposits**: `price = requestedShares / depositedAssets`
 * **Redemptions**: `price = burnedShares / redeemedAssets`

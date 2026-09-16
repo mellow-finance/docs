@@ -2,6 +2,10 @@
 title: "ManagedValidator"
 ---
 
+<Info>
+**Legacy architecture.** Mellow-LRT is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 ### Overview
 
 `ManagedValidator` provides role-based access control and validation for smart contract functions. It uses a bitmask structure to represent different roles, ensuring that only authorized users can interact with specific functions or contracts. This contract is a primary validator in the system, granting or revoking permissions based on roles and supporting custom validation logic.

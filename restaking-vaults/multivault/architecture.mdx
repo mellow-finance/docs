@@ -2,6 +2,10 @@
 title: "Architecture"
 ---
 
+<Info>
+**Legacy architecture.** MultiVault is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 <Frame>
   <img src="/images/image-2.png" alt="MultiVault top-level architecture" />
 </Frame>
@@ -144,7 +148,7 @@ The **SymbioticAdapter** is the main contract for interacting with the Symbiotic
 * Interaction with standard reward farms.
 * Deposits and withdrawals.
 
-When a SYMBIOTIC-type subvault is added (Symbiotic Vault), a corresponding **SymbioticWithdrawalQueue** is created (if not already present in adapter’s cache). This queue manages withdrawals using an **epoch-based logic**, allowing users to claim and transfer pending assets.
+When a SYMBIOTIC-type subvault is added (Symbiotic Vault), a corresponding **SymbioticWithdrawalQueue** is created (if not already present in adapter's cache). This queue manages withdrawals using an **epoch-based logic**, allowing users to claim and transfer pending assets.
 
 ***
 

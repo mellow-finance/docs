@@ -6,7 +6,7 @@ title: "Verifier"
 
 The `Verifier` contract is a multi-mode permissioning module for verifying and enforcing call-level access control across vault-connected modules. It supports:
 
-* On-chain allowlists using hashed shortened calls (`CompactCall`)
+* Onchain allowlists using hashed shortened calls (`CompactCall`)
 * Merkle tree-based validation for compact merkle, extended merkle and custom verifier verification types
 * Delegated verification logic through external custom verifiers (`ICustomVerifier`)
 
@@ -15,7 +15,7 @@ This contract enables secure and modular delegation of operational permissions
 ### Core Responsibilities
 
 * Validates function calls from external actors (e.g., operators, curators) or strategy contracts (strategies)
-* Grants or revokes execution rights using on-chain and off-chain mechanisms
+* Grants or revokes execution rights using onchain and off-chain mechanisms
 * Ensures that only whitelisted or merkle-authenticated calls are allowed
 * Integrates with vault-based role system via `IAccessControl`
 

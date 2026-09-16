@@ -13,7 +13,7 @@ This library implements a **0-indexed** Fenwick Tree for tracking cumulative val
 ### Invariants and Constraints
 
 * The tree must be initialized with a power-of-two length > 0 via `initialize(...)`.
-* Index bounds are enforced — access beyond the current capacity reverts with `IndexOutOfBounds()`.
+* Index bounds are enforced - access beyond the current capacity reverts with `IndexOutOfBounds()`.
 * To support dynamic resizing, `extend()` can double the current tree length (up to a safe limit).
 * Use of negative values is supported in `modify(...)`, allowing decrement operations.
 

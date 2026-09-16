@@ -19,7 +19,7 @@ Building an RWA allocation product from scratch requires smart contracts, securi
 
 **Mandate**
 
-A mandate is the set of rules that defines how a vault may operate. It includes eligible depositors, supported assets and issuers, approved venues, allocation caps, liquidity requirements, verifier rules, and oracle constraints. The mandate is encoded at the contract level and enforced by onchain verifiers. Operations that fall outside the mandate revert.
+A mandate is the set of rules that defines how a vault may operate. It includes eligible depositors, supported assets and issuers, approved venues, allocation caps, liquidity requirements, verifier rules, and oracle constraints. The mandate is encoded at the contract level and enforced by onchain verifiers. Operations that fall outside the mandate cannot be executed.
 
 **Roles**
 
@@ -89,7 +89,7 @@ Different products on the same platform enforce different compliance perimeters 
 
 #### Agent-operated RWA vaults
 
-RWA allocation suits agent operation: continuous, mandate-bounded decisions across instruments with different settlement and liquidity profiles. The same verifier model that bounds a human vault manager bounds an agent – approved assets, venues, allocation bands, and NAV constraints are enforced before execution, and operations outside the mandate revert.
+RWA allocation suits agent operation: continuous, mandate-bounded decisions across instruments with different settlement and liquidity profiles. The same verifier model that bounds a human vault manager bounds an agent – approved assets, venues, allocation bands, and NAV constraints are enforced before execution, and operations outside the mandate cannot be executed.
 
 An agent can rebalance and manage liquidity at frequencies impractical for human operators, while the vault ensures it never exceeds its mandate.
 

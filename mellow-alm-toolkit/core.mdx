@@ -2,6 +2,10 @@
 title: "Core"
 ---
 
+<Info>
+**Legacy architecture.** Mellow ALM is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 The `Core` contract is a central component, orchestrating interactions between users, liquidity pools, and various strategy modules within Automated Market Makers (AMMs). It acts as a comprehensive manager for liquidity positions, facilitating deposits, withdrawals, rebalances, and the strategic allocation of assets across different pools. By interfacing with AMM modules, strategy modules, and oracles, the `Core` contract enables a dynamic and responsive liquidity management system tailored to the evolving conditions of the DeFi market.
 
 ### Structures Overview for `Core` Contract
@@ -207,7 +211,7 @@ struct RebalanceParams {
      * Consulting the strategy module to determine if rebalancing is necessary and, if so, calculating the target position parameters.
   3. **Preprocessing**: Before executing the rebalance, performs necessary preparations, such as collecting rewards and fees from positions by calling beforeRebalance callback, and transferring AMM NFTs to the callback contract.
   4. **Execute Callback**: Invokes the callback contract with the prepared `data` and target positions, allowing the execution of complex rebalancing logic, including swaps and liquidity adjustments.
-  5. **Postprocessing**: After the callback execution, updates the ManagedPositions within the Core contract to reflect the new state, ensuring the internal state is consistent with the on-chain reality.
+  5. **Postprocessing**: After the callback execution, updates the ManagedPositions within the Core contract to reflect the new state, ensuring the internal state is consistent with the onchain reality.
   6. **Validation and Cleanup**: Verifies the final state of rebalanced positions against the strategy's requirements, ensuring all operations were successful and the positions are correctly updated.
 
 #### `function emptyRebalance(uint256 id) external`

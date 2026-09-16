@@ -5,11 +5,11 @@ title: "Vault infrastructure overview"
 
 # Vault infrastructure overview
 
-Mellow is vault infrastructure for onchain asset management.
+Mellow is vault infrastructure for onchain yield and treasury products.
 
 Mellow provides the management layer between onchain assets and the platforms that distribute financial products. Banks, fintechs, exchanges, wallets, custodians, brokers, payment platforms, asset issuers, asset managers, ecosystems, and agentic platforms can use Mellow to launch Earn, treasury, and managed strategy products under their own brand.
 
-Core Vaults are Mellow's current architecture for new deployments.
+Core Vaults are Mellow's current vault architecture.
 
 ## Core Vaults
 
@@ -25,7 +25,7 @@ Each Core Vault operates under a mandate. The mandate defines:
 - Verifier rules
 - Oracle constraints
 
-Every curator action passes through onchain verifiers. Operations outside the mandate revert.
+Every curator action passes through onchain verifiers. Operations outside the mandate cannot be executed.
 
 Core Vaults include:
 

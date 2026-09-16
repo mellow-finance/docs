@@ -137,109 +137,6 @@
         ]
       },
       {
-        "group": "Mellow ALM",
-        "icon": "arrows-left-right",
-        "pages": [
-          {
-            "group": "Overview",
-            "pages": [
-              "mellow-alm/overview/index",
-              "mellow-alm/overview/architecture",
-              "mellow-alm/overview/api",
-              {
-                "group": "Strategies",
-                "pages": [
-                  "mellow-alm/overview/strategies/index",
-                  "mellow-alm/overview/strategies/gearbox-strategy",
-                  "mellow-alm/overview/strategies/lstrategy",
-                  "mellow-alm/overview/strategies/uni-v3-boosted-strategy",
-                  "mellow-alm/overview/strategies/pulse-strategy",
-                  "mellow-alm/overview/strategies/pulse-strategy-v2",
-                  "mellow-alm/overview/strategies/lstrategy-1"
-                ]
-              },
-              "mellow-alm/overview/governance-parameters",
-              "mellow-alm/overview/contracts-specs",
-              {
-                "group": "Tutorials",
-                "pages": [
-                  "mellow-alm/overview/tutorials/index",
-                  "mellow-alm/overview/tutorials/contracts-deployments",
-                  "mellow-alm/overview/tutorials/deploy-your-own-strategy",
-                  "mellow-alm/overview/tutorials/wsteth-strategies-deposit-guide"
-                ]
-              },
-              {
-                "group": "Mellow contracts addresses",
-                "pages": [
-                  "mellow-alm/overview/mellow-contracts-addresses/index",
-                  "mellow-alm/overview/mellow-contracts-addresses/mellow-protocol-addresses-polygon",
-                  "mellow-alm/overview/mellow-contracts-addresses/mellow-protocol-addresses-mainnet",
-                  "mellow-alm/overview/mellow-contracts-addresses/gearbox-fearless-strategy",
-                  "mellow-alm/overview/mellow-contracts-addresses/lstrategy",
-                  "mellow-alm/overview/mellow-contracts-addresses/univ3-pulse-wsteth-usdc",
-                  "mellow-alm/overview/mellow-contracts-addresses/univ3-pulse-v2-wsteth-usdc",
-                  "mellow-alm/overview/mellow-contracts-addresses/velodrome-cl-strategies",
-                  "mellow-alm/overview/mellow-contracts-addresses/aerodrome-cl-strategies"
-                ]
-              },
-              "mellow-alm/overview/definitions",
-              "mellow-alm/overview/faq"
-            ]
-          },
-          {
-            "group": "Mellow ALM Toolkit",
-            "pages": [
-              "mellow-alm/mellow-alm-toolkit/index",
-              "mellow-alm-toolkit/domain-objects",
-              "mellow-alm-toolkit/components",
-              "mellow-alm-toolkit/processes",
-              "mellow-alm-toolkit/core",
-              {
-                "group": "Oracles",
-                "pages": [
-                  "mellow-alm-toolkit/oracles/index",
-                  "mellow-alm-toolkit/oracles/velooracle"
-                ]
-              },
-              {
-                "group": "Strategy",
-                "pages": [
-                  "mellow-alm-toolkit/strategy/index",
-                  "mellow-alm-toolkit/strategy/pulsestrategymodule"
-                ]
-              },
-              {
-                "group": "AMM Adapters",
-                "pages": [
-                  "mellow-alm-toolkit/amm-adapters/index",
-                  "mellow-alm-toolkit/amm-adapters/veloammmodule"
-                ]
-              },
-              {
-                "group": "Utility contracts",
-                "pages": [
-                  "mellow-alm-toolkit/utility-contracts/index",
-                  "mellow-alm-toolkit/utility-contracts/ammdepositwithdrawmodule",
-                  "mellow-alm-toolkit/utility-contracts/counter",
-                  "mellow-alm-toolkit/utility-contracts/lpwrapper",
-                  "mellow-alm-toolkit/utility-contracts/velodeployfactory"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "group": "Points",
-        "icon": "star",
-        "pages": [
-          "points/overview",
-          "points/points-in-symbiotic-pre-deposit-contracts",
-          "points/defi-points-integration-instructions"
-        ]
-      },
-      {
         "group": "Resources",
         "icon": "book",
         "pages": [
@@ -281,76 +178,76 @@
                     "group": "LRT V1.0",
                     "pages": [
                       "resources/mellow-lrt-depreciated/index",
-              "resources/mellow-lrt-depreciated/vault",
-              "resources/mellow-lrt-depreciated/vaultconfigurator",
-              {
-                "group": "Validators",
-                "pages": [
-                  "resources/mellow-lrt-depreciated/validators/index",
-                  "resources/mellow-lrt-depreciated/validators/managedvalidator",
-                  "resources/mellow-lrt-depreciated/validators/erc20swapvalidator",
-                  "resources/mellow-lrt-depreciated/validators/defaultbondvalidator",
-                  "resources/mellow-lrt-depreciated/validators/allowallvalidator"
-                ]
-              },
-              {
-                "group": "Strategies",
-                "pages": [
-                  "resources/mellow-lrt-depreciated/strategies/index",
-                  "resources/mellow-lrt-depreciated/strategies/defaultbondstrategy",
-                  "resources/mellow-lrt-depreciated/strategies/simpledvtstakingstrategy"
-                ]
-              },
-              {
-                "group": "Oracles",
-                "pages": [
-                  "resources/mellow-lrt-depreciated/oracles/index",
-                  "resources/mellow-lrt-depreciated/oracles/chainlinkoracle",
-                  "resources/mellow-lrt-depreciated/oracles/managedratiosoracle"
-                ]
-              },
-              {
-                "group": "Modules",
-                "pages": [
-                  "resources/mellow-lrt-depreciated/modules/index",
-                  {
-                    "group": "DelegateModules",
-                    "pages": [
-                      "resources/mellow-lrt-depreciated/modules/delegatemodules/index",
-                      "resources/mellow-lrt-depreciated/modules/delegatemodules/erc20swapmodule",
-                      "resources/mellow-lrt-depreciated/modules/delegatemodules/defaultbondmodule",
-                      "resources/mellow-lrt-depreciated/modules/delegatemodules/stakingmodule"
-                    ]
-                  },
-                  "resources/mellow-lrt-depreciated/modules/externalmodules",
-                  {
-                    "group": "TvlModules",
-                    "pages": [
-                      "resources/mellow-lrt-depreciated/modules/tvlmodules/index",
-                      "resources/mellow-lrt-depreciated/modules/tvlmodules/defaultbondtvlmodule",
-                      "resources/mellow-lrt-depreciated/modules/tvlmodules/erc20tvlmodule",
-                      "resources/mellow-lrt-depreciated/modules/tvlmodules/managedtvlmodule"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Utils",
-                "pages": [
-                  "resources/mellow-lrt-depreciated/utils/index",
-                  "resources/mellow-lrt-depreciated/utils/depositwrapper",
-                  "resources/mellow-lrt-depreciated/utils/defaultaccesscontrol"
-                ]
-              },
-              {
-                "group": "Security",
-                "pages": [
-                  "resources/mellow-lrt-depreciated/security/index",
-                  "resources/mellow-lrt-depreciated/security/adminproxy"
-                ]
-              },
-              "resources/mellow-lrt-depreciated/emergency-withdrawal-guide-advanced",
-              "resources/mellow-lrt-depreciated/dvv-legacy-architecture"
+                      "resources/mellow-lrt-depreciated/vault",
+                      "resources/mellow-lrt-depreciated/vaultconfigurator",
+                      {
+                        "group": "Validators",
+                        "pages": [
+                          "resources/mellow-lrt-depreciated/validators/index",
+                          "resources/mellow-lrt-depreciated/validators/managedvalidator",
+                          "resources/mellow-lrt-depreciated/validators/erc20swapvalidator",
+                          "resources/mellow-lrt-depreciated/validators/defaultbondvalidator",
+                          "resources/mellow-lrt-depreciated/validators/allowallvalidator"
+                        ]
+                      },
+                      {
+                        "group": "Strategies",
+                        "pages": [
+                          "resources/mellow-lrt-depreciated/strategies/index",
+                          "resources/mellow-lrt-depreciated/strategies/defaultbondstrategy",
+                          "resources/mellow-lrt-depreciated/strategies/simpledvtstakingstrategy"
+                        ]
+                      },
+                      {
+                        "group": "Oracles",
+                        "pages": [
+                          "resources/mellow-lrt-depreciated/oracles/index",
+                          "resources/mellow-lrt-depreciated/oracles/chainlinkoracle",
+                          "resources/mellow-lrt-depreciated/oracles/managedratiosoracle"
+                        ]
+                      },
+                      {
+                        "group": "Modules",
+                        "pages": [
+                          "resources/mellow-lrt-depreciated/modules/index",
+                          {
+                            "group": "DelegateModules",
+                            "pages": [
+                              "resources/mellow-lrt-depreciated/modules/delegatemodules/index",
+                              "resources/mellow-lrt-depreciated/modules/delegatemodules/erc20swapmodule",
+                              "resources/mellow-lrt-depreciated/modules/delegatemodules/defaultbondmodule",
+                              "resources/mellow-lrt-depreciated/modules/delegatemodules/stakingmodule"
+                            ]
+                          },
+                          "resources/mellow-lrt-depreciated/modules/externalmodules",
+                          {
+                            "group": "TvlModules",
+                            "pages": [
+                              "resources/mellow-lrt-depreciated/modules/tvlmodules/index",
+                              "resources/mellow-lrt-depreciated/modules/tvlmodules/defaultbondtvlmodule",
+                              "resources/mellow-lrt-depreciated/modules/tvlmodules/erc20tvlmodule",
+                              "resources/mellow-lrt-depreciated/modules/tvlmodules/managedtvlmodule"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "group": "Utils",
+                        "pages": [
+                          "resources/mellow-lrt-depreciated/utils/index",
+                          "resources/mellow-lrt-depreciated/utils/depositwrapper",
+                          "resources/mellow-lrt-depreciated/utils/defaultaccesscontrol"
+                        ]
+                      },
+                      {
+                        "group": "Security",
+                        "pages": [
+                          "resources/mellow-lrt-depreciated/security/index",
+                          "resources/mellow-lrt-depreciated/security/adminproxy"
+                        ]
+                      },
+                      "resources/mellow-lrt-depreciated/emergency-withdrawal-guide-advanced",
+                      "resources/mellow-lrt-depreciated/dvv-legacy-architecture"
                     ]
                   }
                 ]
@@ -360,6 +257,109 @@
                 "pages": [
                   "dvsteth-vault/overview",
                   "dvsteth-vault/dvv-deployment"
+                ]
+              },
+              {
+                "group": "Mellow ALM",
+                "icon": "arrows-left-right",
+                "pages": [
+                  {
+                    "group": "Overview",
+                    "pages": [
+                      "mellow-alm/overview/index",
+                      "mellow-alm/overview/architecture",
+                      "mellow-alm/overview/api",
+                      {
+                        "group": "Strategies",
+                        "pages": [
+                          "mellow-alm/overview/strategies/index",
+                          "mellow-alm/overview/strategies/gearbox-strategy",
+                          "mellow-alm/overview/strategies/lstrategy",
+                          "mellow-alm/overview/strategies/uni-v3-boosted-strategy",
+                          "mellow-alm/overview/strategies/pulse-strategy",
+                          "mellow-alm/overview/strategies/pulse-strategy-v2",
+                          "mellow-alm/overview/strategies/lstrategy-1"
+                        ]
+                      },
+                      "mellow-alm/overview/governance-parameters",
+                      "mellow-alm/overview/contracts-specs",
+                      {
+                        "group": "Tutorials",
+                        "pages": [
+                          "mellow-alm/overview/tutorials/index",
+                          "mellow-alm/overview/tutorials/contracts-deployments",
+                          "mellow-alm/overview/tutorials/deploy-your-own-strategy",
+                          "mellow-alm/overview/tutorials/wsteth-strategies-deposit-guide"
+                        ]
+                      },
+                      {
+                        "group": "Mellow contracts addresses",
+                        "pages": [
+                          "mellow-alm/overview/mellow-contracts-addresses/index",
+                          "mellow-alm/overview/mellow-contracts-addresses/mellow-protocol-addresses-polygon",
+                          "mellow-alm/overview/mellow-contracts-addresses/mellow-protocol-addresses-mainnet",
+                          "mellow-alm/overview/mellow-contracts-addresses/gearbox-fearless-strategy",
+                          "mellow-alm/overview/mellow-contracts-addresses/lstrategy",
+                          "mellow-alm/overview/mellow-contracts-addresses/univ3-pulse-wsteth-usdc",
+                          "mellow-alm/overview/mellow-contracts-addresses/univ3-pulse-v2-wsteth-usdc",
+                          "mellow-alm/overview/mellow-contracts-addresses/velodrome-cl-strategies",
+                          "mellow-alm/overview/mellow-contracts-addresses/aerodrome-cl-strategies"
+                        ]
+                      },
+                      "mellow-alm/overview/definitions",
+                      "mellow-alm/overview/faq"
+                    ]
+                  },
+                  {
+                    "group": "Mellow ALM Toolkit",
+                    "pages": [
+                      "mellow-alm/mellow-alm-toolkit/index",
+                      "mellow-alm-toolkit/domain-objects",
+                      "mellow-alm-toolkit/components",
+                      "mellow-alm-toolkit/processes",
+                      "mellow-alm-toolkit/core",
+                      {
+                        "group": "Oracles",
+                        "pages": [
+                          "mellow-alm-toolkit/oracles/index",
+                          "mellow-alm-toolkit/oracles/velooracle"
+                        ]
+                      },
+                      {
+                        "group": "Strategy",
+                        "pages": [
+                          "mellow-alm-toolkit/strategy/index",
+                          "mellow-alm-toolkit/strategy/pulsestrategymodule"
+                        ]
+                      },
+                      {
+                        "group": "AMM Adapters",
+                        "pages": [
+                          "mellow-alm-toolkit/amm-adapters/index",
+                          "mellow-alm-toolkit/amm-adapters/veloammmodule"
+                        ]
+                      },
+                      {
+                        "group": "Utility contracts",
+                        "pages": [
+                          "mellow-alm-toolkit/utility-contracts/index",
+                          "mellow-alm-toolkit/utility-contracts/ammdepositwithdrawmodule",
+                          "mellow-alm-toolkit/utility-contracts/counter",
+                          "mellow-alm-toolkit/utility-contracts/lpwrapper",
+                          "mellow-alm-toolkit/utility-contracts/velodeployfactory"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Points",
+                "icon": "star",
+                "pages": [
+                  "points/overview",
+                  "points/points-in-symbiotic-pre-deposit-contracts",
+                  "points/defi-points-integration-instructions"
                 ]
               }
             ]

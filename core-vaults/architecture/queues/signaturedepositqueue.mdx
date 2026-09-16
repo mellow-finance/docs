@@ -4,9 +4,9 @@ title: "SignatureDepositQueue"
 
 ### Purpose
 
-`SignatureDepositQueue` extends `SignatureQueue` to enable **instant deposit** of assets into a vault, bypassing the standard on-chain `DepositQueue` mechanism. It leverages **off-chain approvals** signed by a trusted consensus group, using **EIP-712** or **EIP-1271**-compliant signatures, to authorize asset inflows and minting of vault shares.
+`SignatureDepositQueue` extends `SignatureQueue` to enable **instant deposit** of assets into a vault, bypassing the standard onchain `DepositQueue` mechanism. It leverages **off-chain approvals** signed by a trusted consensus group, using **EIP-712** or **EIP-1271**-compliant signatures, to authorize asset inflows and minting of vault shares.
 
-This contract is optimized for high-trust environments requiring immediate asset onboarding while maintaining on-chain price safety guarantees.
+This contract is optimized for high-trust environments requiring immediate asset onboarding while maintaining onchain price safety guarantees.
 
 ### Key Features
 
@@ -22,7 +22,7 @@ This contract is optimized for high-trust environments requiring immediate asset
    * Includes asset amount (`ordered`) and shares to mint (`requested`)
    * Binds the request to a specific queue and vault
    * Includes a nonce and expiration timestamp
-2. User submits the order on-chain by calling `deposit` function:
+2. User submits the order onchain by calling `deposit` function:
    * The contract validates the order using signatures and price logic
    * Receives tokens from the user
    * Transfers these tokens to the vault
@@ -48,7 +48,7 @@ function deposit(Order calldata order, IConsensus.Signature[] calldata signature
    * Confirms correct asset, caller, and nonce
    * Validates off-chain signatures
    * Computes and validates asset/share price using vault oracle
-2. Increments the caller’s nonce to prevent replay
+2. Increments the caller's nonce to prevent replay
 3. Transfers `order.ordered` assets from the caller to this contract
 4. Transfers these assets into the vault
 5. Calls `vault.callHook(...)` for any optional strategy logic

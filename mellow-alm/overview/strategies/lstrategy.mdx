@@ -2,6 +2,10 @@
 title: "LStrategy"
 ---
 
+<Info>
+**Legacy architecture.** Mellow ALM is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
 LStrategy is a strategy for the WSTETH/WETH pair of tokens, which works on top of the corresponding Uniswap V3 pool. It holds two positions in this pool, changing them and rebalancing liquidity between them depending on the price in the pool.
 
 _**Note for future understanding**._ Some strategy parameters, which are typically from 0 to 1, need to be multiplied by a special constant `DENOMINATOR` (typically `$$10^9$$`) in order to be saved as integers in the code. Hence, when we mention parameters as is, it's mentioned as is, whereas we mention them multiplied by `DENOMINATOR,` we mention them with the letter D at the end. For example, `erc20UniV3CapitalRatio` = `$$0.5$$`, whereas`erc20UniV3CapitalRatioD` = `$$5 \cdot 10^8$$`.
@@ -68,7 +72,7 @@ There is a parameter `erc20TokenRatio`, which is what share of the capital of th
 
 If the current ratio and the desired ratio differ less than by `minErc20TokenRatioDeviation`, we don't do anything.
 
-In the other case, we have to swap some amount of an excessively presented token to get the second token and align the ratio. We do swaps using Cowswap. At first, a preorder is placed on-chain by the operator. Then, an off-chain bot submits the actual Cowswap order using preorder parameters and calls the `signOrder()` function. This function verifies that the actual order matches the preorder's requirements and signs the orders using the Cowswap `setPresignature()` function.
+In the other case, we have to swap some amount of an excessively presented token to get the second token and align the ratio. We do swaps using Cowswap. At first, a preorder is placed onchain by the operator. Then, an off-chain bot submits the actual Cowswap order using preorder parameters and calls the `signOrder()` function. This function verifies that the actual order matches the preorder's requirements and signs the orders using the Cowswap `setPresignature()` function.
 
 ### Parameters
 

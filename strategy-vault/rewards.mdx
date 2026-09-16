@@ -4,13 +4,13 @@ title: "Rewards"
 
 #### APY
 
-When you deposit your tokens, you receive strETH tokens that represent your portion of the vault.  While your strETH token balance stays the same, the value per token adjusts to account for fees and performance. Simply put, your balance doesn’t grow in number – it grows in value.
+When you deposit your tokens, you receive strETH tokens that represent your portion of the vault.  While your strETH token balance stays the same, the value per token adjusts to account for fees and performance. Simply put, your balance doesn't grow in number – it grows in value.
 
 The stRATEGY APY[^1] comes from continuous rewards generation across the underlying apps and protocols currently used in the strategy (e.g. lending, staking, liquidity provision). All these rewards are automatically compounded into the vault.&#x20;
 
 APY is calculated based on the [Oracle](../core-vaults/architecture/oracle) reports - each report updates the stRATEGY price to reflect the changes that might happen.&#x20;
 
-When your funds enter the vault and strETH tokens are generated and can be claimed in the Lido UI or Mellow UI. Not claiming your tokens _won’t affect the rewards accrual_.
+When your funds enter the vault and strETH tokens are generated and can be claimed in the Lido UI or Mellow UI. Not claiming your tokens _won't affect the rewards accrual_.
 
 
 
@@ -22,7 +22,7 @@ The following formula is used for APY calculations:
 
 `apy := ((initialReport.priceD18 / currentReport.priceD18) ** (365 * 24 * 3600 / (currentReport.timestamp - initialReport.timestamp)) - 1) * 100`
 
-Please note that APY figures are only estimates and subject to change at any time. Past performance is not a guarantee of future results. Rewards are influenced by factors outside the platform’s control, including changes to blockchain protocols and validator performance.
+Please note that APY figures are only estimates and subject to change at any time. Past performance is not a guarantee of future results. Rewards are influenced by factors outside the platform's control, including changes to blockchain protocols and validator performance.
 
 
 
@@ -30,11 +30,11 @@ Please note that APY figures are only estimates and subject to change at any tim
 
 Mellow provides additional incentives in the form of points: all stRATEGY Vault participants are eligible for point accrual based on the deposited value.
 
-The stRATEGY Vault offers boosted Mellow Points for the first 4 weeks after launch (starting October 01, 2025):
+The stRATEGY Vault offered boosted Mellow Points for the first 4 weeks after launch (October 1-29, 2025). That boost period has concluded:
 
-* For every $1 of value in your strETH, your wallet earns 0.00075 Mellow Points per hour.
+* During the boost window, every $1 of value in strETH earned 0.00075 Mellow Points per hour.
 
-After the initial 4 weeks, the rate adjusts back to:
+Since the boost period ended, the rate has been:
 
 * For every $1 of value in your strETH, your wallet earns 0.00025 Mellow Points per hour.<br/>
 
