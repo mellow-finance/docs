@@ -140,6 +140,7 @@
         "icon": "plug",
         "pages": [
           "core-vaults-integration-guide",
+          "para-integration",
           "resources/api",
           {
             "group": "API Reference",
