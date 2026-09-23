@@ -31,7 +31,6 @@
           "core-vaults-for-stablecoins",
           "core-vaults-for-rwa-allocation",
           "core-vaults-and-other-approaches",
-          "core-vaults-integration-guide",
           {
             "group": "Architecture",
             "pages": [
@@ -137,10 +136,27 @@
         ]
       },
       {
+        "group": "Integrations",
+        "icon": "plug",
+        "pages": [
+          "core-vaults-integration-guide",
+          "resources/api",
+          {
+            "group": "API Reference",
+            "icon": "code",
+            "pages": [
+              "api-reference/get-vaults",
+              "api-reference/get-defi-protocols",
+              "api-reference/get-user-positions",
+              "api-reference/get-user-defi-positions"
+            ]
+          }
+        ]
+      },
+      {
         "group": "Resources",
         "icon": "book",
         "pages": [
-          "resources/api",
           {
             "group": "Legacy",
             "pages": [
@@ -365,16 +381,6 @@
             ]
           },
           "resources/brand-assets"
-        ]
-      },
-      {
-        "group": "API Reference",
-        "icon": "code",
-        "pages": [
-          "api-reference/get-vaults",
-          "api-reference/get-defi-protocols",
-          "api-reference/get-user-positions",
-          "api-reference/get-user-defi-positions"
         ]
       }
     ]
