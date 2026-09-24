@@ -127,6 +127,16 @@
         ]
       },
       {
+        "group": "Lido Earn",
+        "icon": "layer-group",
+        "pages": [
+          "lido-earn/overview",
+          "lido-earn/earneth",
+          "lido-earn/earnusd",
+          "lido-earn/deployments"
+        ]
+      },
+      {
         "group": "stRATEGY Vault",
         "icon": "chart-line",
         "pages": [
