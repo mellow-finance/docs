@@ -1,0 +1,42 @@
+---
+title: "Overview"
+description: "How Lido Earn works: EarnETH and EarnUSD MetaVaults built on Mellow Core Vaults, curation, deposits and withdrawals, fees, security, and integration."
+---
+
+Lido Earn is Lido's line of DeFi vaults. It has two vaults: EarnETH for ETH-denominated assets and EarnUSD for USD stablecoins. Both run on Mellow Core Vaults, and Mellow is appointed to provide curation services for them.
+
+Users deposit and withdraw through the Lido interface at [stake.lido.fi/earn](https://stake.lido.fi/earn). Depositors receive a share token, earnETH or earnUSD, that represents their portion of the vault. Rewards from the underlying strategies are reinvested automatically, so the value of each share token grows over time. Rewards are realized on withdrawal.
+
+## How the vaults are structured
+
+EarnETH and EarnUSD are MetaVaults: Core Vaults whose subvaults are themselves vaults. Each underlying vault runs its own strategies inside isolated subvaults, and every curator action is checked by that subvault's verifier before it executes. The MetaVault allocates capital across its underlying vaults and rebalances as market conditions change. Depositors hold one share token and never have to pick or manage individual strategies.
+
+MetaVaults use the same queues, oracle, permissions and risk limits as every other Core Vault. See the [Core Vaults overview](/core-vaults/overview) and [Architecture](/core-vaults/architecture) for the underlying mechanics.
+
+## Deposits and withdrawals
+
+Deposits go through a time-buffered queue. A deposit request is processed after the next valid oracle report, so deposits are never priced on stale or manipulated data. A pending deposit can be cancelled in the Lido interface. Once a deposit is processed, the share tokens can be claimed in the Lido interface. Unclaimed shares already count toward the depositor's balance and accrue rewards.
+
+Withdrawals take two steps. The depositor requests a withdrawal, which burns the share tokens, and then claims the assets once the request is processed. Withdrawal requests cannot be cancelled. This prevents a request from forcing the curator to unwind positions only to be withdrawn afterwards.
+
+Typical timings and payout assets for each vault are on the [EarnETH](/lido-earn/earneth) and [EarnUSD](/lido-earn/earnusd) pages.
+
+## Fees
+
+Fees are taken in vault shares and reflected in the share token price, so a depositor's token balance does not decrease to pay them. Lido sets the fee levels, and the active fees are always shown in the Lido Earn interface.
+
+## Security
+
+Core Vaults have been audited by Sherlock and Nethermind, with further module and upgrade audits by Nethermind and MixBytes. The reports are listed on the [Security](/security) page and on Lido's [Earn security page](https://docs.lido.fi/earn/audits). A live [bug bounty on Sherlock](https://audits.sherlock.xyz/bug-bounties/125) offers up to 100,000 USDC for valid findings.
+
+Vault roles are held by multisig safes. Lido and Mellow each hold a separate pauser role. The full list of roles and quorums is on the [Deployments](/lido-earn/deployments) page.
+
+Lido DAO has placed five million dollars of its treasury into the vaults as first-loss capital: three million dollars in wstETH in EarnETH and two million dollars in USDC in EarnUSD. If a loss is confirmed, the DAO's shares are burned first, which offsets the loss for other depositors. The DAO pays the same fees as every other depositor and cannot exit ahead of them. First-loss capital is not insurance and does not guarantee against losses. The mechanism is defined in the [Lido DAO proposal](https://research.lido.fi/t/lido-earn-competing-on-trust-5m-treasury-allocation/11228).
+
+## For integrators
+
+Platforms can embed the Lido Earn widget or link straight to a vault's deposit page. Each deposit can carry a referral code that is recorded onchain in the deposit queue. See Lido's guides on [embedding the Earn widget](https://docs.lido.fi/earn/embedding-the-earn-widget) and [referral tracking](https://docs.lido.fi/earn/referral-tracking). For contract-level integration, see the [Core Vaults integration guide](/core-vaults-integration-guide).
+
+## Legal
+
+Depositors accept Mellow's [vault legal notice](https://mellow.finance/Runtime-Labs-Vault-Legal-Notice.pdf) alongside Lido's terms when they deposit. DeFi strategies carry smart contract, market and liquidity risk, and returns are not guaranteed.

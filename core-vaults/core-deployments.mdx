@@ -433,6 +433,8 @@ description: "Contract addresses for all Core Vault implementations and factorie
 
 <br />Instances
 
+Addresses for the Lido Earn vaults, earnETH, earnUSD, earnUSDc and earnUSDe, are on the [Lido Earn deployments](/lido-earn/deployments) page.
+
 <AccordionGroup>
   <Accordion title="strETH">
     | Vault | [0x277C6A642564A91ff78b008022D65683cEE5CCC5](https://etherscan.io/address/0x277C6A642564A91ff78b008022D65683cEE5CCC5) |
@@ -608,96 +610,6 @@ description: "Contract addresses for all Core Vault implementations and factorie
     | DepositQueue (BTC) | [0x88e2641C6d6dACdc451F5d91787d7a58cbc6B6B1](https://explorer.mezo.org/address/0x88e2641C6d6dACdc451F5d91787d7a58cbc6B6B1) |
   </Accordion>
 
-  <Accordion title="earnETH">
-    Smart contracts of earnETH
-
-    | Component | Address |
-    | --- | --- |
-    | Vault | 0x6a37725ca7f4CE81c004c955f7280d5C704a249e |
-    | DepositQueue (ETH) | 0x1db7094Ef0D994B0b62f6Cd67dB801ad194999A8 |
-    | SyncDepositQueue (ETH) | 0xb99394f8b95d426Cb2F013B857C74aCC924b20D5 |
-    | DepositQueue (WETH) | 0x3Fc48660d02e59fBedD0a5Cc18a5580D1f8dD6A4 |
-    | SyncDepositQueue (WETH) | 0xCe6C2505fEF74d2dE10FCF1d534cB73eCc837976 |
-    | DepositQueue (wstETH) | 0xe39EED9A454C4918F8d0682062777cB251cd513F |
-    | SyncDepositQueue (wstETH) | 0xECD2Bfe725fa14f5Ed86e9bDcc0eA4b34A4ed522 |
-    | RedeemQueue (wstETH) | 0x095bFAca9f1c6F2B063Cd67C6d6bfcd0c3aaB7b4 |
-    | DepositQueue (GG) | 0x411172F1E5310d03b38128F2a294F2e33c691B30 |
-    | SyncDepositQueue (GG) | 0x2792004b709E3E88b8FCCb06c3C5e1A6dff0EC2B |
-    | DepositQueue (strETH) | 0x268ea1cc674cdaE200c4609E7b09d03Dc618E663 |
-    | SyncDepositQueue (strETH) | 0xA4F23f56442C01a478af20fe06b9F5f8f05aDD96 |
-    | DepositQueue (DVstETH) | 0x4bDd2Ea1E20acb13f2758190c92a84175107A86f |
-    | SyncDepositQueue (DVstETH) | 0xA80f247b92C79740b0610b754403D5cb0bf216b5 |
-    | Oracle | 0xAda1f4c24603aB2fe5aBd35BCD12370e98A20358 |
-    | ShareManager | 0xBBFC8683C8fE8cF73777feDE7ab9574935fea0A4 |
-    | FeeManager | 0xed4Fac879eE86F3aB0101993A3713e7cAA0488E1 |
-    | RiskManager | 0xa2a4C4ecE27229aF51c546844AB752824Ccb557e |
-    | Subvault 0 | 0xC5901C2481ca9C26398A9Da258b13717894bfebF |
-    | Verifier 0 | 0xBc46B79d79fCac1F4232D4Da1BA31aCED0AABFE0 |
-    | Subvault 1 | 0x7F515C80fA4C1FCFF34F0329141A9C3b20468FE5 |
-    | Verifier 1 | 0xc0FC0B74923A80Af21B1E49633cAA309f432140F |
-    | Timelock controller | 0x363Ba8843d06BA5968f55C26aB055162eDd62189 |
-    | OracleSubmitter | 0xFbD83f7C531D35D99392a5A20bb5F1e75E97076e |
-  </Accordion>
-
-  <Accordion title="earnUSD">
-    Smart contracts of earnUSD<br />
-
-    | Component | Address |
-    | --- | --- |
-    | Vault | 0x014e6DA8F283C4aF65B2AA0f201438680A004452 |
-    | DepositQueue (USDC) | 0xC75E7E73B25fEa8bB23EB55CC48BA55067b5be76 |
-    | SyncDepositQueue (USDC) | 0xf6AFAf6afcAe116dD37A779D50fE6c5fa6f8C8f5 |
-    | AsyncDepositQueue (USDe) | 0xeec37568b01e0c4d5028501a49e024b475e2d7ca |
-    | RedeemQueue (USDC) | 0x9e36A74FE278906a76e7615263e46a83fC40c47F |
-    | DepositQueue (USDT) | 0xEeC5041c47Cba1e31321AC6941Bf09Ad60645B73 |
-    | SyncDepositQueue (USDT) | 0x534d0bEb82C47cf703BFb9E959297658b65Ec8E9 |
-    | AsyncRedeemQueue (USDT) | 0x95092A7a86715246Be6395b8D514B3d60A270Cd3 |
-    | Oracle | 0x827044735c9708a2cf850e7Ea37EBa43bc786028 |
-    | ShareManager | 0x4Ce1ac8F43E0E5BD7A346A98aF777bF8fbeA1981 |
-    | FeeManager | 0x72fa23f40e08eB9E45953233b2Dd9665E347e8Dc |
-    | RiskManager | 0x7b1e06C46d4510277FC37a37bBeF65F3794fdDE4 |
-    | Subvault 0 | 0x77B9441d5Cb89fca435190A9B6D108ad4B00ccFd |
-    | Verifier 0 | 0xB65A8E0937c77a76C3f4F86A1110f81A299CB481 |
-    | Timelock Controller | 0xdA6Da82DFF8cD29D828e4775Cc003f504A968845 |
-    | OracleSubmitter | 0xB105DaEeFEb1390ce49172c99E3e12C607367156 |
-  </Accordion>
-
-  <Accordion title="[Ethereum] earnUSDc - Conservative earnUSD Ethereum">
-    ### **Actors**
-
-    | Actor | Address |
-    | --- | --- |
-    | ProxyAdmin | 0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0 |
-    | LazyAdmin | 0x0Dd73341d6158a72b4D224541f1094188f57076E |
-    | ActiveAdmin | 0x982aB69785f5329BB59c36B19CBd4865353fEf10 |
-    | Curator | 0x9745F161b0160a99924845BeFCE1d7b9Daee6899 |
-    | OracleUpdater | 0x93a797643d74fC81e7A51F3f84a9D78F930435D1 |
-    | OracleAccepter | 0x0Dd73341d6158a72b4D224541f1094188f57076E |
-    | Treasury | 0xcCf2daba8Bb04a232a2fDA0D01010D4EF6C69B85 |
-    | LidoPauser | 0xA916fD5252160A7E56A6405741De76dc0Da5A0Cd |
-    | MellowPauser | 0x6E887aF318c6b29CEE42Ea28953Bd0BAdb3cE638 |
-
-    ### **Addresses**
-
-    | Component | Address |
-    | --- | --- |
-    | SwapModule 0 | 0x28c4c26b4d4eA70434906C270cF26B995583c08C |
-    | Subvault 0 | 0xD6D3a0f4dd3d48bF3653c0549aac6b3516dD933B |
-    | Verifier 0 | 0x1e87c6fba77966A5Ff6BF83FAc4Ea76D978A733f |
-    | Vault | 0xDF0fb76Df2c21F79798949A4E886cd22D1C085d7 |
-    | SyncDepositQueue (USDC) | 0xEdcd9C257719799435B05C28ff9a8a34e6872bE0 |
-    | RedeemQueue (USDC) | 0x59fC26AFFF725eBb77Db8E1de14572e5eA9e87EB |
-    | SyncDepositQueue (USDT) | 0xeC3EE7F7669b7ce0aC91c4638e4b89c9F40E179F |
-    | SyncRedeemQueue(USDC) | [0x395d3230B47c8EAd7b4152c670945f6545efe3c9](https://etherscan.io/address/0x395d3230B47c8EAd7b4152c670945f6545efe3c9) |
-    | SyncRedeemQueue(USDT) | [0xe04A1c2D63e6964f5629B3c08BF08D2472faaB09](https://etherscan.io/address/0xe04A1c2D63e6964f5629B3c08BF08D2472faaB09) |
-    | Oracle | 0x8d229B565A0c6Bf2d693C343bea0Ec96103dEF5f |
-    | ShareManager | 0xd9543AfF8A859F6B34f80A9A230B277c89ACdda4 |
-    | FeeManager | 0x31325D52B763B1a43d5564114FA4A4ce62148716 |
-    | RiskManager | 0x24d5300b6503a7358581EE5bb3651b5bC3F6f835 |
-    | Timelock controller | 0xD0e9094E7E26ff133C349ACd9993743DCc15cA5c |
-    | OracleSubmitter | 0x03852b7138c6704F8F46e87768399616D31Cf733 |
-  </Accordion>
-
   <Accordion title="[Robinhood] USDG Yield Vault (rUSDG)">
     ### **Actors**
 
@@ -728,36 +640,6 @@ description: "Contract addresses for all Core Vault implementations and factorie
     | RiskManager | 0x0c0e28642DB782e1de77F5388b1fe82801dB76ce |
     | Timelock controller | 0x36DdE3B932198CFEf88D97767A352e562Cd72f18 |
     | OracleSubmitter | 0x34AAc3467099484F67107e448fd089FDafc025D0 |
-  </Accordion>
-
-  <Accordion title="[Base] earnUSDc - Conservative earnUSD Base">
-    #### Actors
-
-    | Role | Address |
-    | --- | --- |
-    | ProxyAdmin | 0x81698f87C6482bF1ce9bFcfC0F103C4A0Adf0Af0 |
-    | LazyAdmin | 0x0Dd73341d6158a72b4D224541f1094188f57076E |
-    | ActiveAdmin | 0x982aB69785f5329BB59c36B19CBd4865353fEf10 |
-    | Curator | 0x9745F161b0160a99924845BeFCE1d7b9Daee6899 |
-    | OracleUpdater | 0x93a797643d74fC81e7A51F3f84a9D78F930435D1 |
-    | OracleAccepter | 0x0Dd73341d6158a72b4D224541f1094188f57076E |
-    | Treasury | 0xcCf2daba8Bb04a232a2fDA0D01010D4EF6C69B85 |
-    | LidoPauser | 0xA916fD5252160A7E56A6405741De76dc0Da5A0Cd |
-    | MellowPauser | 0x6E887aF318c6b29CEE42Ea28953Bd0BAdb3cE638 |
-
-    #### Addresses
-
-    | Component | Address |
-    | --- | --- |
-    | Subvault 0 | 0x6CD300d6D848cb315EfaE2d874b2Ec8Ad4897977 |
-    | Verifier 0 | 0x67276a558638073D43068CbD91e2E6b478963742 |
-    | Vault | 0xb7651cae9c8de82B188990CFD44aB728dC2Fa061 |
-    | Oracle | 0x0C7E836EB1d30E2f2f02D0F85e64449D355ecFd0 |
-    | ShareManager | 0xcfe8DbC6a2df2d8eb7F0a4d7e915C253A78B0754 |
-    | FeeManager | 0x25958e9965B76f0B3a7809FcCc934066Aa80A540 |
-    | RiskManager | 0xc93f1B04CDEFB5C7F86f7F2f3df4CA26c5a098Ce |
-    | Timelock Controller | 0x0555306F5063f62a3A7896A9eaBA0754c1185a67 |
-    | OracleSubmitter | 0x8A6a1648A39C7F3dE64282e8bF2fcD783CCF08b0 |
   </Accordion>
 
   <Accordion title="[Rootstock] Tyr.rBTC">
