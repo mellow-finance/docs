@@ -8,7 +8,7 @@ When you deposit your tokens, you receive strETH tokens that represent your port
 
 The stRATEGY APY[^1] comes from continuous rewards generation across the underlying apps and protocols currently used in the strategy (e.g. lending, staking, liquidity provision). All these rewards are automatically compounded into the vault.&#x20;
 
-APY is calculated based on the [Oracle](../core-vaults/architecture/oracle) reports - each report updates the stRATEGY price to reflect the changes that might happen.&#x20;
+The APY shown for stRATEGY is a 7-day trailing APY, calculated from [Oracle](../core-vaults/architecture/oracle) reports – each report updates the stRATEGY price to reflect the changes that might happen.&#x20;
 
 When your funds enter the vault and strETH tokens are generated and can be claimed in the Lido UI or Mellow UI. Not claiming your tokens _won't affect the rewards accrual_.
 
@@ -18,9 +18,11 @@ The following formula is used for APY calculations:
 
 `currentReport = oracle.getReport(ETH) # current block`  &#x20;
 
-`initalReport = oracle.getReport(ETH) # 1 week old block`   &#x20;
+`initialReport = oracle.getReport(ETH) # 1 week old block`   &#x20;
 
 `apy := ((initialReport.priceD18 / currentReport.priceD18) ** (365 * 24 * 3600 / (currentReport.timestamp - initialReport.timestamp)) - 1) * 100`
+
+`priceD18` is the number of shares per unit of asset, so it falls as the vault earns. The ratio in the formula is therefore initial over current.
 
 Please note that APY figures are only estimates and subject to change at any time. Past performance is not a guarantee of future results. Rewards are influenced by factors outside the platform's control, including changes to blockchain protocols and validator performance.
 

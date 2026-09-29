@@ -1,0 +1,34 @@
+---
+title: "Overview"
+description: "How the USDG Yield Vault works: a Core Vault on Robinhood Chain running a capped stablecoin carry strategy with Morpho markets underneath, with deposits and withdrawals in USDG."
+---
+
+The USDG Yield Vault is a Core Vault on Robinhood Chain. It accepts USDG, the stablecoin issued by Paxos, and runs a capped stablecoin carry strategy with Morpho markets underneath. Mellow is appointed to provide curation services for the vault.
+
+Users deposit and withdraw through the Mellow interface at [app.mellow.finance/vaults/robinhood-usdg-yield-vault](https://app.mellow.finance/vaults/robinhood-usdg-yield-vault). Depositors receive rUSDG, the vault's share token, which represents their portion of the vault. Depositors do not manage any positions themselves. The strategy's results are reflected in the rUSDG price.
+
+## How the strategy works
+
+The vault deploys USDG into Ethena's USDe and Maple's syrupUSDG, supplies them as collateral on Morpho and borrows USDG against them. The borrowed USDG is looped back into the strategy to capture the carry spread between the collateral yield and the cost of borrowing.
+
+Curation decides how capital is allocated within the vault's permissions. Every curator action is checked by the subvault's verifier before it executes, and actions outside the vault's permissions cannot be executed. See the [Core Vaults overview](/core-vaults/overview) and [Architecture](/core-vaults/architecture) for the underlying mechanics.
+
+## Deposits and withdrawals
+
+Deposits are made in USDG.
+
+Withdrawals take two steps. The depositor requests a withdrawal, then claims USDG once the request is processed. Withdrawals typically take 2–3 days.
+
+## Security
+
+Core Vaults have been audited by Sherlock and Nethermind, with further module and upgrade audits by Nethermind and MixBytes. The reports are listed on the [Security](/security) page. A live [bug bounty on Sherlock](https://audits.sherlock.xyz/bug-bounties/125) offers up to 100,000 USDC for valid findings.
+
+Vault roles and their addresses are listed on the [Deployments](/usdg-vault/deployments) page.
+
+## For integrators
+
+For contract-level integration, see the [Core Vaults integration guide](/core-vaults-integration-guide).
+
+## Risks
+
+DeFi strategies carry smart contract, market and liquidity risk, and returns are not guaranteed.

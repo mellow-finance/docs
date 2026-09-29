@@ -146,6 +146,11 @@
         ]
       },
       {
+        "group": "USDG Yield Vault",
+        "icon": "dollar-sign",
+        "pages": ["usdg-vault/overview", "usdg-vault/deployments"]
+      },
+      {
         "group": "Integrations",
         "icon": "plug",
         "pages": [
