@@ -20,6 +20,7 @@
           "index",
           "mellow-vaults-overview",
           "vault-infrastructure-for-fintech-earn-products",
+          "deployments",
           "security"
         ]
       },
@@ -144,6 +145,11 @@
           "strategy-vault/rewards",
           "strategy-vault/streth-deployment"
         ]
+      },
+      {
+        "group": "USDG Yield Vault",
+        "icon": "dollar-sign",
+        "pages": ["usdg-vault/overview", "usdg-vault/deployments"]
       },
       {
         "group": "Integrations",

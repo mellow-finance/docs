@@ -5,7 +5,7 @@ description: "How Core Vaults compare to ERC-4626, ERC-7540, and common vault ar
 
 ## Core Vaults and other approaches
 
-Mellow provides vault infrastructure for launching onchain Earn, treasury, and managed yield products. Distribution partners use Core Vaults to launch these products under their own brand, without constructing the management layer from scratch.
+Mellow provides vault infrastructure for launching onchain Earn, treasury, and managed yield products. Distribution partners can use Core Vaults to launch these products under their own brand, without constructing the management layer from scratch.
 
 ERC-4626 and ERC-7540 are not competitors to Core Vaults – they define vault interfaces. Core Vaults operate at the management layer: strategy execution, permissions, accounting, compliance, and multi-venue control. This page compares both interface standards and broader architectural patterns against the requirements institutional capital introduces.
 
@@ -95,7 +95,7 @@ The result is that integration becomes configuration. For supported interaction 
 
 Interface standards and single-purpose architectures each solve a slice of the problem: a synchronous interface, an async primitive, a fixed set of protocol adapters, or an off-chain custody route. Each works until a strategy needs more than that slice – a second venue, a CeFi leg, a compliance constraint, a faster integration path.
 
-Core Vaults are built for the full surface rather than a slice. Multi-protocol allocation, mixed DeFi and CeFi execution, operation-level risk controls, subvault isolation, jurisdiction-aware compliance, oracle-defined NAV, fast venue integration, and agent-bounded execution operate within one management layer, under one permission model, on one audit surface. A curator does not assemble these from separate systems or migrate when a strategy outgrows its original design. The same infrastructure covers a single-protocol vault on day one and a multi-venue structured product later, without re-architecting.
+Core Vaults cover the full surface rather than a slice. Multi-protocol allocation, mixed DeFi and CeFi execution, operation-level risk controls, subvault isolation, jurisdiction-aware compliance, oracle-defined NAV, fast venue integration, and agent-bounded execution operate within one management layer, under one permission model, on one audit surface. A curator does not assemble these from separate systems or migrate when a strategy outgrows its original design. The same infrastructure covers a single-protocol vault on day one and a multi-venue structured product later, without re-architecting.
 
 For institutional onchain products that need to hold up across venues, asset types, and regulatory requirements, Core Vaults are the management layer to build on.
 
@@ -111,5 +111,5 @@ For institutional onchain products that need to hold up across venues, asset typ
 * **NAV:** Oracle-defined, three-tier validation with automatic escalation
 * **Compliance:** Jurisdiction-aware mandates, allowlisted depositors, transfer-restricted shares
 * **Audits:** Sherlock, Nethermind
-* **Track record:** Vault infrastructure since 2021, zero security incidents
+* **Track record:** Vault infrastructure since 2021
 * **Product evolution:** Concentrated Liquidity Vaults → MultiVaults → Interop Vaults → Core Vaults

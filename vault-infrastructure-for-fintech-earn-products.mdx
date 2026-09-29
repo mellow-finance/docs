@@ -5,7 +5,7 @@ description: "Reference page for teams evaluating vault infrastructure to power 
 
 ### Overview
 
-Mellow provides modular vault infrastructure for Earn and managed yield products. Fintechs, wallets, banks, neobanks, exchanges, brokers, asset issuers, stablecoin platforms, custodians, and agent platforms use Core Vaults to build these products under their own brand – without constructing the management layer from scratch.
+Mellow provides modular vault infrastructure for Earn and managed yield products. Fintechs, wallets, banks, neobanks, exchanges, brokers, asset issuers, stablecoin platforms, custodians, and agentic platforms can use Core Vaults to build these products under their own brand – without constructing the management layer from scratch.
 
 The partner owns the customer and the brand. Vault manager provides the strategy. Mellow provides the vault layer – smart contracts, risk enforcement, compliance hooks, execution, oracle pricing, queues and fees.
 
@@ -79,13 +79,13 @@ See [Core Vaults for Stablecoins](core-vaults-for-stablecoins) for the full refe
 
 Multi-asset vaults holding tokenized treasuries (BUIDL, USDY, USTB), lending positions, and liquidity buffers. Per-issuer eligibility constraints, async settlement, transfer restriction handling, and oracle-defined NAV across mixed positions with different pricing sources and settlement timings.
 
-#### Ecosystem vaults
+#### Network and protocol vaults
 
-L1 and L2 networks, DeFi protocols, and their foundations, RWA and stablecoin issuers need to attract and retain capital beyond short-term incentive programs. Ecosystem vaults are managed capital products built around a specific network's or protocol's native venues – stablecoin vaults allocating across the ecosystem's lending markets, ETH vaults combining staking with selected strategies, foundation treasury allocation, and co-branded Earn products with distribution partners. Curators, mandates, and risk controls are configured per vault.
+L1 and L2 networks, DeFi protocols, and their foundations, RWA and stablecoin issuers need to attract and retain capital beyond short-term incentive programs. Network and protocol vaults are managed capital products built around a specific network's or protocol's native venues – stablecoin vaults allocating across the ecosystem's lending markets, ETH vaults combining staking with selected strategies, foundation treasury allocation, and co-branded Earn products with distribution partners. Curators, mandates, and risk controls are configured per vault.
 
 #### Agent-operated vaults
 
-Vaults where the operator is an autonomous agent. Core Vaults act as the safety harness and execution environment for agentic asset management – the agent operates within hard, contract-level constraints it cannot override. The vault enforces the same permission model as for human curators: action-level verifiers, target whitelists, asset whitelists, role-scoped operations, time-locked sensitive calls, and oracle-defined NAV constraints. Only actions within the permission set can be executed. The agent decides; the vault bounds what it can execute.
+Vaults where the operator is an autonomous agent. Core Vaults act as the execution environment for agent-operated strategies – the agent operates within hard, contract-level constraints it cannot override. The vault enforces the same permission model as for human curators: action-level verifiers, target whitelists, asset whitelists, role-scoped operations, time-locked sensitive calls, and oracle-defined NAV constraints. Only actions within the permission set can be executed. The agent decides; the vault bounds what it can execute.
 
 #### Meta-vaults
 
@@ -106,7 +106,7 @@ Mellow serves partners across concentric rings:
 * **Stablecoin companies and payment platforms** – treasury products for stablecoin balances
 * **Asset issuers** – strategy products that make issued assets productive and liquid
 * **Ecosystems** – managed capital formation products
-* **Agent platforms** – vault infrastructure for finance-aware autonomous agents
+* **Agentic platforms** – vault infrastructure for finance-aware autonomous agents
 
 #### Multi-venue allocation
 

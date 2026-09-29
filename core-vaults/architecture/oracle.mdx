@@ -13,7 +13,7 @@ It enforces strong assumptions around **data integrity**, **report timing**, and
 * **Report Submission**: Allows trusted accounts to submit price updates
 * **Deviation Analysis**: Compares new prices against the last report for suspicious behavior
 * **Timestamp-based Rate Limiting**: Prevents frequent or premature reports
-* **Asset Management**: Controls which tokens are supported by the oracle
+* **Supported assets**: Controls which tokens are supported by the oracle
 * **Oracle Price Validation**: Used by other modules (e.g., `SignatureQueue`) to verify incoming prices
 
 #### Roles
@@ -137,5 +137,5 @@ Used by:
 
 * Only trusted roles can push prices
 * Suspicious reports cannot be accepted without explicit approval
-* No pricing logic oracles trust external feeds - price validation is local
+* No pricing logic oracles trust external feeds – price validation is local
 * Prevents manipulation by enforcing absolute & relative deviation constraints
