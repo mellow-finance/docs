@@ -7,12 +7,6 @@ The USDG Yield Vault is a Core Vault on Robinhood Chain. It accepts USDG, the st
 
 Users deposit and withdraw through the Mellow interface at [app.mellow.finance/vaults/robinhood-usdg-yield-vault](https://app.mellow.finance/vaults/robinhood-usdg-yield-vault). Depositors receive rUSDG, the vault's share token, which represents their portion of the vault. Depositors do not manage any positions themselves. The strategy's results are reflected in the rUSDG price.
 
-## How the strategy works
-
-The vault deploys USDG into Ethena's USDe and Maple's syrupUSDG, supplies them as collateral on Morpho and borrows USDG against them. The borrowed USDG is looped back into the strategy to capture the carry spread between the collateral yield and the cost of borrowing.
-
-Curation decides how capital is allocated within the vault's permissions. Every curator action is checked by the subvault's verifier before it executes, and actions outside the vault's permissions cannot be executed. See the [Core Vaults overview](/core-vaults/overview) and [Architecture](/core-vaults/architecture) for the underlying mechanics.
-
 ## Deposits and withdrawals
 
 Deposits are made in USDG.
