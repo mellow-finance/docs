@@ -26,7 +26,8 @@ Attempts to make `assets` of `asset` liquid within the main vault by pulling fro
 2. If balance is sufficient → no-op.
 3. Otherwise:
    * Iterates over subvaults (via `subvaultAt(i)`)
-   * For each subvault:
+   * Skips subvaults where the `RiskManager` does not allow the asset (`isAllowedAsset(subvault, asset)`)
+   * For each remaining subvault:
      * Pulls **only the required portion** via `hookPullAssets()`
      * Stops when total required assets have been pulled
 
@@ -38,12 +39,16 @@ Attempts to make `assets` of `asset` liquid within the main vault by pulling fro
 
 ### `getLiquidAssets(address asset) → uint256`
 
-Returns the **total liquid amount of a given asset** available across the vault and all its subvaults.
+Returns the **total liquid amount of a given asset** available across the vault and its subvaults.
+
+Unlike `callHook`, this function is called directly by the vault (`ShareModule.getLiquidAssets`), not through `delegatecall`, so it treats `msg.sender` as the vault.
 
 * Reads balances:
   * `vault.balanceOf(asset)`
-  * `subvault[i].balanceOf(asset)` for each subvault
+  * `subvault[i].balanceOf(asset)` for each subvault where the `RiskManager` allows the asset
 * Aggregates and returns sum
+
+Only token balances held directly by the vault and subvaults count. Positions in external protocols are not included.
 
 ### Contract Assumptions
 
@@ -51,6 +56,7 @@ Returns the **total liquid amount of a given asset** available across the vault 
   * `subvaults()` → total number of subvaults
   * `subvaultAt(index)` → address of a given subvault
   * `hookPullAssets(subvault, asset, amount)` → callable method to move funds
+  * `riskManager()` → used to check which subvaults allow the asset
 
 ### Security Considerations
 

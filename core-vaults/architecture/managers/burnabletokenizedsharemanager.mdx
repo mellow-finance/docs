@@ -1,0 +1,43 @@
+---
+title: "BurnableTokenizedShareManager"
+---
+
+### Overview
+
+`BurnableTokenizedShareManager` extends [`TokenizedShareManager`](/core-vaults/architecture/managers/tokenizedsharemanager) with two ERC20 burn functions, in the style of OpenZeppelin's `ERC20Burnable`. Holders can destroy their own vault shares, or shares they have an allowance for, without going through a redeem queue.
+
+Everything else, including minting, locking, whitelists, lockups and transfer rules, is inherited unchanged from `TokenizedShareManager` and `ShareManager`.
+
+In the standard deployment, the share manager factory registers it as version `2`, after `TokenizedShareManager` (version `0`) and `BasicShareManager` (version `1`).
+
+### Functions
+
+### `burn(uint256 value)`
+
+Burns `value` shares from the caller's balance.
+
+### `burnFrom(address account, uint256 value)`
+
+Spends `value` of the caller's ERC20 allowance from `account`, then burns `value` shares from `account`.
+
+Both functions are public and need no vault role. They are separate from the queue-only `burn(address account, uint256 value)` inherited from `ShareManager`, which redeem queues use.
+
+### Checks on burn
+
+Burns go through the token's `_update` hook, so the usual `ShareManager.updateChecks(from, address(0))` rules apply:
+
+* Reverts with `GlobalLockupNotExpired` while the global lockup is active
+* Reverts with `Blacklisted` if the holder is blacklisted
+* Reverts with `BurnPaused` if the burn pause flag is set
+
+Before the burn, `TokenizedShareManager` claims any shares the holder has waiting in deposit queues, as it does for every balance change.
+
+### Effect on the vault
+
+Burning shares with these functions does not return any assets to the holder. The vault's assets stay in place while the share supply shrinks, so the value of the burned shares is shared among the remaining holders from the next oracle report.
+
+These public burns do not emit the `ShareManager` `Burn` event. Indexers see a standard ERC20 `Transfer(account, address(0), value)` event.
+
+### When to use it
+
+Use `BurnableTokenizedShareManager` when shares must be destroyable outside the redemption flow. Examples are buyback-and-burn programs, or integrations that expect an `ERC20Burnable`-compatible token. If you do not need public burning, use `TokenizedShareManager`.

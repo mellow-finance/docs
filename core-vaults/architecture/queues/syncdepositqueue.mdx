@@ -1,0 +1,132 @@
+---
+title: "SyncDepositQueue"
+---
+
+### Overview
+
+`SyncDepositQueue` extends [`SyncQueue`](/core-vaults/architecture/queues/syncqueue) to provide **instant deposits**. The user's assets move into the vault and shares are minted to the user in the same transaction, priced at the latest oracle report for the asset.
+
+There is no request, no waiting for the next report and no claim step. The call signature matches `DepositQueue.deposit`, so integrations can use the same call for both queue types.
+
+### Key features
+
+* Shares minted in the same transaction as the deposit
+* Pricing from the latest non-suspicious oracle report, no older than `maxAge`
+* Optional `penaltyD6` discount on the deposit price, kept by existing holders
+* Vault deposit fee applied, as in `DepositQueue`
+* Same depositor whitelist check as `DepositQueue`
+* Deposit hook runs inside the deposit transaction
+
+### Parameters
+
+```solidity
+struct SyncDepositQueueStorage {
+    uint256 penaltyD6;  // Price penalty in 1e6 precision (1e4 = 1%)
+    uint32 maxAge;      // Maximum age of the oracle report, in seconds
+}
+```
+
+| Parameter   | Constraint                     | Effect                                                                 |
+| ----------- | ------------------------------ | ---------------------------------------------------------------------- |
+| `penaltyD6` | `<= 5e5` (50%)                 | Reduces the shares minted per unit of asset                            |
+| `maxAge`    | `> 0` and `<= 365 days`        | Deposits revert with `StaleReport` once the latest report is older     |
+
+Parameters are set at creation and can be updated with `setSyncDepositParams(penaltyD6, maxAge)`. The caller must hold `SET_SYNC_DEPOSIT_PARAMS_ROLE` on the vault:
+
+```solidity
+keccak256("queues.SyncDepositQueue.SET_SYNC_DEPOSIT_PARAMS_ROLE")
+```
+
+### Creation
+
+Create the queue through the vault with the deposit queue factory version registered for `SyncDepositQueue` (version `2` in the standard deployment):
+
+```solidity
+vault.createQueue(
+    2,                                  // SyncDepositQueue implementation
+    true,                               // isDeposit
+    owner,                              // proxy owner
+    asset,                              // must be supported by the oracle
+    abi.encode(penaltyD6, maxAge)       // uint256, uint32
+);
+```
+
+### Function: `deposit`
+
+```solidity
+function deposit(uint224 assets, address referral, bytes32[] calldata merkleProof) external payable nonReentrant
+```
+
+For native ETH (`0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`), `msg.value` must equal `assets` exactly, or the call reverts with `InvalidValue`. For ERC20 assets, approve the queue first.
+
+**Execution steps:**
+
+1. Reverts with `ZeroValue` if `assets` is zero.
+2. Reverts with `QueuePaused` if the vault has paused the queue.
+3. Reverts with `DepositNotAllowed` if `shareManager.isDepositorWhitelisted(caller, merkleProof)` returns `false`.
+4. Reads the latest report with `oracle.getReport(asset)`:
+   * Reverts with `InvalidReport` if the report is suspicious or its price is zero.
+   * Reverts with `StaleReport` if `report.timestamp + maxAge < block.timestamp`.
+5. Applies the penalty: `priceD18 = report.priceD18 * (1e6 - penaltyD6) / 1e6`.
+6. Transfers `assets` from the caller to the queue, then from the queue to the vault.
+7. Computes `shares = assets * priceD18 / 1e18`.
+8. Computes `feeShares = feeManager.calculateDepositFee(shares)`, mints them to the fee recipient and subtracts them from `shares`.
+9. Mints the remaining `shares` to the caller. Reverts with `ZeroValue` if nothing is left.
+10. Calls `riskManager.modifyVaultBalance(asset, +assets)`. Reverts with `LimitExceeded` if the deposit would push the vault over its limit, including pending async deposits.
+11. Calls `vault.callHook(assets)`, which runs the queue's deposit hook (custom or default) in the vault context.
+12. Emits `Deposited(account, referral, assets, shares, feeShares)`.
+
+### Estimating shares
+
+To preview the shares a user receives, read the same values the contract uses:
+
+```solidity
+(uint256 penaltyD6, uint32 maxAge) = queue.syncDepositParams();
+IOracle.DetailedReport memory report = oracle.getReport(asset);
+// check: !report.isSuspicious && report.priceD18 != 0
+// check: report.timestamp + maxAge >= block.timestamp
+uint256 priceD18 = report.priceD18 * (1e6 - penaltyD6) / 1e6;
+uint256 grossShares = assets * priceD18 / 1e18;
+uint256 userShares = grossShares - feeManager.calculateDepositFee(grossShares);
+```
+
+### Interface compatibility
+
+`claimableOf(account)` always returns `0` and `claim(account)` always returns `false`. These stubs exist because `ShareModule.claimShares` and `claimableSharesOf` iterate over all deposit queues. `handleReport` is a no-op and `canBeRemoved()` always returns `true`.
+
+### View functions
+
+| Function                      | Description                                           |
+| ----------------------------- | ----------------------------------------------------- |
+| `syncDepositParams()`         | Returns `(penaltyD6, maxAge)`                         |
+| `SET_SYNC_DEPOSIT_PARAMS_ROLE()` | Role required to update parameters                 |
+| `vault()` / `asset()`         | Owning vault and accepted asset                       |
+| `claimableOf(account)`        | Always `0`                                            |
+
+### Events
+
+```solidity
+event Deposited(address indexed account, address indexed referral, uint224 assets, uint256 shares, uint256 feeShares);
+event SyncDepositParamsSet(uint256 penaltyD6, uint32 maxAge);
+```
+
+`shares` in `Deposited` is the amount minted to the depositor, after the fee.
+
+### Errors
+
+| Error                 | Reason                                                            |
+| --------------------- | ----------------------------------------------------------------- |
+| `ZeroValue()`         | `assets` is zero, zero shares would be minted, or `maxAge` is zero |
+| `QueuePaused()`       | Queue paused by the vault                                         |
+| `DepositNotAllowed()` | Depositor fails the share manager whitelist check                 |
+| `InvalidReport()`     | Latest report is suspicious or has price 0                        |
+| `StaleReport()`       | Latest report is older than `maxAge`                              |
+| `Forbidden()`         | Caller lacks `SET_SYNC_DEPOSIT_PARAMS_ROLE`                       |
+| `TooLarge()`          | `penaltyD6 > 5e5` or `maxAge > 365 days`                          |
+| `InvalidValue()`      | Native ETH deposit where `msg.value != assets`                    |
+
+### Design considerations
+
+* **Stale-price window.** Deposits are priced at a report that can be up to `maxAge` old. If the real share price has dropped since that report, a deposit mints more shares than it would after the next report. Keep `maxAge` close to the oracle's reporting cadence, and use `penaltyD6` if you need an extra buffer.
+* **Vault limit.** The vault limit check counts pending async deposits, so a large pending async deposit can make sync deposits revert with `LimitExceeded`.
+* **Hook execution.** The deposit hook runs in the depositor's transaction, so a reverting hook blocks sync deposits for that queue.

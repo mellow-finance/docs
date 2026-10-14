@@ -1,6 +1,6 @@
 ---
 title: "Architecture"
-description: "Full technical architecture: Deposit Queue, Redeem Queue, Signature Queues, Vault modules, Subvaults, Verifiers, Oracle, Share Manager, Fee Manager, Risk Manager, Access Control, supported protocols"
+description: "Full technical architecture: Deposit Queue, Redeem Queue, Signature Queues, Sync Queues, Hooks, Vault modules, Subvaults, Verifiers, Oracle, Share Manager, Fee Manager, Risk Manager, Access Control, supported protocols"
 ---
 
 ## Mellow Core Vaults
@@ -57,7 +57,7 @@ The deposit queue is also responsible for issuing receipt tokens.
     * Step 1: **User Deposits**
       * A user submits a deposit request via `deposit(assets, referral, merkleProof)`.
       * Deposits are validated via optional Merkle whitelist logic (using `merkleProof`) or onchain mapping (if `hasWhitelist` flag is set).
-      * If a previous request exists, it must be claimed or canceled before creating a new one.
+      * If a previous request exists and is already claimable, it is claimed automatically. If it is still pending, the new deposit reverts until the request is processed or canceled.
       * The deposited amount and timestamp is stored in the `DepositQueue` contract
     * Step 2: **Oracle Report**
       * Oracle report is propagated via the `handleReport(priceD18, timestamp)` method.
@@ -109,11 +109,11 @@ This separation allows asynchronous liquidity management, gas efficiency, and pr
     **Redeem flow**:
 
     * **Step 1: User redeems**
-      * User submits `redeem` request, vault shares are immediately burned.
+      * User submits `redeem` request, vault shares are immediately locked in the share manager. They are burned when an oracle report prices the request.
       * The vault curator monitors and manages liquidity across connected Subvaults, pulling funds and swapping assets as needed to fulfill redemption requests.
     * **Step 2: Oracle report**
       * Valid and non-suspicious `Oracle` `report` arrives.
-      * The vault curator invokes `handleBatches(n)` on the `RedeemQueue`.
+      * Anyone, usually the vault curator or a keeper, invokes `handleBatches(n)` on the `RedeemQueue`.
       * This triggers the movement of required assets from the vault (and associated subvaults) to process redemption requests.
     * **Step 3: User claims**
       * Users call `claim(receiver, timestamps)` to withdraw assets.
@@ -160,6 +160,43 @@ Key Features:
     * Orders must be executed before `deadline`.\
       \
       <br/>
+
+#### Sync Deposit and Redeem Queues
+
+Sync Queues settle deposits and redemptions instantly at the latest oracle price, without signatures and without a claim step. Any eligible user can call them directly.
+
+Key Features:
+
+* **Instant execution** at the latest stored oracle report
+* **Freshness check**: the report must be non-suspicious and no older than `maxAge`
+* **Optional penalty** (`penaltyD6`) that reduces the shares minted or the assets paid out, in favor of remaining holders
+* **Fees apply**: the vault's deposit and redeem fees are charged as in the async queues
+* **Redemption safeguards**: `SyncRedeemQueue` also checks vault liquidity and a leaky-bucket daily limit in shares
+*   **Technical Details**
+
+    **Sync deposit flow:**
+
+    * User calls `deposit(assets, referral, merkleProof)` on the `SyncDepositQueue`.
+    * The queue checks the whitelist and the oracle report, moves the assets into the vault, mints shares to the user and the fee recipient, and runs the deposit hook.
+
+    **Sync redeem flow:**
+
+    * User calls `redeem(shares, receiver)` on the `SyncRedeemQueue`.
+    * The queue checks the oracle report, liquidity and daily limit, burns the shares, runs the redeem hook to pull liquidity, and sends the assets to `receiver`.
+
+    #### Assumptions & Properties
+
+    * Prices can be up to `maxAge` old, so `maxAge` should stay close to the oracle's reporting cadence.
+    * Sync redemptions do not reserve liquidity for priced async redemptions. When both queue types are active, the curator must keep enough liquid assets for both.
+    * See [SyncDepositQueue](/core-vaults/architecture/queues/syncdepositqueue) and [SyncRedeemQueue](/core-vaults/architecture/queues/syncredeemqueue) for details.\
+      \
+      <br/>
+
+#### Hooks
+
+Hooks are contracts that a vault runs with `delegatecall` whenever a queue moves assets in or out. Deposit hooks route or convert incoming assets, for example forwarding them into subvaults or wrapping ETH into wstETH. Redeem hooks pull liquidity back from subvaults and report how much is available for redemptions.
+
+Each queue uses its own custom hook if one is set, or the vault's default deposit or redeem hook. See [Hooks](/core-vaults/architecture/hooks/index) for the available implementations.
 
 #### Vault
 
@@ -260,6 +297,7 @@ Key considerations:
     Used by:
 
     * `SignatureDepositQueue`, `SignatureRedeemQueue`, `DepositQueue` and `RedeemQueue` contracts
+    * `SyncDepositQueue` and `SyncRedeemQueue` contracts
     * Vault's limit accounting (`RiskManager`)\
       \
       <br/>

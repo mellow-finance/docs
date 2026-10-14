@@ -1,0 +1,63 @@
+---
+title: "PermissionedChainlinkOracle"
+---
+
+### Overview
+
+`PermissionedChainlinkOracle` is a minimal, owner-controlled price feed that implements the `latestRoundData()` part of Chainlink's `AggregatorV3` interface. It provides prices for assets that have no native Chainlink feed.
+
+Its main use is as a price source for custom `AaveOracle` deployments. The [`SwapModule`](/core-vaults/architecture/utils/swapmodule) reads those `AaveOracle` deployments to value assets and enforce minimum swap output.
+
+<Warning>
+This feed is intentionally centralized. Its security depends entirely on the owner, so the owner should be a multisig.
+</Warning>
+
+### Constructor parameters
+
+| Parameter           | Type    | Description                                     |
+| ------------------- | ------- | ----------------------------------------------- |
+| `owner_`            | address | Account allowed to update the price             |
+| `decimals_`         | uint8   | Price decimals, at most 36 (for example, 8)     |
+| `initialAnswer_`    | int256  | Starting price                                  |
+| `minAllowedAnswer_` | int256  | Lowest accepted price, inclusive, at least 0    |
+| `maxAllowedAnswer_` | int256  | Highest accepted price, inclusive               |
+| `description_`      | string  | Feed description (for example, `"ETH / USD"`)   |
+
+The constructor reverts with `InvalidDecimals` if `decimals_ > 36`, and with `InvalidAllowedRange` if `minAllowedAnswer_` is negative or greater than `maxAllowedAnswer_`. The price bounds are immutable.
+
+### Functions
+
+### `latestRoundData()`
+
+Returns `(0, latestAnswer, latestTimestamp, latestTimestamp, 0)`. `roundId` and `answeredInRound` are always `0`. `getRoundData` and historical rounds are not implemented.
+
+### `updatePrice(int256 newAnswer)`
+
+Owner only. Stores a new price and sets `latestTimestamp` to the current block time. Reverts with `InvalidPrice` if `newAnswer` is outside `[minAllowedAnswer, maxAllowedAnswer]`.
+
+### Public state
+
+| Variable           | Description                       |
+| ------------------ | --------------------------------- |
+| `latestAnswer`     | Latest price                      |
+| `latestTimestamp`  | Time of the latest update         |
+| `decimals`         | Price decimals                    |
+| `description`      | Feed description                  |
+| `minAllowedAnswer` | Lower price bound                 |
+| `maxAllowedAnswer` | Upper price bound                 |
+
+### Events
+
+```solidity
+event AnswerUpdated(int256 indexed current, uint256 indexed roundId, uint256 updatedAt);
+```
+
+`roundId` is always `0`.
+
+### Deployment
+
+Mellow deploys instances deterministically with a `PermissionedOracleFactory` using `CREATE2`. The same initialization parameters always produce the same feed address.
+
+### Audit
+
+Audited by Nethermind (NM_0891, April 2026), with one informational note and no other findings. See [Security](/security).

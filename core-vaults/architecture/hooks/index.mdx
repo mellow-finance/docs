@@ -2,6 +2,30 @@
 title: "Hooks"
 ---
 
+Hooks let a vault run custom asset logic whenever a queue moves assets in or out. Typical uses are routing deposits into subvaults, wrapping assets, and pulling liquidity back for redemptions.
+
+### How hooks are called
+
+* Every hook implements `IHook.callHook(address asset, uint256 assets)`.
+* Queues trigger hooks through `ShareModule.callHook(assets)`. The vault resolves the hook for the calling queue and runs it with `delegatecall`, so the hook code executes in the vault's context.
+* Each queue uses its custom hook if one is set with `setCustomHook(queue, hook)`. Otherwise it falls back to `defaultDepositHook` or `defaultRedeemHook`. Changing hooks requires `SET_HOOK_ROLE`.
+* For redeem queues, the vault transfers `assets` to the queue after the hook returns, or straight away if the queue has no hook.
+
+| Queue                   | When the hook runs                                     |
+| ----------------------- | ------------------------------------------------------ |
+| `DepositQueue`          | When an oracle report processes pending deposits       |
+| `SignatureDepositQueue` | Inside the signed deposit transaction                  |
+| `SyncDepositQueue`      | Inside the deposit transaction                         |
+| `RedeemQueue`           | When `handleBatches` settles priced batches            |
+| `SignatureRedeemQueue`  | Inside the signed redemption transaction               |
+| `SyncRedeemQueue`       | Inside the redemption transaction                      |
+
+### Redeem hooks
+
+Redeem hooks also implement `IRedeemHook.getLiquidAssets(address asset)`. Redeem queues call `ShareModule.getLiquidAssets()` to find out how much they can pay out, and the vault answers with the hook's `getLiquidAssets`. Without a redeem hook, only the vault's own balance counts as liquid.
+
+### Hook contracts
+
 In this directory, you will find a detailed per-contract overview of the "Hooks" contract category, including the following hooks:&#x20;
 
 [BasicRedeemHook](/core-vaults/architecture/hooks/basicredeemhook)
@@ -9,3 +33,5 @@ In this directory, you will find a detailed per-contract overview of the "Hooks"
 [LidoDepositHook](/core-vaults/architecture/hooks/lidodeposithook)
 
 [RedirectingDepositHook](/core-vaults/architecture/hooks/redirectingdeposithook)
+
+[TransferDepositHook](/core-vaults/architecture/hooks/transferdeposithook)

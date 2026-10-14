@@ -36,8 +36,36 @@ To enable flexible and asynchronous liquidity management, redemption is handled 
     Vault curators monitor and, if needed, pull liquidity from external protocols.
 2. **Post-Oracle Report**:
    * Once a valid report is submitted and sufficient liquidity is available,
-   * The vault curator (or any other trusted actor) invokes `handleBatches(n)` on the `RedeemQueue`,
+   * Anyone can call `handleBatches(n)` on the `RedeemQueue`. The function has no access control, and in practice the curator or a keeper calls it,
    * This action triggers the movement of required assets from the vault (and associated subvaults) to process redemption requests.
+
+### Function: `redeem`
+
+```solidity
+function redeem(uint256 shares) external nonReentrant
+```
+
+1. Reverts with `ZeroValue` if `shares` is zero, or with `QueuePaused` if the vault has paused the queue.
+2. Locks `shares` from the caller with `shareManager.lock(caller, shares)`. Locked shares move to the share manager's own balance and no longer count as the caller's active shares.
+3. Unless the caller is the fee recipient, computes the redeem fee with `feeManager.calculateRedeemFee(shares)`. The fee is burned from the locked shares, minted to the fee recipient and subtracted from the request.
+4. Adds the remaining shares to the request at the current timestamp and emits `RedeemRequested(account, shares, timestamp)`.
+
+Requests made in the same block are merged into one entry for that timestamp.
+
+### Function: `handleBatches`
+
+```solidity
+function handleBatches(uint256 batches) external nonReentrant returns (uint256 counter)
+```
+
+Settles up to `batches` priced batches, in order, starting from `batchIterator`:
+
+1. Reads available liquidity with `vault.getLiquidAssets()`, which uses the queue's redeem hook.
+2. Takes batches while their cumulative `assets` fit within that liquidity, and stops at the first batch that does not fit.
+3. Calls `vault.callHook(demand)`, so the redeem hook pulls the assets from subvaults and the vault transfers them to the queue.
+4. Decreases the vault balance in the `RiskManager` and `totalDemandAssets`, advances `batchIterator` and emits `RedeemRequestsHandled(counter, demand)`.
+
+Locked shares are burned when an oracle report prices them, not in `handleBatches`.
 
 ### Scalability Approach
 
@@ -58,10 +86,10 @@ Unlike deposits, **redemption requests are never cancelled**, which allows for a
     timestamp <= reportTimestamp - redeemInterval
     ```
 
-    are marked as processed.
+    are priced into a new batch. The batch's shares are burned from the share manager's locked balance, and its asset value (`shares * 1e18 / priceD18`) is added to `totalDemandAssets`.
 * **Post-Processing**:
   * The curator ensures the necessary asset liquidity is available,
-  * Then calls `handleBatches()` to finalize processing.
+  * Then anyone, usually the curator or a keeper, calls `handleBatches()` to finalize processing.
 *   **User Claim**:
 
     After requests are processed, users can call:

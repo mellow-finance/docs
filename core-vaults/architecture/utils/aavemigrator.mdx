@@ -1,0 +1,136 @@
+---
+title: "AaveMigrator"
+---
+
+### Overview
+
+`AaveMigrator` moves a leveraged Aave position from one subvault to another without unwinding it. It handles one collateral and one debt asset, and moves the position in small steps so that neither subvault's health factor drops below a set minimum.
+
+Each step, the target subvault borrows the debt asset and hands it to the source subvault. The source repays that amount of debt and withdraws collateral of equal value straight to the target, and the target supplies it back to Aave. Each side's equity (collateral minus debt) stays roughly the same, and the contract checks the change against a tolerance. The debt and collateral end up in the target.
+
+One `AaveMigrator` instance serves one source subvault, one target subvault and one collateral/debt pair. All of these are set in the constructor and cannot be changed.
+
+### Constructor parameters
+
+| Parameter                  | Description                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| `owner_`                   | Account allowed to call `migrate` and `kill`                                     |
+| `pool_`                    | Aave pool that holds both positions                                              |
+| `oracle_`                  | `AaveOracle`-compatible price source used to size the steps                      |
+| `sourceSubvault_`          | Subvault that currently holds the position                                       |
+| `targetSubvault_`          | Subvault that receives the position                                              |
+| `collateral_`              | Collateral asset                                                                 |
+| `debt_`                    | Debt asset, borrowed at variable rate                                            |
+| `minAllowedSourceHFD18_`   | Lowest health factor allowed for the source, before and after migration (1e18 precision) |
+| `minAllowedTargetHFD18_`   | Lowest health factor allowed for the target, before and after migration (1e18 precision) |
+| `minAllowedMigratingDebt_` | Smallest amount of debt, in debt asset units, that a single `migrate` call may move |
+| `maxAllowedError_`         | Largest tolerated value difference, in the Aave oracle's base currency units     |
+
+The constructor reads the collateral aToken, debt aToken and variable debt token from the pool. All values are exposed as public immutables.
+
+`maxAllowedError_` uses the Aave oracle's base currency. On USD markets that has 8 decimals, so `1e6` is $0.01.
+
+### Requirements
+
+* The `AaveMigrator` contract calls both subvaults through `Subvault.call`, so it must hold the verifier `CALLER_ROLE` on the vault.
+* It always sends an `ONCHAIN_COMPACT` verification payload, so the calls below must be allowed with `allowCalls` in each subvault's verifier. A Merkle-only permission is not enough.
+
+| Subvault | Allowed calls                                                                 |
+| -------- | ----------------------------------------------------------------------------- |
+| Source   | `debt.approve`, `pool.repay`, `pool.withdraw`                                 |
+| Target   | `pool.borrow`, `debt.transfer`, `collateral.approve`, `pool.supply`           |
+
+* The target must already have borrowing capacity in Aave, because every step starts with a borrow from the target. In practice, the target needs some collateral supplied in advance.
+* If the position relies on an Aave e-mode category, enable the same category on the target first. Otherwise its borrowing capacity and health factor are lower.
+
+### Function: `migrate`
+
+```solidity
+function migrate(uint256 maxUtilizationD18, uint256 percentageD6) external
+```
+
+Owner only. Moves `percentageD6` of the source's current debt, together with collateral of the same value, to the target.
+
+| Argument            | Range               | Meaning                                                                 |
+| ------------------- | ------------------- | ----------------------------------------------------------------------- |
+| `maxUtilizationD18` | `> 0` and `<= 1e18` | Share of the target's available borrowing capacity used per step        |
+| `percentageD6`      | `> 0` and `<= 1e6`  | Share of the source's current debt to move. `1e6` moves all of it       |
+
+**Execution steps:**
+
+1. Reverts with `InvalidMaxUtilizationD18` or `InvalidPercentageD6` if an argument is out of range, and with `AlreadyMigrated` if the migrator has finished or been killed.
+2. Calls `calculateSteps` to get the number of steps, the debt and collateral per step and the expected remaining source debt.
+3. Checks that both health factors are at or above their minimums and records each subvault's equity.
+4. Runs each step:
+   1. The target borrows `debtPerStep` of the debt asset at variable rate.
+   2. The target transfers it to the source.
+   3. The source approves the pool and repays `debtPerStep`.
+   4. The source withdraws `collateralPerStep` of collateral, sent straight to the target.
+   5. The target approves the pool and supplies the collateral.
+5. Checks both health factors again and adds up how much each subvault's equity changed. Reverts with `CumulativeErrorTooHigh` if the total exceeds `maxAllowedError`.
+6. Reverts with `TooHighDeviation` if the source's remaining debt differs from the expected amount by more than `maxAllowedError` in value.
+7. If the source's remaining debt is worth `maxAllowedError` or less, marks the migration as finished and emits `Migrated`. Otherwise emits `PartiallyMigrated`, and the owner can call `migrate` again.
+
+Before each `approve`, the subvault resets any existing allowance to 0, which some tokens require.
+
+### Function: `calculateSteps`
+
+```solidity
+function calculateSteps(uint256 maxUtilizationD18, uint256 percentageD6)
+    external view
+    returns (uint256 iterations, uint256 debtPerStep, uint256 collateralPerStep, uint256 expectedDebtAfter)
+```
+
+Previews a migration with the same checks `migrate` uses:
+
+1. `debtToMigrate` is `percentageD6` of the source's variable debt. Reverts with `InsufficientDebt` if it is below `minAllowedMigratingDebt`.
+2. Reverts with `InvalidDebtAfterMigration` if the leftover debt is worth more than `maxAllowedError` but is below `minAllowedMigratingDebt`. That would leave debt too large to ignore and too small to migrate later.
+3. The largest step is the target's available borrowing capacity times `maxUtilizationD18`, converted to the debt asset. It is also capped by the debt asset liquidity available in the Aave reserve.
+4. `iterations` is `debtToMigrate` divided by the largest step, rounded up. Reverts with `TooManyIterations` if it exceeds `MAX_ALLOWED_ITERATIONS` (30) or no borrowing is possible.
+5. `debtPerStep` is `debtToMigrate / iterations`, and `collateralPerStep` is collateral of the same value at oracle prices. Reverts with `NotEnoughCollateral` if the source does not hold enough collateral for all steps.
+
+Call it before `migrate` to choose a `maxUtilizationD18` and `percentageD6` that fit within 30 steps.
+
+### Function: `checkHFAndGetEquity`
+
+```solidity
+function checkHFAndGetEquity(address holder, uint256 minAllowedHealthFactorD18) external view returns (uint256)
+```
+
+Reverts with `HealthFactorIsTooLow` if `holder`'s Aave health factor is below the minimum. Otherwise returns its equity, total collateral minus total debt, in the Aave base currency.
+
+### Function: `kill`
+
+Owner only. Permanently disables `migrate` and emits `Killed`. Use it to retire the migrator, for example after a partial migration that you do not want to continue.
+
+### Events
+
+```solidity
+event Migrated(uint256 indexed timestamp, address indexed caller, uint256 indexed cumulativeError);
+event PartiallyMigrated(uint256 indexed timestamp, address indexed caller, uint256 indexed cumulativeError, uint256 percentageD6);
+event Killed(uint256 indexed timestamp, address indexed caller);
+```
+
+`cumulativeError` is the total equity change across both subvaults, in the Aave base currency.
+
+### Errors
+
+| Error                          | Reason                                                                     |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| `AlreadyMigrated()`            | Migration finished, or the migrator was killed                             |
+| `InvalidMaxUtilizationD18()`   | `maxUtilizationD18` is 0 or above `1e18`                                   |
+| `InvalidPercentageD6()`        | `percentageD6` is 0 or above `1e6`                                         |
+| `InsufficientDebt()`           | Debt to migrate is below `minAllowedMigratingDebt`                         |
+| `InvalidDebtAfterMigration()`  | Leftover debt is too large to ignore and too small to migrate later        |
+| `TooManyIterations(iterations)`| More than 30 steps needed, or no borrowing capacity or liquidity           |
+| `NotEnoughCollateral()`        | Source does not hold enough collateral for the planned steps               |
+| `HealthFactorIsTooLow()`       | A health factor is below its minimum, before or after migration            |
+| `CumulativeErrorTooHigh()`     | Total equity change exceeds `maxAllowedError`                              |
+| `TooHighDeviation()`           | Remaining source debt differs from the expected amount by too much         |
+| `ERC20TransferFailed()`        | The debt token `transfer` returned `false`                                 |
+| `ERC20ApproveFailed()`         | A token `approve` returned `false`                                         |
+
+### Notes
+
+* Assets move between the subvaults through Aave, not through `Vault.pushAssets` or `Vault.pullAssets`. The `RiskManager` subvault balances are not updated by a migration.
+* The vault's total equity stays the same within `maxAllowedError`, so a migration should not change the vault's reported value. Only the split between subvaults changes.

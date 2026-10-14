@@ -1,0 +1,56 @@
+---
+title: "MellowAccountV1"
+---
+
+### Overview
+
+`MellowAccountV1` is a minimal smart account for curators. It is owned by a single address, which can execute a batch of calls in one transaction.
+
+Its main use is as the curator entity of a vault. You grant the account the roles a curator needs, such as the verifier `CALLER_ROLE`, `PUSH_LIQUIDITY_ROLE` or `PULL_LIQUIDITY_ROLE`. The owner then combines operations like `Vault.pushAssets`, `Subvault.call` and `Vault.pullAssets` into a single atomic transaction.
+
+### Deployment
+
+`MellowAccountV1` is an upgradeable factory entity. Instances are created through an account factory as proxies, and the implementation disables initializers in its constructor.
+
+```solidity
+function initialize(bytes memory data) external initializer
+```
+
+`data` is `abi.encode(address owner)`. The function sets the owner, initializes the reentrancy guard and emits `Initialized(data)`.
+
+### Function: `multicall`
+
+```solidity
+struct Call {
+    address target;
+    bytes data;
+}
+
+function multicall(Call[] calldata calls) external nonReentrant onlyOwner returns (bytes[] memory results)
+```
+
+* Executes each call in order, as a regular call from the account to `target` with `data`.
+* Returns the return data of every call.
+* Reverts the whole batch if any call reverts, bubbling up the original revert reason.
+* Emits `Executed(caller)`.
+
+Calls send no ETH, and the account has no `receive` function.
+
+### Ownership
+
+Ownership uses OpenZeppelin `OwnableUpgradeable`. The owner can transfer or renounce ownership with the standard functions. Renouncing ownership leaves the account with no one who can call `multicall`.
+
+### Events
+
+```solidity
+event Executed(address indexed caller);
+```
+
+### Security considerations
+
+* The account can do anything its roles allow, so protect the owner key accordingly. A multisig is recommended for production vaults.
+* The account adds no checks of its own. All permission checks happen in the vault, subvault and verifier it calls.
+
+### Audit
+
+Audited by Nethermind (NM_0829, February 2026). See [Security](/security).
