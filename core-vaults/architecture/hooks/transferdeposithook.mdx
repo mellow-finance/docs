@@ -1,0 +1,71 @@
+---
+title: "TransferDepositHook"
+---
+
+### Overview
+
+`TransferDepositHook` is a deposit hook implementing the `IHook` interface. It forwards every processed deposit of one asset into a fixed subvault, then makes that subvault transfer the same amount to a fixed destination address.
+
+Use it when deposits must leave the vault right away for a known external destination, such as a custody account or an external strategy wallet, instead of staying idle in the vault.
+
+A single hook instance is bound to one vault, one asset, one subvault and one destination. All four are set in the constructor and cannot be changed.
+
+### Constructor parameters
+
+| Parameter   | Type    | Description                                                       |
+| ----------- | ------- | ----------------------------------------------------------------- |
+| `asset_`    | address | The only asset the hook accepts                                   |
+| `vault_`    | address | The vault that delegate-calls the hook                            |
+| `subvault_` | address | Subvault that receives the deposit and performs the transfer      |
+| `to_`       | address | Final destination of the deposited assets                         |
+
+The values are exposed as public immutables: `asset()`, `vault()`, `subvault()` and `to()`.
+
+### Key function
+
+### `callHook(address asset_, uint256 assets_)`
+
+The vault calls the hook through `delegatecall` from `ShareModule.callHook`, so the code runs in the vault's context.
+
+**Execution logic:**
+
+1. Reverts with `OnlyDelegateCall` if called directly instead of through `delegatecall`.
+2. Reverts with `InvalidVault` if the calling context is not the configured `vault`.
+3. Reverts with `InvalidAsset` if `asset_` is not the configured `asset`.
+4. Reverts with `UnsupportedSubvault` if the configured subvault is no longer connected to the vault (`vault.hasSubvault(subvault)`).
+5. Returns early if `assets_` is zero.
+6. Calls `vault.hookPushAssets(subvault, asset, assets_)`. This moves the assets into the subvault and increases the subvault balance in the `RiskManager`.
+7. Calls `ICallModule(subvault).call(asset, 0, transfer(to, assets_), payload)` with an empty `ONCHAIN_COMPACT` verification payload. The subvault transfers `assets_` to `to`.
+8. Reverts with `InvalidResponse` if the token returns data other than `true`. Tokens that return no data, such as USDT, are accepted.
+
+### When the hook runs
+
+* **`DepositQueue`**: when an oracle report processes pending deposits, for the assets moved into the vault in that report.
+* **`SyncDepositQueue`**: inside the user's `deposit` transaction.
+
+### Configuration requirements
+
+The hook only works if the vault is configured for it:
+
+* Assign it to the deposit queue for `asset` with `setCustomHook(queue, hook)`, or as the default deposit hook with `setDefaultDepositHook(hook)`. Both require `SET_HOOK_ROLE`. If you set it as the default, every deposit queue in the vault must use `asset`, because any other asset reverts with `InvalidAsset`.
+* The subvault's `RiskManager` configuration must allow `asset` for that subvault and leave enough limit for incoming deposits. Otherwise `hookPushAssets` reverts.
+* The vault address must hold the verifier `CALLER_ROLE`, because the vault itself calls `subvault.call(...)`.
+* The subvault's verifier must allow the compact call `(who = vault, where = asset, selector = transfer)` through `allowCalls`. The hook always sends an `ONCHAIN_COMPACT` payload, so a Merkle-only permission is not enough.
+
+### Accounting note
+
+`hookPushAssets` records the deposit as subvault balance in the `RiskManager`. The transfer from the subvault to `to` is a plain token transfer, so it does not reduce that recorded balance. The oracle report for the vault must account for the assets held at `to` so that the share price stays correct.
+
+### Errors
+
+| Error                 | Reason                                                     |
+| --------------------- | ---------------------------------------------------------- |
+| `OnlyDelegateCall()`  | Hook called directly instead of via `delegatecall`         |
+| `InvalidVault()`      | Calling context is not the configured vault                |
+| `InvalidAsset()`      | Asset passed to the hook is not the configured asset       |
+| `UnsupportedSubvault()` | Configured subvault is not connected to the vault        |
+| `InvalidResponse()`   | Token `transfer` returned unexpected data                  |
+
+### Audit
+
+`TransferDepositHook` was reviewed in the Nethermind custom hook audit (NM_0956, June 2026). See [Security](/security).

@@ -9,7 +9,7 @@ This guide covers the full lifecycle for integrating deposits and redemptions wi
 
 A **Mellow Core Vault** is a programmable, modular vault contract. It serves as the central hub for capital management, risk control, and composable logic. **Depositors** provide capital; **Curators** manage that capital within guardrails set by the vault configuration.
 
-All deposit and redemption flows are time-buffered through an off-chain oracle – protecting depositors against flash-loan attacks and front-running by design.
+Async deposit and redemption flows are time-buffered through an offchain oracle – protecting depositors against flash-loan attacks and front-running by design. Sync queues settle in the same transaction at the latest oracle price, within a configured maximum report age.
 
 ### Core Components
 
@@ -18,9 +18,10 @@ All deposit and redemption flows are time-buffered through an off-chain oracle �
 | **Vault**        | Central contract. Orchestrates ACLModule (access control), ShareModule (queues & shares), VaultModule (subvault management), and BaseModule (reentrancy). |
 | **DepositQueue** | Accepts token deposits, stores them as timestamped checkpoints, and mints vault shares after oracle pricing.                                              |
 | **RedeemQueue**  | Accepts share redemptions, locks shares immediately, and releases assets after oracle pricing and liquidity settlement.                                   |
+| **SyncDepositQueue** / **SyncRedeemQueue** | Settle deposits and redemptions in one transaction at the latest oracle price. No claim step.                                   |
 | **ShareManager** | ERC20-compatible contract managing share supply, whitelisting, global lockups, and compliance controls.                                                   |
 | **Oracle**       | Trusted off-chain price reporter. Submits `handleReport()` with a price and timestamp.                                                                    |
-| **Curator**      | Manages capital allocation across subvaults; calls `handleBatches()` to settle redemption liquidity.                                                      |
+| **Curator**      | Manages capital allocation across subvaults; usually calls `handleBatches()` to settle redemption liquidity (the function is permissionless).            |
 
 ### Deposit Lifecycle
 
@@ -51,6 +52,8 @@ Step 1 — User calls deposit(assets, referral, merkleProof)
 
 ### Redemption Lifecycle
 
+#### Async queue
+
 ```
 Step 1 — User calls RedeemQueue.redeem(shares)
          └─► Shares locked immediately from the user's wallet
@@ -58,12 +61,21 @@ Step 1 — User calls RedeemQueue.redeem(shares)
 Step 2 — Handle Report submitted handleReport(priceD18, redeemTimestamp)
          └─► Prices all requests older than the configured redeemInterval
 
-Step 3 — Curator calls RedeemQueue.handleBatches(n)
+Step 3 — Anyone (usually the Curator or a keeper) calls RedeemQueue.handleBatches(n)
          └─► Pulls required liquidity from vault/subvaults into RedeemQueue
          └─► RedeemRequestsHandled event emitted; isClaimable becomes true
 
 Step 4 — User calls RedeemQueue.claim(receiver, timestamps[])
          └─► Underlying assets transferred to receiver
+```
+
+#### Sync queue
+
+Assets returned in the same transaction. No separate claim step. Limited by vault liquidity and a daily limit.
+
+```
+Step 1 — User calls SyncRedeemQueue.redeem(shares, receiver)
+         └─► Shares burned, redeem fee deducted, assets transferred to receiver
 ```
 
 ## 2. Supported Networks
@@ -262,8 +274,9 @@ const DEPOSIT_QUEUE_ABI = [
   { type: 'error', name: 'ZeroValue',               inputs: [] },
   {
     type: 'error',
-    name: 'InsufficientBalance',
+    name: 'ERC20InsufficientBalance',
     inputs: [
+      { name: 'sender',  type: 'address' },
       { name: 'balance', type: 'uint256' },
       { name: 'needed',  type: 'uint256' },
     ],
@@ -348,10 +361,83 @@ const REDEEM_QUEUE_ABI = [
   { type: 'error', name: 'ZeroValue',   inputs: [] },
   {
     type: 'error',
-    name: 'InsufficientBalance',
+    name: 'ERC20InsufficientBalance',
     inputs: [
+      { name: 'sender',  type: 'address' },
       { name: 'balance', type: 'uint256' },
       { name: 'needed',  type: 'uint256' },
+    ],
+  },
+] as const
+```
+
+#### Sync redeem queue ABI
+
+`SyncDepositQueue` uses the same `deposit(assets, referral, merkleProof)` call as `DepositQueue` but emits `Deposited` instead of `DepositRequested`. `SyncRedeemQueue` has its own entry point:
+
+```typescript
+const SYNC_REDEEM_QUEUE_ABI = [
+  {
+    type: 'function',
+    name: 'redeem',
+    inputs: [
+      { name: 'shares',   type: 'uint256' },
+      { name: 'receiver', type: 'address' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'syncRedeemParams',
+    inputs: [],
+    outputs: [
+      { name: 'penaltyD6',              type: 'uint256' },
+      { name: 'maxAge',                 type: 'uint32'  },
+      { name: 'usage',                  type: 'uint256' },
+      { name: 'dailyLimit',             type: 'uint256' },
+      { name: 'latestRequestTimestamp', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'remainingDailyLimit',
+    inputs: [],
+    outputs: [
+      { name: 'usage',               type: 'uint256' },
+      { name: 'remainingDailyLimit', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getLiquidAssets',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    name: 'Redeemed',
+    inputs: [
+      { name: 'account',   type: 'address', indexed: true  },
+      { name: 'shares',    type: 'uint256', indexed: false },
+      { name: 'assets',    type: 'uint256', indexed: false },
+      { name: 'feeShares', type: 'uint256', indexed: false },
+    ],
+  },
+  { type: 'error', name: 'QueuePaused',        inputs: [] },
+  { type: 'error', name: 'ZeroValue',          inputs: [] },
+  { type: 'error', name: 'InvalidReport',      inputs: [] },
+  { type: 'error', name: 'StaleReport',        inputs: [] },
+  { type: 'error', name: 'DailyLimitOverflow', inputs: [] },
+  {
+    type: 'error',
+    name: 'InsufficientAssets',
+    inputs: [
+      { name: 'requested', type: 'uint256' },
+      { name: 'available', type: 'uint256' },
     ],
   },
 ] as const
@@ -821,7 +907,7 @@ async function claimDeposit(queueAddress: string) {
 
 ### Overview
 
-Redemption burns vault shares and, after oracle processing, returns the underlying asset to the user. Redeem queues are **always async** – there is always a separate claim step.
+Redemption returns the underlying asset to the user in exchange for vault shares. Check `queue.type` on each redeem queue: **async** queues lock the shares and pay out after oracle processing and a separate claim step, while **sync** queues pay out in the same transaction (see [Sync redeem queues](#sync-redeem-queues) below).
 
 ```
 Step 1 — call redeem(shares)
@@ -835,7 +921,7 @@ Step 2 — call claim(receiver, timestamps)
 
 <Steps>
 <Step title="Pick a redeem queue">
-Pick a redeem queue from `vault.redeem_queues`.
+Pick a redeem queue from `vault.redeem_queues`. Check `queue.type`: the steps below are for `"async"` queues. For `"sync"` queues, see [Sync redeem queues](#sync-redeem-queues).
 </Step>
 
 <Step title="Check whether the queue is paused">
@@ -856,11 +942,11 @@ Validate `parsedShares > 0n` and `parsedShares <= activeShareBalance`.
 </Step>
 
 <Step title="Submit the redeem request">
-Call `redeem(parsedShares)`. No ETH value, no ERC20 approval – the vault contract locks shares directly from the caller.
+Call `redeem(parsedShares)`. No ETH value, no ERC20 approval – the queue locks shares directly from the caller through the share manager.
 </Step>
 
 <Step title="Wait for settlement and claim later">
-Wait for oracle processing and `handleBatches()`, then call `claimRedeem` (see Section 10).
+For async queues, wait for oracle processing and `handleBatches()`, then call `claimRedeem` (see Section 10).
 </Step>
 </Steps>
 
@@ -869,11 +955,11 @@ Wait for oracle processing and `handleBatches()`, then call `claimRedeem` (see S
 </Info>
 
 <Warning>
-**Requests cannot be cancelled.** Once submitted, a redemption request is permanent. This is intentional – cancellable redemptions would allow yield-griefing (requesting redemption to force liquidity pulls from external protocols, then withdrawing the request). The locked shares remain locked until claimed.
+**Requests cannot be cancelled.** Once submitted, a redemption request is permanent. This is intentional – cancellable redemptions would allow yield-griefing (requesting redemption to force liquidity pulls from external protocols, then withdrawing the request). The locked shares are burned when the oracle prices the request.
 </Warning>
 
 <Info>
-**Settlement flow:** After `redeem()`, two off-chain steps must happen before you can claim: (1) the oracle calls `handleReport()` to price the batch, then (2) the Curator calls `handleBatches()` on the RedeemQueue to pull the required liquidity from subvaults. Listen for the `RedeemRequestsHandled` event – it fires when `handleBatches()` settles one or more batches and requests become claimable. The timing depends on vault configuration (`redeemInterval`) and curator activity, typically ranging from minutes to hours.
+**Settlement flow:** After `redeem()`, two offchain steps must happen before you can claim: (1) the oracle calls `handleReport()` to price the batch, then (2) the Curator or a keeper calls `handleBatches()` on the RedeemQueue to pull the required liquidity from subvaults. Listen for the `RedeemRequestsHandled` event – it fires when `handleBatches()` settles one or more batches and requests become claimable. The timing depends on vault configuration (`redeemInterval`) and curator activity, typically ranging from minutes to hours.
 </Info>
 
 ### Code Example
@@ -922,6 +1008,40 @@ async function redeem(vault: VaultData, queueAddress: string, humanShares: strin
 <Info>
 **No approval needed:** Unlike deposits, redemptions do not require an ERC20 `approve`. The vault contract has the authority to lock and burn shares on behalf of the caller.
 </Info>
+
+### Sync redeem queues
+
+A `SyncRedeemQueue` pays out in the same transaction. There is no request, no `handleBatches()` and no claim.
+
+<Steps>
+<Step title="Check the queue and the share balance">
+Check `queue.is_paused === false`. Read `shareManager.activeSharesOf(userAddress)` and validate `parsedShares` as for async queues.
+</Step>
+
+<Step title="Check the daily limit">
+Call `remainingDailyLimit()` and use the second value. The redemption reverts with `DailyLimitOverflow` if `parsedShares` exceeds it. The limit is shared by all users of the queue and refills linearly over 24 hours.
+</Step>
+
+<Step title="Estimate the payout">
+Read `syncRedeemParams()` for `penaltyD6` and `maxAge`, and `oracle.getReport(queue.asset)` for the price. The report must not be suspicious and must be younger than `maxAge`. Then compute:
+
+```typescript
+let net = shares * (1_000_000n - penaltyD6) / 1_000_000n
+net -= net * redeemFeeD6 / 1_000_000n   // feeManager.redeemFeeD6()
+const assets = net * 10n ** 18n / report.priceD18
+```
+
+Check that `assets <= getLiquidAssets()`, or the call reverts with `InsufficientAssets`.
+</Step>
+
+<Step title="Redeem">
+Call `redeem(parsedShares, receiverAddress)`. No ETH value and no approval are needed. Listen for the `Redeemed` event to confirm the amount sent.
+</Step>
+</Steps>
+
+<Warning>
+`redeem` has no minimum-output argument. The oracle report, parameters and liquidity can change between your estimate and execution, so show users an estimate rather than a guaranteed amount.
+</Warning>
 
 ## 10. Claim Redeem
 
@@ -1022,8 +1142,8 @@ Fees in Mellow Core Vaults are paid in **vault shares**, not in underlying asset
 
 | Fee Type            | When Applied                   | Effect on Integrator                                                                                   |
 | ------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| **Deposit fee**     | At `DepositQueue.claim()` time | User receives fewer shares than the raw price implies. Calculated as `shares * depositFeeD6 / 1e6`.    |
-| **Redeem fee**      | At `RedeemQueue.redeem()` time | A portion of shares is deducted before the redemption amount is finalized.                             |
+| **Deposit fee**     | When the oracle report is handled (async) or at `deposit()` (sync) | User receives fewer shares than the raw price implies. Calculated as `shares * depositFeeD6 / 1e6`. |
+| **Redeem fee**      | At `redeem()` time (async and sync) | A portion of shares is deducted before the redemption amount is finalized.                        |
 | **Performance fee** | Oracle report trigger          | Accrued to the vault as yield is generated; does not directly affect per-request calculations.         |
 | **Protocol fee**    | Continuous accrual             | Time-based, deducted from share supply; transparent to depositors but reduces NAV per share over time. |
 
@@ -1037,9 +1157,13 @@ Fees in Mellow Core Vaults are paid in **vault shares**, not in underlying asset
 | `ClaimableRequestExists` | DepositQueue | `cancelDepositRequest()` called when request is already claimable                     | The oracle processed the request – call `claim()` instead                           |
 | `NoPendingRequest`       | DepositQueue | `cancelDepositRequest()` called with no pending request                               | Nothing to cancel                                                                   |
 | `QueuePaused`            | Both         | Queue is temporarily suspended                                                        | Check `queue.is_paused` before submitting; wait for it to re-open                   |
-| `DepositNotAllowed`      | DepositQueue | Deposit rejected – queue paused, or vault has a whitelist and address is not included | Check `flags.hasWhitelist`; if true, obtain a valid Merkle proof via the Mellow API |
+| `DepositNotAllowed`      | DepositQueue, SyncDepositQueue | Vault has a whitelist and the address or Merkle proof is not included | Check `flags.hasWhitelist`; if true, obtain a valid Merkle proof via the Mellow API |
 | `ZeroValue`              | RedeemQueue  | `redeem()` called with `shares = 0`                                                   | Validate amount > 0 before calling                                                  |
-| `InsufficientBalance`    | Both         | Token or share balance too low                                                        | Validate balance onchain before submitting                                         |
+| `ERC20InsufficientBalance` | Both       | Token or share balance too low                                                        | Validate balance onchain before submitting                                         |
+| `StaleReport`            | Sync queues  | Latest oracle report is older than the queue's `maxAge`                               | Wait for the next oracle report, or use an async queue                              |
+| `InvalidReport`          | Sync queues  | Latest oracle report is suspicious or has price 0                                     | Wait until the report is accepted or replaced                                      |
+| `DailyLimitOverflow`     | SyncRedeemQueue | Redemption exceeds the remaining daily limit                                       | Check `remainingDailyLimit()`; redeem less or wait for the limit to refill          |
+| `InsufficientAssets`     | SyncRedeemQueue | Not enough liquid assets in the vault and subvaults                                | Check `getLiquidAssets()`; redeem less or use an async queue                        |
 | `Forbidden`              | Both         | Caller does not have the required role for the called function                        | This is a contract-operator error; user-facing code should not hit this             |
 
 ## 13. Events Reference
@@ -1052,8 +1176,10 @@ Listen for these events to drive UI state or index onchain activity.
 | `DepositRequestClaimed(account, shares, timestamp)`          | DepositQueue | `claim()` succeeds – user received vault shares                                                                             |
 | `DepositRequestCanceled(account, assets, timestamp)`         | DepositQueue | `cancelDepositRequest()` succeeds – tokens returned                                                                         |
 | `RedeemRequested(account, shares, timestamp)`                | RedeemQueue  | `redeem()` succeeds                                                                                                         |
-| `RedeemRequestsHandled(counter, demand)`                     | RedeemQueue  | Curator called `handleBatches()` and settled one or more batches – **listen for this to know when claims become available** |
+| `RedeemRequestsHandled(counter, demand)`                     | RedeemQueue  | `handleBatches()` settled one or more batches – **listen for this to know when claims become available**                     |
 | `RedeemRequestClaimed(account, receiver, assets, timestamp)` | RedeemQueue  | `claim()` succeeds – user received underlying assets                                                                        |
+| `Deposited(account, referral, assets, shares, feeShares)`    | SyncDepositQueue | `deposit()` succeeds – shares minted to the user in the same transaction                                                |
+| `Redeemed(account, shares, assets, feeShares)`               | SyncRedeemQueue  | `redeem()` succeeds – assets sent to the receiver in the same transaction                                               |
 
 ### Example: watching for claim events with viem
 

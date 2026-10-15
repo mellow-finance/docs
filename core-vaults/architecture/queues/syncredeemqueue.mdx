@@ -1,0 +1,193 @@
+---
+title: "SyncRedeemQueue"
+---
+
+### Overview
+
+`SyncRedeemQueue` extends [`SyncQueue`](/core-vaults/architecture/queues/syncqueue) to provide **instant redemptions**. The user's shares are burned and the underlying asset is sent to a receiver in the same transaction, priced at the latest oracle report for the asset.
+
+There is no request, no batch processing and no claim step. To protect the vault, every redemption must fit within three limits:
+
+* **Oracle freshness**: the latest report must be non-suspicious and no older than `maxAge`.
+* **Liquidity**: the vault and its subvaults must hold enough liquid assets.
+* **Daily limit**: a rate limit on how many shares can be redeemed over time, shared by all users of the queue.
+
+### Key features
+
+* Assets paid out in the same transaction as the redemption
+* Pricing from the latest non-suspicious oracle report, no older than `maxAge`
+* Optional `penaltyD6` haircut on redeemed shares, kept by remaining holders
+* Vault redeem fee applied to every redemption
+* Liquidity pulled from subvaults through the queue's redeem hook
+* Leaky-bucket daily limit, denominated in shares
+
+### Parameters
+
+```solidity
+struct SyncRedeemQueueStorage {
+    uint256 penaltyD6;              // Share haircut in 1e6 precision (1e4 = 1%)
+    uint32 maxAge;                  // Maximum age of the oracle report, in seconds
+    uint256 usage;                  // Stored bucket usage, in shares
+    uint256 dailyLimit;             // Bucket capacity, in shares
+    uint256 latestRequestTimestamp; // Last time usage was synchronized
+}
+```
+
+| Parameter    | Constraint                       | Effect                                                         |
+| ------------ | -------------------------------- | -------------------------------------------------------------- |
+| `penaltyD6`  | `<= 5e5` (50%)                   | Share haircut applied before the fee and asset conversion      |
+| `maxAge`     | `> 0` and `<= 365 days`          | Redemptions revert with `StaleReport` once the report is older |
+| `dailyLimit` | Multiple of `86400` (24 hours)   | Capacity of the redemption bucket, in shares                   |
+
+`dailyLimit` must divide evenly by `86400` so that usage decays at an exact whole-share rate per second. A `dailyLimit` of `0` blocks all redemptions through the queue.
+
+Parameters are set at creation and can be updated with `setSyncRedeemParams(penaltyD6, maxAge, dailyLimit)`. The caller must hold `SET_SYNC_REDEEM_PARAMS_ROLE` on the vault:
+
+```solidity
+keccak256("queues.SyncRedeemQueue.SET_SYNC_REDEEM_PARAMS_ROLE")
+```
+
+Updating parameters first applies the decay accrued so far under the old `dailyLimit`, then stores the new values.
+
+### Creation
+
+Create the queue through the vault with the redeem queue factory version registered for `SyncRedeemQueue` (version `2` in the standard deployment):
+
+```solidity
+vault.createQueue(
+    2,                                          // SyncRedeemQueue implementation
+    false,                                      // isDeposit
+    owner,                                      // proxy owner
+    asset,                                      // must be supported by the oracle
+    abi.encode(penaltyD6, maxAge, dailyLimit)   // uint256, uint32, uint256
+);
+```
+
+### Function: `redeem`
+
+```solidity
+function redeem(uint256 shares, address receiver) external nonReentrant
+```
+
+No approval is needed. The queue burns shares directly from the caller through the share manager.
+
+**Execution steps:**
+
+1. Reverts with `ZeroValue` if `shares` is zero or `receiver` is the zero address.
+2. Reverts with `QueuePaused` if the vault has paused the queue.
+3. Reads the latest report with `oracle.getReport(asset)`:
+   * Reverts with `InvalidReport` if the report is suspicious or its price is zero.
+   * Reverts with `StaleReport` if `report.timestamp + maxAge < block.timestamp`.
+4. Applies the penalty: `sharesToRedeem = shares * (1e6 - penaltyD6) / 1e6`.
+5. Computes `feeShares = feeManager.calculateRedeemFee(sharesToRedeem)` and subtracts them from `sharesToRedeem`.
+6. Converts to assets: `assets = sharesToRedeem * 1e18 / priceD18`. Reverts with `ZeroValue` if `assets` is zero.
+7. Reverts with `InsufficientAssets(assets, available)` if `assets` exceeds `vault.getLiquidAssets()`.
+8. Synchronizes the bucket and reverts with `DailyLimitOverflow` if `shares` exceeds the remaining capacity. Otherwise adds `shares` to `usage`.
+9. Burns the full `shares` amount from the caller. Share manager restrictions apply, including global lockup, blacklist and burn pause.
+10. Mints `feeShares` to the fee recipient.
+11. Calls `vault.callHook(assets)`. The redeem hook pulls any missing liquidity from subvaults into the vault, then the vault transfers `assets` to the queue.
+12. Sends `assets` to `receiver`.
+13. Calls `riskManager.modifyVaultBalance(asset, -assets)`.
+14. Emits `Redeemed(account, shares, assets, feeShares)`.
+
+The shares removed by the penalty are burned without paying out assets, so their value stays with the remaining holders.
+
+### Liquidity
+
+`getLiquidAssets()` returns the result of `vault.getLiquidAssets()` for this queue. The vault resolves the queue's redeem hook (custom or default):
+
+* With a hook such as [`BasicRedeemHook`](/core-vaults/architecture/hooks/basicredeemhook), liquidity is the vault's balance plus the balances of subvaults where the asset is allowed.
+* Without a hook, liquidity is the vault's own balance only.
+
+Assets deployed into external protocols do not count until the curator moves them back into the vault or a subvault.
+
+### Daily limit
+
+The daily limit is a **leaky bucket** measured in shares, before the penalty and fee:
+
+* Each redemption adds its `shares` to `usage`.
+* `usage` decays linearly at `dailyLimit / 86400` shares per second.
+* Remaining capacity is `dailyLimit - usage`, after decay.
+
+Because capacity refills continuously, up to `2 * dailyLimit` shares can be redeemed within some 24-hour windows: the full bucket at the start, plus a full refill over the following 24 hours. Size risk limits with this burst in mind.
+
+The bucket is shared by all users of the queue. One holder can use the whole remaining capacity, and other users then wait for it to refill.
+
+### Estimating assets
+
+To preview a redemption, read the same values the contract uses:
+
+```solidity
+(uint256 penaltyD6, uint32 maxAge,,,) = queue.syncRedeemParams();
+(, uint256 remaining) = queue.remainingDailyLimit();
+uint256 liquid = queue.getLiquidAssets();
+IOracle.DetailedReport memory report = oracle.getReport(asset);
+// check: !report.isSuspicious && report.priceD18 != 0
+// check: report.timestamp + maxAge >= block.timestamp
+// check: shares <= remaining
+uint256 net = shares * (1e6 - penaltyD6) / 1e6;
+net -= feeManager.calculateRedeemFee(net);
+uint256 assets = net * 1e18 / report.priceD18;
+// check: assets <= liquid
+```
+
+The function has no minimum-output argument. Parameters, the oracle report and liquidity can change between the moment you read them and the moment the transaction executes.
+
+### View functions
+
+| Function                        | Description                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `syncRedeemParams()`            | Returns `(penaltyD6, maxAge, usage, dailyLimit, latestRequestTimestamp)`. `usage` is the stored value, before decay |
+| `remainingDailyLimit()`         | Returns `(usage, remaining)` with decay applied up to the current block                           |
+| `getLiquidAssets()`             | Liquid assets available for redemption                                                            |
+| `SET_SYNC_REDEEM_PARAMS_ROLE()` | Role required to update parameters                                                                |
+| `vault()` / `asset()`           | Owning vault and payout asset                                                                     |
+
+### Events
+
+```solidity
+event Redeemed(address indexed account, uint256 shares, uint256 assets, uint256 feeShares);
+event SyncRedeemParamsSet(uint256 penaltyD6, uint32 maxAge, uint256 dailyLimit);
+```
+
+`shares` in `Redeemed` is the total amount burned from the account. `assets` is the amount sent to the receiver.
+
+### Errors
+
+| Error                                       | Reason                                                       |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| `ZeroValue()`                               | `shares` is zero, `receiver` is zero, zero assets result, or `maxAge` is zero |
+| `QueuePaused()`                             | Queue paused by the vault                                    |
+| `InvalidReport()`                           | Latest report is suspicious or has price 0                   |
+| `StaleReport()`                             | Latest report is older than `maxAge`                         |
+| `InsufficientAssets(requested, available)`  | Not enough liquid assets in the vault and subvaults          |
+| `DailyLimitOverflow()`                      | `shares` exceeds the remaining daily capacity                |
+| `Forbidden()`                               | Caller lacks `SET_SYNC_REDEEM_PARAMS_ROLE`                   |
+| `TooLarge()`                                | `penaltyD6 > 5e5` or `maxAge > 365 days`                     |
+| `InvalidDailyLimit()`                       | `dailyLimit` is not a multiple of `86400`                    |
+
+### Differences from `RedeemQueue`
+
+| Aspect                | `RedeemQueue`                                         | `SyncRedeemQueue`                                  |
+| --------------------- | ----------------------------------------------------- | -------------------------------------------------- |
+| Entry point           | `redeem(shares)`                                      | `redeem(shares, receiver)`                         |
+| Settlement            | Report, then `handleBatches`, then `claim`            | Same transaction                                   |
+| Price                 | First report at least `redeemInterval` after request  | Latest report within `maxAge`                      |
+| Shares                | Locked at request, burned at report                   | Burned immediately                                 |
+| Redeem fee            | Not charged to the fee recipient                      | Charged on every redemption                        |
+| Cancellation          | Not possible                                          | Not applicable                                     |
+| Rate limit            | None                                                  | Daily limit in shares                              |
+
+### Design considerations
+
+These points come from the MixBytes audit of `SyncRedeemQueue` (July 2026). The findings were acknowledged as intended behavior.
+
+* **Stale-price window.** Redemptions are priced at a report that can be up to `maxAge` old. Keep `maxAge` close to the oracle `timeout`, which is about one day in Mellow's deployments. A `maxAge` shorter than the reporting cadence makes the queue revert with `StaleReport` between reports. `penaltyD6` is expected to stay at `0` in normal operation.
+* **Priority over async redemptions.** The liquidity check does not reserve assets already owed to priced but unsettled `RedeemQueue` batches. When both queue types are active, sync redemptions take priority, and the curator must keep enough liquidity buffer for both.
+* **Protocol fee.** Shares burned between reports are not in the supply at the next report, so the time-based protocol fee for that interval is not charged on them.
+* **Oracle outage.** If reports stop or are flagged suspicious, sync redemptions revert until a valid report is available. The async `RedeemQueue` remains available if the vault has one.
+* **Native ETH.** The queue accepts ETH from the vault during payout. Do not send ETH to the queue directly, and do not set the queue as `receiver`: those funds cannot be recovered.
+
+### Audit
+
+`SyncRedeemQueue` was audited by MixBytes in July 2026. See [Security](/security).

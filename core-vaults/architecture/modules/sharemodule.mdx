@@ -44,7 +44,7 @@ title: "ShareModule"
 * `depositQueueFactory()` / `redeemQueueFactory()`: Queue factory contracts.
 * `queueLimit()`: Max allowed queues.
 * `claimableSharesOf(account)`: Sum of claimable shares across all deposit queues for the `account`.
-* `getLiquidAssets()`: Called by redeem queues to determine liquidity available for handling redemptions.
+* `getLiquidAssets()`: Called by redeem queues to determine liquidity available for handling redemptions. Returns the redeem hook's `getLiquidAssets(asset)`, or the vault's own balance if the queue has no hook. Reverts with `Forbidden` if the caller is not a registered redeem queue.
 * `defaultDepositHook()` / `defaultRedeemHook()`: Global default hooks.
 * `getHook(queue)`: Resolves hook for queue (custom or default fallback as a fallback).
 * Asset/Queue helpers:
@@ -61,7 +61,7 @@ title: "ShareModule"
 * `setDefaultDepositHook(hook)` / `setDefaultRedeemHook(hook)`: Sets global hooks.
 * `setQueueLimit(limit)`: Updates global queue cap.
 * `setQueueStatus(queue, isPaused)`: Pauses/unpauses a queue.
-* `createQueue(version, isDeposit, owner, asset, data)`: Deploys new queue for asset.
+* `createQueue(version, isDeposit, owner, asset, data)`: Deploys new queue for asset. `version` selects the queue implementation in the deposit or redeem queue factory. In the standard deployment, `0` is the async queue, `1` the signature queue and `2` the sync queue. See [SyncQueue](/core-vaults/architecture/queues/syncqueue#creating-a-sync-queue).
 * `removeQueue(queue)`: Removes a queue that passed `canBeRemoved()`.
 * `handleReport(asset, priceD18, depositTimestamp, redeemTimestamp)`:
   * Called by the oracle.

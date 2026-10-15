@@ -1,0 +1,85 @@
+---
+title: "OracleSubmitter"
+---
+
+### Overview
+
+`OracleSubmitter` is a thin wrapper that sits between offchain reporters and a vault's [`Oracle`](/core-vaults/architecture/oracle). Reports pass through it to the oracle, and it adds two things:
+
+* An onchain **history of every report** submitted through it, per asset.
+* A **Chainlink-style price feed** of the vault share price, denominated in the vault's base asset.
+
+The feed lets external protocols, such as lending markets, read the share price with the standard `latestRoundData()` interface instead of integrating the `Oracle` directly.
+
+### Setup
+
+```solidity
+constructor(address admin_, address submitter_, address accepter_, address oracle_)
+```
+
+* Reads the vault from `oracle.vault()` and the base asset from `feeManager.baseAsset(vault)`. Reverts with `ZeroBaseAsset` if the vault has no base asset.
+* Sets `decimals` to the base asset's decimals, or 18 for native ETH.
+* Grants `DEFAULT_ADMIN_ROLE` to `admin_`.
+* Grants the oracle's `SUBMIT_REPORTS_ROLE` to `submitter_` and `ACCEPT_REPORT_ROLE` to `accepter_`. These roles are held **in the `OracleSubmitter`**, using the same role IDs as the `Oracle`.
+
+For the wrapper to work, the `OracleSubmitter` contract itself must hold `SUBMIT_REPORTS_ROLE` and `ACCEPT_REPORT_ROLE` on the **vault**. The `Oracle` checks roles against the vault, and the wrapper is the account that calls it. Mellow's deployment scripts grant both roles to the submitter contract at vault creation.
+
+### Functions
+
+### `submitReports(IOracle.Report[] reports)`
+
+Callable by holders of `SUBMIT_REPORTS_ROLE` in the `OracleSubmitter`.
+
+1. Reverts with `InvalidOrder` unless the first report is for the base asset.
+2. Forwards the batch to `oracle.submitReports(reports)`. All oracle checks apply, including timeout, deviation limits and suspicious flags.
+3. For each asset, reads back the stored `DetailedReport` and appends it to that asset's history.
+4. If the base asset report is not suspicious, updates the share price feed.
+
+### `acceptReports(address[] assets, uint224[] pricesD18, uint32[] timestamps)`
+
+Callable by holders of `ACCEPT_REPORT_ROLE` in the `OracleSubmitter`.
+
+1. Calls `oracle.acceptReport(asset, priceD18, timestamp)` for each entry.
+2. If an entry is for the base asset, it must be the first entry, or the call reverts with `InvalidOrder`. Accepting the base asset report updates the share price feed.
+3. Records the acceptance time in `acceptedAt[asset][index]` for the asset's latest stored report.
+
+### Share price feed
+
+The feed stores the inverse of the oracle price:
+
+```solidity
+latestAnswer = 1e36 / priceD18;
+```
+
+The oracle's `priceD18` is the number of shares per unit of base asset. `latestAnswer` is therefore the value of one full share (`1e18` share units) in base asset units, using the base asset's `decimals`.
+
+| Function            | Returns                                                                  |
+| ------------------- | ------------------------------------------------------------------------ |
+| `latestRoundData()` | `(0, latestAnswer, updatedAt, updatedAt, 0)`. Round IDs are always `0`  |
+| `latestAnswer()`    | Latest share price in base asset units                                   |
+| `getRate()`         | `latestAnswer` as `uint256`                                              |
+| `decimals()`        | Decimals of the base asset                                               |
+| `updatedAt()`       | Time the feed was last updated                                           |
+
+Suspicious base asset reports do not update the feed until they are accepted. Consumers should check `updatedAt` for staleness, as with any Chainlink feed.
+
+### Report history
+
+| Function                   | Description                                                                  |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| `reports(asset)`           | Number of reports stored for `asset`                                         |
+| `reportAt(asset, index)`   | The `DetailedReport` (price, timestamp, suspicious flag) at `index`          |
+| `acceptedAt(asset, index)` | Time the report at `index` was accepted, or `0` if it was never accepted     |
+
+Only reports submitted through this contract are recorded. Reports sent directly to the `Oracle` do not appear in the history.
+
+### Errors
+
+| Error             | Reason                                                       |
+| ----------------- | ------------------------------------------------------------ |
+| `ZeroBaseAsset()` | The vault has no base asset configured in the `FeeManager`   |
+| `InvalidOrder()`  | The base asset report is not the first entry                 |
+
+### Deployments
+
+`OracleSubmitter` addresses for live vaults are listed on the deployment pages, for example [Lido Earn](/lido-earn/deployments).

@@ -1,0 +1,69 @@
+---
+title: "OracleHelper"
+---
+
+### Overview
+
+`OracleHelper` is a stateless, view-only contract that computes the prices an oracle reporter should submit for a vault. You give it the vault's total value in the base asset and the price of each asset in base asset terms. It returns the `priceD18` values to pass to `Oracle.submitReports`.
+
+The helper accounts for two things that are easy to get wrong offchain:
+
+* **Pending redemptions.** Assets already owed to priced async redemptions are excluded from TVL.
+* **Fee dilution.** Fee shares minted when the report is handled are included, so the reported price already reflects them.
+
+### Function
+
+```solidity
+function getPricesD18(Vault vault, uint256 totalAssets, AssetPrice[] calldata assetPrices)
+    external view returns (uint256[] memory pricesD18)
+```
+
+```solidity
+struct AssetPrice {
+    address asset;
+    uint256 priceD18; // 0 for the base asset; otherwise the value of 1 asset in base asset units, 1e18 precision
+}
+```
+
+**Inputs:**
+
+* `vault`: the vault to price.
+* `totalAssets`: the vault's total value, expressed in the base asset.
+* `assetPrices`: every asset to report, sorted by address in strictly ascending order. Exactly one entry must have `priceD18 = 0`, and that entry is the base asset. For the other entries, `1e18` means 1 asset equals 1 base asset, and `0.5e18` means 1 asset equals 0.5 base assets.
+
+The result has one price per entry, in the same order, ready to submit.
+
+### Calculation
+
+1. **Validate input.** Reverts if the assets are not strictly ascending, or if more than one asset has price 0.
+2. **Subtract redeem demand.** For every redeem queue that still has unprocessed requests or unsettled batches (`canBeRemoved()` is `false`), reads `totalDemandAssets` from `getState()`. This is the amount owed to priced but unsettled batches. It converts that demand to the base asset with the given prices and subtracts it from `totalAssets`. Sync and signature redeem queues are skipped because they hold no outstanding demand. Every queue asset must appear in `assetPrices`.
+3. **Price the base asset.** Computes:
+
+   ```solidity
+   basePriceD18 = (totalShares + fee) * 1e18 / totalAssets
+   ```
+
+   `fee` is `feeManager.calculateFee(vault, baseAsset, minPriceD18, totalShares - feeRecipientShares)`. No performance fee applies at `minPriceD18`, so this is the protocol fee accrued since the last report.
+4. **Resolve the performance fee.** If the result is below `minPriceD18`, the share price has reached a new high and a performance fee applies, which in turn depends on the reported price. The helper binary-searches between the result and `minPriceD18` for the smallest price that covers its own fee shares.
+5. **Price the other assets.** Each non-base price is `basePriceD18 * assetPrice / 1e18`.
+6. **Check the output.** Reverts if any price is 0 or does not fit in `uint224`.
+
+If the fee manager has a base asset configured, the zero-priced entry must be that asset, or the call reverts with `OracleHelper: invalid base asset`.
+
+### Errors
+
+The helper reverts with string messages:
+
+| Message                              | Reason                                                     |
+| ------------------------------------ | ---------------------------------------------------------- |
+| `OracleHelper: invalid asset order`  | `assetPrices` is not sorted by address in ascending order  |
+| `OracleHelper: multiple base assets` | More than one entry has `priceD18 = 0`                     |
+| `OracleHelper: asset not found`      | A vault queue asset is missing from `assetPrices`          |
+| `OracleHelper: invalid base asset`   | Zero-priced asset differs from the fee manager base asset  |
+| `OracleHelper: invalid price`        | A computed price is 0 or exceeds `uint224`                 |
+
+### Usage notes
+
+* The helper only computes prices. It does not submit them, and it holds no roles.
+* The result is only as accurate as `totalAssets` and the input prices, which come from the offchain valuation.
+* Call it in the same block, or close to it, as the report submission. Queue demand, total shares and fee state change over time.

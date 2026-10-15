@@ -120,6 +120,7 @@ A price is:
 Used by:
 
 * `SignatureDepositQueue`, `SignatureRedeemQueue`, `DepositQueue` and `RedeemQueue` contracts
+* `SyncDepositQueue` and `SyncRedeemQueue`, which price instant deposits and redemptions with `getReport(asset)`
 * Vault's limit accounting (RiskManager)
 
 #### Events
@@ -139,3 +140,9 @@ Used by:
 * Suspicious reports cannot be accepted without explicit approval
 * No pricing logic oracles trust external feeds – price validation is local
 * Prevents manipulation by enforcing absolute & relative deviation constraints
+
+#### Related contracts
+
+* [`OracleSubmitter`](/core-vaults/architecture/oracles/oraclesubmitter): wrapper that forwards reports to the `Oracle`, keeps a report history and exposes the share price as a Chainlink-style feed
+* [`OracleHelper`](/core-vaults/architecture/oracles/oraclehelper): view helper that computes the prices to report from vault TVL
+* [`PermissionedChainlinkOracle`](/core-vaults/architecture/oracles/permissionedchainlinkoracle): owner-controlled price feed for assets without a Chainlink feed

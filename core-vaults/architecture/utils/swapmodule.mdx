@@ -1,0 +1,132 @@
+---
+title: "SwapModule"
+---
+
+### Overview
+
+`SwapModule` is a helper contract that lets curators swap a subvault's assets under onchain guardrails. Each module serves one subvault. The subvault pushes assets into the module, an authorized caller swaps them through an approved router or a CoW Swap limit order, and the subvault pulls the output back.
+
+Every swap is checked against an external price oracle, so the curator cannot accept a price worse than a configured tolerance.
+
+### Roles
+
+`SwapModule` uses `MellowACL`, so roles are granted on the module itself. Three roles are granted to **token or router addresses**, not to people:
+
+| Role                | Granted to       | Allows                                                                 |
+| ------------------- | ---------------- | ---------------------------------------------------------------------- |
+| `DEFAULT_ADMIN_ROLE`| Admin account    | Managing roles and calling `setOracle`                                 |
+| `CALLER_ROLE`       | Curator accounts | Calling `swap`, `setCowswapApproval`, `createLimitOrder`, `invalidateOrder` |
+| `SET_SLIPPAGE_ROLE` | Accounts         | Setting the default and per-pair price multipliers                     |
+| `TOKEN_IN_ROLE`     | Token addresses  | Token can be sold                                                      |
+| `TOKEN_OUT_ROLE`    | Token addresses  | Token can be bought                                                    |
+| `ROUTER_ROLE`       | Router addresses | Router can execute swaps                                               |
+
+Role IDs follow the pattern `keccak256("utils.SwapModule.<ROLE>")`.
+
+### Initialization
+
+The module is deployed through a factory and initialized with:
+
+```solidity
+abi.encode(
+    address admin,
+    address subvault,
+    address oracle,             // AaveOracle-compatible price source
+    uint256 defaultMultiplier,  // 1e8 precision, between 0.9e8 and 1.1e8
+    address[] holders,
+    bytes32[] roles             // roles[i] is granted to holders[i]
+)
+```
+
+The constructor sets immutable addresses for the CoW Swap settlement contract, the CoW Swap vault relayer and WETH.
+
+### Moving assets
+
+| Function                   | Caller   | Effect                                                               |
+| -------------------------- | -------- | -------------------------------------------------------------------- |
+| `pushAssets(asset, value)` | Subvault | Pulls `value` of `asset` from the subvault into the module           |
+| `pullAssets(asset, value)` | Subvault | Sends `value` of `asset` from the module back to the subvault        |
+
+Only the configured subvault can call these. In practice the curator triggers them through `Subvault.call`, so the subvault's verifier must allow those calls, and the `approve` that precedes a push. For native ETH, `pushAssets` must be called with `msg.value == value`.
+
+### Price check
+
+Before any swap or limit order, `checkParams` validates the `Params` struct:
+
+```solidity
+struct Params {
+    address tokenIn;
+    address tokenOut;
+    uint256 amountIn;
+    uint256 minAmountOut;
+    uint256 deadline;
+}
+```
+
+* `tokenIn` holds `TOKEN_IN_ROLE` and `tokenOut` holds `TOKEN_OUT_ROLE`.
+* `amountIn` is non-zero and not more than the module's balance of `tokenIn`.
+* `tokenIn` differs from `tokenOut`, and `deadline` has not passed.
+* `minAmountOut` is at least the oracle value of `amountIn`, adjusted by the multiplier:
+
+```solidity
+oracleMinAmount = evaluate(tokenIn, tokenOut, amountIn) * multiplier / 1e8;
+```
+
+`evaluate` converts with `getAssetPrice` from the oracle and adjusts for token decimals. Native ETH is priced as WETH. The multiplier is the per-pair value set with `setCustomMultiplier(tokenIn, tokenOut, m)`, or `defaultMultiplier` if none is set. Multipliers must stay between `0.9e8` and `1.1e8`. For example, `0.995e8` allows a result up to 0.5% below the oracle value.
+
+Failed checks revert with `Forbidden(reason)`, where `reason` names the failing check.
+
+### Router swaps
+
+```solidity
+function swap(Params calldata params, address router, bytes calldata data) external returns (bytes memory)
+```
+
+Callable by `CALLER_ROLE`.
+
+1. Runs `checkParams(params)` and checks that `router` holds `ROUTER_ROLE`.
+2. For ERC20 input, approves `router` for exactly `amountIn`, calls it with `data`, then resets the approval to 0. For native ETH input, calls the router with `amountIn` as value.
+3. Measures the module's `tokenOut` balance increase and reverts if it is below `minAmountOut`.
+4. Emits `Swap(params, router, amountOut)`.
+
+The output stays in the module until the subvault calls `pullAssets`.
+
+### CoW Swap limit orders
+
+For CoW Swap, the module signs orders onchain with pre-signatures.
+
+* `setCowswapApproval(asset, amount)`: approves the CoW Swap vault relayer to spend `asset`. The asset must hold `TOKEN_IN_ROLE` and cannot be native ETH.
+* `createLimitOrder(params, order, orderUid)`: runs `checkParams` and `checkCowswapOrder`, then calls `setPreSignature(orderUid, true)` on the settlement contract.
+* `invalidateOrder(orderUid)`: cancels an order on the settlement contract.
+
+`checkCowswapOrder` requires the order to be a sell order that uses ERC20 balances, with the module as receiver. Its sell token, buy token, sell amount, buy amount and `validTo` must match `params`, and `orderUid` must match the order hash. ETH is not supported in limit orders.
+
+### Configuration functions
+
+| Function                                      | Role                 |
+| --------------------------------------------- | -------------------- |
+| `setOracle(oracle)`                           | `DEFAULT_ADMIN_ROLE` |
+| `setDefaultMultiplier(multiplier)`            | `SET_SLIPPAGE_ROLE`  |
+| `setCustomMultiplier(tokenIn, tokenOut, m)`   | `SET_SLIPPAGE_ROLE`  |
+
+### Events
+
+```solidity
+event AssetsPushed(address indexed asset, uint256 value);
+event AssetsPulled(address indexed asset, uint256 value);
+event Swap(Params params, address router, uint256 amountOut);
+event CowswapApprovalSet(address indexed asset, uint256 amount);
+event LimitOrderCreated(Params params, bytes orderUid);
+event LimitOrderInvalidated(bytes orderUid);
+event DefaultMultiplierSet(uint256 indexed multiplier);
+event CustomMultiplierSet(address indexed tokenIn, address indexed tokenOut, uint256 indexed multiplier);
+event OracleSet(address indexed oracle);
+```
+
+### Price sources
+
+The oracle must implement `getAssetPrice(address)` as `AaveOracle` does. For assets without a Chainlink feed, Mellow uses custom `AaveOracle` deployments backed by [`PermissionedChainlinkOracle`](/core-vaults/architecture/oracles/permissionedchainlinkoracle) feeds.
+
+### Deployments
+
+`SwapModule` addresses for live vaults are listed on the deployment pages, for example [Lido Earn](/lido-earn/deployments) and [strETH](/strategy-vault/streth-deployment).

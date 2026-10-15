@@ -69,7 +69,15 @@
                   }
                 ]
               },
-              "core-vaults/architecture/oracle",
+              {
+                "group": "Oracles",
+                "pages": [
+                  "core-vaults/architecture/oracle",
+                  "core-vaults/architecture/oracles/oraclesubmitter",
+                  "core-vaults/architecture/oracles/oraclehelper",
+                  "core-vaults/architecture/oracles/permissionedchainlinkoracle"
+                ]
+              },
               {
                 "group": "Queues",
                 "pages": [
@@ -79,7 +87,10 @@
                   "core-vaults/architecture/queues/redeemqueue",
                   "core-vaults/architecture/queues/signaturequeue",
                   "core-vaults/architecture/queues/signaturedepositqueue",
-                  "core-vaults/architecture/queues/signatureredeemqueue"
+                  "core-vaults/architecture/queues/signatureredeemqueue",
+                  "core-vaults/architecture/queues/syncqueue",
+                  "core-vaults/architecture/queues/syncdepositqueue",
+                  "core-vaults/architecture/queues/syncredeemqueue"
                 ]
               },
               "core-vaults/architecture/factory",
@@ -89,7 +100,8 @@
                   "core-vaults/architecture/hooks/index",
                   "core-vaults/architecture/hooks/basicredeemhook",
                   "core-vaults/architecture/hooks/lidodeposithook",
-                  "core-vaults/architecture/hooks/redirectingdeposithook"
+                  "core-vaults/architecture/hooks/redirectingdeposithook",
+                  "core-vaults/architecture/hooks/transferdeposithook"
                 ]
               },
               {
@@ -110,7 +122,8 @@
                   "core-vaults/architecture/managers/riskmanager",
                   "core-vaults/architecture/managers/sharemanager",
                   "core-vaults/architecture/managers/basicsharemanager",
-                  "core-vaults/architecture/managers/tokenizedsharemanager"
+                  "core-vaults/architecture/managers/tokenizedsharemanager",
+                  "core-vaults/architecture/managers/burnabletokenizedsharemanager"
                 ]
               },
               {
@@ -120,6 +133,19 @@
                   "core-vaults/architecture/vaults/vault",
                   "core-vaults/architecture/vaults/subvault",
                   "core-vaults/architecture/vaults/vaultconfigurator"
+                ]
+              },
+              {
+                "group": "Accounts",
+                "pages": [
+                  "core-vaults/architecture/accounts/mellowaccountv1"
+                ]
+              },
+              {
+                "group": "Utilities",
+                "pages": [
+                  "core-vaults/architecture/utils/swapmodule",
+                  "core-vaults/architecture/utils/aavemigrator"
                 ]
               }
             ]

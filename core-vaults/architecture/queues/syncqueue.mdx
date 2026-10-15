@@ -1,0 +1,76 @@
+---
+title: "SyncQueue"
+---
+
+### Overview
+
+`SyncQueue` is the abstract base contract for **synchronous queues**: queues that settle a deposit or redemption in the same transaction the user sends. It is not deployable on its own. It is extended by:
+
+* [`SyncDepositQueue`](/core-vaults/architecture/queues/syncdepositqueue): instant deposits
+* [`SyncRedeemQueue`](/core-vaults/architecture/queues/syncredeemqueue): instant redemptions
+
+Unlike [`Queue`](/core-vaults/architecture/queues/queue), a sync queue keeps no request history and does not wait for a future oracle report. It prices each action against the **latest stored oracle report** for its asset, which must be non-suspicious and no older than a configured `maxAge`.
+
+Unlike [`SignatureQueue`](/core-vaults/architecture/queues/signaturequeue), a sync queue needs no offchain signatures. Any eligible user can call it directly, and the vault's deposit or redeem fee applies.
+
+### How sync queues compare
+
+| Property            | Async (`DepositQueue` / `RedeemQueue`) | Signature queues                  | Sync queues                                        |
+| ------------------- | -------------------------------------- | --------------------------------- | -------------------------------------------------- |
+| Settlement          | After a later oracle report            | Same transaction                  | Same transaction                                   |
+| Price source        | Report submitted after the request     | Signed order, checked against oracle | Latest stored report, within `maxAge`           |
+| Claim step          | Yes                                    | No                                | No                                                 |
+| Offchain approval   | No                                     | Consensus signatures              | No                                                 |
+| Deposit/redeem fee  | Applied                                | Not applied                       | Applied                                            |
+| Extra safeguards    | `depositInterval` / `redeemInterval`   | Nonce, deadline, signer quorum    | `maxAge`, `penaltyD6`, daily limit (redeem only)   |
+
+### Storage
+
+```solidity
+struct SyncQueueStorage {
+    address vault;   // Vault (ShareModule) that owns this queue
+    address asset;   // ERC20 token or native ETH handled by the queue
+}
+```
+
+Storage lives in a custom slot derived with `SlotLibrary.getSlot("SyncQueue", name_, version_)`.
+
+### Initialization
+
+```solidity
+function __SyncQueue_init(address asset_, address vault_) internal
+```
+
+* Called by child contracts from `initialize`
+* Reverts with `ZeroValue` if `asset_` or `vault_` is the zero address
+* Initializes the reentrancy guard
+
+### Creating a sync queue
+
+Sync queues are deployed through the vault's queue factories, like any other queue, with `ShareModule.createQueue`. The standard deployment registers queue implementations in this order:
+
+| Factory               | Version `0`    | Version `1`             | Version `2`        |
+| --------------------- | -------------- | ----------------------- | ------------------ |
+| `depositQueueFactory` | `DepositQueue` | `SignatureDepositQueue` | `SyncDepositQueue` |
+| `redeemQueueFactory`  | `RedeemQueue`  | `SignatureRedeemQueue`  | `SyncRedeemQueue`  |
+
+Confirm the version on your network with `factory.implementationAt(version)` before you create a queue.
+
+### Interface compatibility
+
+Sync queues are registered in `ShareModule` like any other queue, so they implement the methods the vault calls on every queue:
+
+* `handleReport(priceD18, timestamp)`: no-op. Oracle reports do not change sync queue state.
+* `canBeRemoved()`: always `true`, because a sync queue holds no pending requests.
+* `vault()` and `asset()`: return the configured addresses.
+* `name()`: returns `"SyncDepositQueue"` or `"SyncRedeemQueue"`.
+
+Because `canBeRemoved()` is `true`, `OracleHelper` skips sync redeem queues when it subtracts outstanding redeem demand from vault TVL.
+
+### Errors
+
+| Error             | Reason                                                              |
+| ----------------- | ------------------------------------------------------------------- |
+| `ZeroValue()`     | Zero address at initialization, or a zero amount in a user action    |
+| `QueuePaused()`   | The vault has paused this queue with `setQueueStatus`               |
+| `InvalidReport()` | The latest oracle report for the asset is suspicious or has price 0 |
