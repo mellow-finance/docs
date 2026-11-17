@@ -179,7 +179,9 @@
       },
       {
         "group": "Mellow USDe+",
-        "pages": []
+        "pages": [
+          "usde-plus-vault/overview"
+        ]
       },
       {
         "group": "Integrations",

@@ -1,0 +1,30 @@
+---
+title: "Overview"
+description: "How Mellow USDe+ works: a Core Vault with its user-facing entry vault on Ethereum, deposits in USDe, USDC and USDT, withdrawals in USDe, and the mUSDep share token."
+---
+
+Mellow USDe+ is a Core Vault for USD stablecoins. Its user-facing entry vault is on Ethereum. Mellow is appointed to provide curation services for the vault.
+
+Depositors receive mUSDep, the vault's share token, which represents their portion of the vault. Depositors do not manage any positions themselves. The strategy's results are reflected in the mUSDep price.
+
+The vault is also deployed on Base, Monad, Plasma, Avalanche, Arc, Robinhood Chain, Ink and X Layer. Those deployments have no deposit or redeem queues, so all deposits and withdrawals go through the Ethereum vault.
+
+## Deposits and withdrawals
+
+Deposits are made on Ethereum in USDe, USDC or USDT. Each asset has a [SyncDepositQueue](/core-vaults/architecture/queues/syncdepositqueue), so mUSDep is minted in the same transaction as the deposit, priced at the latest oracle report.
+
+Withdrawals are paid in USDe and take two steps. The depositor requests a withdrawal, then claims USDe once the request is processed.
+
+## Security
+
+Core Vaults have been audited by Sherlock and Nethermind, with further module and upgrade audits by Nethermind and MixBytes. The reports are listed on the [Security](/security) page. A live [bug bounty on Sherlock](https://audits.sherlock.xyz/bug-bounties/125) offers up to 100,000 USDC for valid findings.
+
+Vault roles and contract addresses on every chain are listed on the [Deployments](/usde-plus-vault/deployments) page.
+
+## For integrators
+
+For contract-level integration, see the [Core Vaults integration guide](/core-vaults-integration-guide).
+
+## Risks
+
+DeFi strategies carry smart contract, market and liquidity risk, and returns are not guaranteed.
