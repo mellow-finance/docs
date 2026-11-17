@@ -180,7 +180,8 @@
       {
         "group": "Mellow USDe+",
         "pages": [
-          "usde-plus-vault/overview"
+          "usde-plus-vault/overview",
+          "usde-plus-vault/deployments"
         ]
       },
       {
