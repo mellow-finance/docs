@@ -178,6 +178,13 @@
         "pages": ["usdg-vault/overview", "usdg-vault/deployments"]
       },
       {
+        "group": "Mellow USDe+",
+        "pages": [
+          "usde-plus-vault/overview",
+          "usde-plus-vault/deployments"
+        ]
+      },
+      {
         "group": "Integrations",
         "icon": "plug",
         "pages": [
