@@ -278,7 +278,6 @@
                               "resources/mellow-lrt-deprecated/modules/delegatemodules/stakingmodule"
                             ]
                           },
-                          "resources/mellow-lrt-deprecated/modules/externalmodules",
                           {
                             "group": "TvlModules",
                             "pages": [
@@ -507,7 +506,7 @@
     },
     {
       "source": "/mellow-lrt/lrt-contracts/modules/externalmodules",
-      "destination": "/resources/mellow-lrt-deprecated/modules/externalmodules"
+      "destination": "/resources/mellow-lrt-deprecated/modules"
     },
     {
       "source": "/mellow-lrt/lrt-contracts/modules/tvlmodules",
@@ -631,7 +630,7 @@
     },
     {
       "source": "/mellow-lrt-primitive/lrt-contracts/modules/externalmodules",
-      "destination": "/resources/mellow-lrt-deprecated/modules/externalmodules"
+      "destination": "/resources/mellow-lrt-deprecated/modules"
     },
     {
       "source": "/mellow-lrt-primitive/lrt-contracts/modules/tvlmodules",
@@ -751,7 +750,7 @@
     },
     {
       "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/externalmodules",
-      "destination": "/resources/mellow-lrt-deprecated/modules/externalmodules"
+      "destination": "/resources/mellow-lrt-deprecated/modules"
     },
     {
       "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/tvlmodules",
@@ -960,6 +959,14 @@
     {
       "source": "/untitled",
       "destination": "/"
+    },
+    {
+      "source": "/resources/mellow-lrt-depreciated/modules/externalmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules"
+    },
+    {
+      "source": "/resources/mellow-lrt-deprecated/modules/externalmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules"
     },
     {
       "source": "/resources/mellow-lrt-depreciated/:slug*",
