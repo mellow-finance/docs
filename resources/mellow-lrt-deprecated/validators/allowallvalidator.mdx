@@ -1,0 +1,20 @@
+---
+title: "AllowAllValidator"
+description: "Legacy: Reference for the Mellow-LRT AllowAllValidator contract: a validator that allows all transactions without additional access control checks."
+---
+
+<Info>
+**Legacy architecture.** Mellow-LRT is an earlier generation of Mellow vault infrastructure, documented for existing deployments. [Core Vaults](/core-vaults/overview) are Mellow's current vault architecture.
+</Info>
+
+### Overview
+
+`AllowAllValidator` provides a simple validation mechanism that allows all transactions without applying additional access control checks. This validator is useful in scenarios where permissions are not a concern and transactions should pass freely.
+
+### Key Features
+
+* **No Restrictions**: Permits all transactions by default, simplifying the validation process.
+
+### Core Methods
+
+As this interface inherits directly from `IValidator` without adding any additional methods, it provides only the standard `validate` function inherited from `IValidator`.
