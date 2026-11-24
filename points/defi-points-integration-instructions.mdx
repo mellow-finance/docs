@@ -21,7 +21,7 @@ getContracts: (params: GetContractsParams) => Promise<DeFiContract[]> | DeFiCont
 
 Async function to load user shares between 2 blocks (inclusive).
 
-This function is called for all contracts returned by `getContracts`.&#x20;
+This function is called for all contracts returned by `getContracts`.
 
 ```ts
 getUserShares: (params: GetUserSharesParams) => Promise<IDeFiUserShare[]> | IDeFiUserShare[];
@@ -43,7 +43,7 @@ Example:
 
 Optional async function to load user balances (if they're not 1:1 to user shares).
 
-This function is called for all contracts returned by `getContracts`.&#x20;
+This function is called for all contracts returned by `getContracts`.
 
 ```typescript
 getBalances: (params: GetBalancesParams) => Promise<IDeFiUserBalance[]> | IDeFiUserBalance[];

@@ -71,7 +71,7 @@ The target allocation for each subvault is calculated using the following formul
 #### Deposits
 
 <Frame>
-  <img src="/images/image-3.png" alt="" />
+  <img src="/images/image-3.png" alt="Diagram of the MultiVault deposit flow: User, MultiVault, RatiosStrategy, subvaults and DefaultCollateral" />
 </Frame>
 
 When depositing assets into the MultiVault, token distribution across subvaults is performed in two stages:
@@ -89,7 +89,7 @@ When depositing assets into the MultiVault, token distribution across subvaults 
 #### Withdrawals
 
 <Frame>
-  <img src="/images/image-4.png" alt="" />
+  <img src="/images/image-4.png" alt="Diagram of the MultiVault withdrawal flow: User, MultiVault, RatiosStrategy, subvaults and DefaultCollateral" />
 </Frame>
 
 The withdrawal process is structured into five stages:
@@ -113,7 +113,7 @@ The withdrawal process is structured into five stages:
 #### Rebalances
 
 <Frame>
-  <img src="/images/image-5.png" alt="" />
+  <img src="/images/image-5.png" alt="Diagram of the MultiVault rebalance flow: Rebalancer, MultiVault, RatiosStrategy, subvaults and DefaultCollateral" />
 </Frame>
 
 During rebalancing in the **MultiVault**, the process for withdrawing and depositing tokens across subvaults is executed in four stages:
@@ -157,7 +157,7 @@ When a SYMBIOTIC-type subvault is added (Symbiotic Vault), a corresponding **Sym
 #### EigenLayer Integration
 
 <Frame>
-  <img src="/images/image-6.png" alt="" />
+  <img src="/images/image-6.png" alt="Diagram of IsolatedEigenLayerVaultFactory creating an IsolatedEigenLayerVault and withdrawal queue with create2" />
 </Frame>
 
 The integration with the **EigenLayer protocol** is currently limited to strategy-based operations, as **EigenPods** are not yet supported. Despite the lack of a slashing mechanism, there remains a **delay** between a withdrawal request and the actual withdrawal of token.

@@ -11,7 +11,7 @@ description: "Legacy: Contracts API for Mellow Permissionless Vaults, starting w
 
 _Inherits from_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-1.82M
+Gas: 1.82M
 
 ### Functions
 
@@ -82,7 +82,7 @@ Latest version of the contract
 
 #### registerContract
 
-256K (254K - 259K)
+Gas: 256K (254K - 259K)
 
 ```solidity
   function registerContract(address target) external
@@ -126,7 +126,7 @@ _Edge cases_
 
 _Inherits from_ [_Multicall_](api#multicall)_,_ [_UnitPricesGovernance_](api#unitpricesgovernance)_,_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-4.68M
+Gas: 4.68M
 
 Governance that manages all params common for Mellow Permissionless Vaults protocol.
 
@@ -408,7 +408,7 @@ Withdraw limit per token per block.
 
 #### stageValidator
 
-129K (43K - 142K)
+Gas: 129K (43K - 142K)
 
 ```solidity
   function stageValidator(address target, address validator) external
@@ -440,7 +440,7 @@ _Edge cases_
 
 #### rollbackStagedValidators
 
-39K (28K - 42K)
+Gas: 39K (28K - 42K)
 
 ```solidity
   function rollbackStagedValidators() external
@@ -461,7 +461,7 @@ _Access control_
 
 #### commitValidator
 
-86K (47K - 117K)
+Gas: 86K (47K - 117K)
 
 ```solidity
   function commitValidator(address stagedAddress) external
@@ -496,7 +496,7 @@ _Edge cases_
 
 #### commitAllValidatorsSurpassedDelay
 
-132K (27K - 463K)
+Gas: 132K (27K - 463K)
 
 ```solidity
   function commitAllValidatorsSurpassedDelay() external returns (address[] addressesCommitted)
@@ -532,7 +532,7 @@ _Edge cases_
 
 #### revokeValidator
 
-38K
+Gas: 38K
 
 ```solidity
   function revokeValidator(address target) external
@@ -556,7 +556,7 @@ _Edge cases_
 
 #### rollbackStagedPermissionGrants
 
-37K (28K - 42K)
+Gas: 37K (28K - 42K)
 
 ```solidity
   function rollbackStagedPermissionGrants() external
@@ -577,7 +577,7 @@ _Access control_
 
 #### commitPermissionGrants
 
-71K (46K - 117K)
+Gas: 71K (46K - 117K)
 
 ```solidity
   function commitPermissionGrants(address stagedAddress) external
@@ -612,7 +612,7 @@ _Edge cases_
 
 #### commitAllPermissionGrantsSurpassedDelay
 
-145K (27K - 248K)
+Gas: 145K (27K - 248K)
 
 ```solidity
   function commitAllPermissionGrantsSurpassedDelay() external returns (address[] addresses)
@@ -648,7 +648,7 @@ _Edge cases_
 
 #### revokePermissions
 
-62K (32K - 275K)
+Gas: 62K (32K - 275K)
 
 ```solidity
   function revokePermissions(address target, uint8[] permissionIds) external
@@ -673,7 +673,7 @@ _Edge cases_
 
 #### commitParams
 
-66K (54K - 81K)
+Gas: 66K (54K - 81K)
 
 ```solidity
   function commitParams() external
@@ -698,7 +698,7 @@ _Edge cases_
 
 #### stagePermissionGrants
 
-166K (44K - 383K)
+Gas: 166K (44K - 383K)
 
 ```solidity
   function stagePermissionGrants(address target, uint8[] permissionIds) external
@@ -729,7 +729,7 @@ _Edge cases_
 
 #### stageParams
 
-140K (62K - 165K)
+Gas: 140K (62K - 165K)
 
 ```solidity
   function stageParams(struct IProtocolGovernance.Params newParams) external
@@ -948,7 +948,7 @@ Emitted when pending parameters are committed
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-1.82M
+Gas: 1.82M
 
 ### Functions
 
@@ -968,7 +968,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### stageUnitPrice
 
-72K (54K - 74K)
+Gas: 72K (54K - 74K)
 
 ```solidity
   function stageUnitPrice(address token, uint256 value) external
@@ -985,7 +985,7 @@ Stage estimated amount of token worth 1 USD staged for commit.
 
 #### rollbackUnitPrice
 
-31K (30K - 31K)
+Gas: 31K (30K - 31K)
 
 ```solidity
   function rollbackUnitPrice(address token) external
@@ -1001,7 +1001,7 @@ Reset staged value
 
 #### commitUnitPrice
 
-50K
+Gas: 50K
 
 ```solidity
   function commitUnitPrice(address token) external
@@ -1080,7 +1080,7 @@ UnitPrice committed
 
 _Inherits from_ [_ERC721_](api#erc721)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-3.07M
+Gas: 3.07M
 
 This contract is used to manage ERC721 NFT for all Vaults.
 
@@ -1294,7 +1294,7 @@ _Properties_
 
 #### registerVault
 
-167K (154K - 188K)
+Gas: 167K (154K - 188K)
 
 ```solidity
   function registerVault(address vault, address owner) external returns (uint256 nft)
@@ -1335,7 +1335,7 @@ _Edge cases_
 
 #### stageProtocolGovernance
 
-75K (43K - 80K)
+Gas: 75K (43K - 80K)
 
 ```solidity
   function stageProtocolGovernance(contract IProtocolGovernance newProtocolGovernance) external
@@ -1363,7 +1363,7 @@ _Edge cases_
 
 #### commitStagedProtocolGovernance
 
-34K
+Gas: 34K
 
 ```solidity
   function commitStagedProtocolGovernance() external
@@ -1387,7 +1387,7 @@ _Edge cases_
 
 #### lockNft
 
-46K (29K - 49K)
+Gas: 46K (29K - 49K)
 
 ```solidity
   function lockNft(uint256 nft) external
@@ -1488,7 +1488,7 @@ Stores permission ids for addresses
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-2.77M
+Gas: 2.77M
 
 Contract for getting chainlink data
 
@@ -1583,7 +1583,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### addChainlinkOracles
 
-82K (81K - 83K)
+Gas: 82K (81K - 83K)
 
 ```solidity
   function addChainlinkOracles(address[] tokens, address[] oracles) external
@@ -1637,7 +1637,7 @@ Emitted when new Chainlink oracle is added
 
 _Inherits from_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-783K
+Gas: 783K
 
 #### constructor
 
@@ -1668,7 +1668,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 _Inherits from_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-671K
+Gas: 671K
 
 #### constructor
 
@@ -1724,7 +1724,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_ContractMeta_](api#contractmeta)
 
-3.44M
+Gas: 3.44M
 
 ### Functions
 
@@ -1774,7 +1774,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### addUniV3Pools
 
-73K (39K - 89K)
+Gas: 73K (39K - 89K)
 
 ```solidity
   function addUniV3Pools(contract IUniswapV3Pool[] pools) external
@@ -1826,7 +1826,7 @@ Emitted when new pool is added or updated and become available for oracle prices
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-7.59M
+Gas: 7.59M
 
 ### Functions
 
@@ -1872,7 +1872,7 @@ initializes the strategy
 
 #### createStrategy
 
-536K (536K - 539K)
+Gas: 536K (536K - 539K)
 
 ```solidity
   function createStrategy(address[] tokens_, contract IERC20Vault erc20Vault_, contract IIntegrationVault moneyVault_, contract IUniV3Vault uniV3Vault_, uint24 fee_, address admin_) external returns (contract HStrategy strategy)
@@ -1903,7 +1903,7 @@ creates the clone of the strategy
 
 #### updateStrategyParams
 
-48K (44K - 51K)
+Gas: 48K (44K - 51K)
 
 ```solidity
   function updateStrategyParams(struct HStrategy.StrategyParams newStrategyParams) external
@@ -1947,7 +1947,7 @@ updates oracle parameters. Can be called only by admin
 
 #### updateRatioParams
 
-39K (38K - 40K)
+Gas: 39K (38K - 40K)
 
 ```solidity
   function updateRatioParams(struct HStrategy.RatioParams newRatioParams) external
@@ -1977,7 +1977,7 @@ updates swap fees for uniswapV3Pool swaps
 
 #### manualPull
 
-468K (256K - 517K)
+Gas: 468K (256K - 517K)
 
 ```solidity
   function manualPull(contract IIntegrationVault fromVault, contract IIntegrationVault toVault, uint256[] tokenAmounts, bytes vaultOptions) external
@@ -2000,7 +2000,7 @@ manual pulling tokens from vault. Can be called only by admin
 
 #### rebalance
 
-1.44M (352K - 1.75M)
+Gas: 1.44M (352K - 1.75M)
 
 ```solidity
   function rebalance(struct HStrategy.RebalanceTokenAmounts restrictions, bytes moneyVaultOptions) external returns (struct HStrategy.RebalanceTokenAmounts actualPulledAmounts, uint256[] burnedAmounts)
@@ -2259,7 +2259,7 @@ Emitted when new swap fees for UniV3Pool swaps are set.
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-7.65M
+Gas: 7.65M
 
 ### Functions
 
@@ -2287,7 +2287,7 @@ Target liquidity ratio for UniV3 vaults
 
 #### rebalanceERC20UniV3Vaults
 
-505K (326K - 1.69M)
+Gas: 505K (326K - 1.69M)
 
 ```solidity
   function rebalanceERC20UniV3Vaults(uint256[] minLowerVaultTokens, uint256[] minUpperVaultTokens, uint256 deadline) public returns (uint256[] totalPulledAmounts, bool isNegativeCapitalDelta, uint256 percentageIncreaseD)
@@ -2313,7 +2313,7 @@ Make a rebalance between ERC20 and UniV3 Vaults
 
 #### rebalanceUniV3Vaults
 
-432K (138K - 900K)
+Gas: 432K (138K - 900K)
 
 ```solidity
   function rebalanceUniV3Vaults(uint256[] minWithdrawTokens, uint256[] minDepositTokens, uint256 deadline) external returns (uint256[] pulledAmounts, uint256[] pushedAmounts, uint128 depositLiquidity, uint128 withdrawLiquidity, bool lowerToUpper)
@@ -2341,7 +2341,7 @@ Make a rebalance of UniV3 vaults
 
 #### postPreOrder
 
-144K (140K - 180K)
+Gas: 144K (140K - 180K)
 
 ```solidity
   function postPreOrder(uint256 minAmountOut) external returns (struct LStrategy.PreOrder preOrder_)
@@ -2363,7 +2363,7 @@ Post preorder for ERC20 vault rebalance.
 
 #### signOrder
 
-210K (103K - 233K)
+Gas: 210K (103K - 233K)
 
 ```solidity
   function signOrder(struct GPv2Order.Data order, bytes uuid, bool signed) external
@@ -2381,7 +2381,7 @@ Sign offchain cowswap order onchain
 
 #### resetCowswapAllowance
 
-117K (116K - 118K)
+Gas: 117K (116K - 118K)
 
 ```solidity
   function resetCowswapAllowance(uint8 tokenNumber) external
@@ -2397,7 +2397,7 @@ Reset cowswap allowance to 0
 
 #### collectUniFees
 
-279K (239K - 320K)
+Gas: 279K (239K - 320K)
 
 ```solidity
   function collectUniFees() external returns (uint256[] totalCollectedEarnings)
@@ -2413,7 +2413,7 @@ Collect Uniswap pool fees to erc20 vault
 
 #### manualPull
 
-345K (297K - 487K)
+Gas: 345K (297K - 487K)
 
 ```solidity
   function manualPull(contract IIntegrationVault fromVault, contract IIntegrationVault toVault, uint256[] tokenAmounts, uint256[] minTokensAmounts, uint256 deadline) external returns (uint256[] actualTokenAmounts)
@@ -2433,7 +2433,7 @@ Manually pull tokens from fromVault to toVault
 
 #### updateTradingParams
 
-68K (42K - 119K)
+Gas: 68K (42K - 119K)
 
 ```solidity
   function updateTradingParams(struct LStrategy.TradingParams newTradingParams) external
@@ -2449,7 +2449,7 @@ Sets new trading params
 
 #### updateRatioParams
 
-37K (36K - 53K)
+Gas: 37K (36K - 53K)
 
 ```solidity
   function updateRatioParams(struct LStrategy.RatioParams newRatioParams) external
@@ -2465,7 +2465,7 @@ Sets new ratio params
 
 #### updateOtherParams
 
-41K (33K - 94K)
+Gas: 41K (33K - 94K)
 
 ```solidity
   function updateOtherParams(struct LStrategy.OtherParams newOtherParams) external
@@ -2701,7 +2701,7 @@ Emitted when other params were updated
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-6.64M
+Gas: 6.64M
 
 ### Functions
 
@@ -2772,7 +2772,7 @@ Can be only called once.
 
 #### createStrategy
 
-571K (570K - 573K)
+Gas: 571K (570K - 573K)
 
 ```solidity
   function createStrategy(address[] tokens_, contract IERC20Vault erc20Vault_, contract IIntegrationVault moneyVault_, uint24 fee_, address admin_) external returns (contract MStrategy strategy)
@@ -2807,7 +2807,7 @@ _Edge cases_
 
 #### rebalance
 
-725K (240K - 851K)
+Gas: 725K (240K - 851K)
 
 ```solidity
   function rebalance(uint256[] minTokensAmount, bytes vaultOptions) external returns (int256[] poolAmounts, uint256[] tokenAmounts, bool zeroToOne)
@@ -2879,7 +2879,7 @@ _Edge cases_
 
 #### setOracleParams
 
-64K (41K - 75K)
+Gas: 64K (41K - 75K)
 
 ```solidity
   function setOracleParams(struct MStrategy.OracleParams params) external
@@ -2905,7 +2905,7 @@ _Access control_
 
 #### setRatioParams
 
-65K (44K - 124K)
+Gas: 65K (44K - 124K)
 
 ```solidity
   function setRatioParams(struct MStrategy.RatioParams params) external
@@ -3041,7 +3041,7 @@ Emitted when Ratio params are set.
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-5.84M
+Gas: 5.84M
 
 ### Functions
 
@@ -3071,7 +3071,7 @@ initializes the strategy
 
 #### createStrategy
 
-1.2M (1.18M - 1.25M)
+Gas: 1.2M (1.18M - 1.25M)
 
 ```solidity
   function createStrategy(struct MultiPoolHStrategy.ImmutableParams immutableParams_, struct MultiPoolHStrategy.MutableParams mutableParams_, address admin) external returns (contract MultiPoolHStrategy strategy)
@@ -3109,7 +3109,7 @@ updates parameters of the strategy. Can be called only by admin
 
 #### rebalance
 
-3.41M
+Gas: 3.41M
 
 ```solidity
   function rebalance(struct MultiPoolHStrategyRebalancer.Restrictions restrictions) external returns (struct MultiPoolHStrategyRebalancer.Restrictions actualAmounts)
@@ -4373,7 +4373,7 @@ Function, that ERC20RootVault calling after withdraw
 
 #### onERC721Received
 
-105K
+Gas: 105K
 
 ```solidity
   function onERC721Received(address, address, uint256, bytes) external returns (bytes4)
@@ -4817,7 +4817,7 @@ Emited when a uniswap position is burned
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)_,_ [_Multicall_](api#multicall)_,_ [_ContractMeta_](api#contractmeta)
 
-7.31M
+Gas: 7.31M
 
 ### Functions
 
@@ -4839,7 +4839,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
 
 #### initialize
 
-671K
+Gas: 671K
 
 ```solidity
   function initialize(struct SinglePositionStrategy.ImmutableParams immutableParams_, address admin) external
@@ -4854,7 +4854,7 @@ _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateini
 
 #### updateMutableParams
 
-120K (89K - 245K)
+Gas: 120K (89K - 245K)
 
 ```solidity
   function updateMutableParams(struct SinglePositionStrategy.MutableParams mutableParams_) external
@@ -4870,7 +4870,7 @@ updates mutable params of the strategy. Only the admin can call the function
 
 #### rebalance
 
-1.16M (804K - 1.38M)
+Gas: 1.16M (804K - 1.38M)
 
 ```solidity
   function rebalance(uint256 deadline) external
@@ -5145,11 +5145,11 @@ Emited when a uniswap position is burned
 
 ## BatchCall
 
-435K
+Gas: 435K
 
 #### batchcall
 
-23K
+Gas: 23K
 
 ```solidity
   function batchcall(address[] targets, bytes[] data) external returns (bytes[] results)
@@ -5191,7 +5191,7 @@ Emited when a uniswap position is burned
 
 _Inherits from_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-1.35M
+Gas: 1.35M
 
 This is a default access control with 3 roles:
 
@@ -5268,7 +5268,7 @@ struct RoleData {
 
 _Inherits from_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-1.25M
+Gas: 1.25M
 
 This is a default access control with 3 roles:
 
@@ -5328,7 +5328,7 @@ Checks that the address is contract admin.
 
 #### init
 
-301K
+Gas: 301K
 
 ```solidity
   function init(address admin) public
@@ -5367,7 +5367,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 ## ERC20RootVaultHelper
 
-445K
+Gas: 445K
 
 #### getTvlToken0
 
@@ -5377,7 +5377,7 @@ _Inherits from_ [_ProxyAdmin_](api#proxyadmin)_,_ [_Ownable_](api#ownable)_,_ [_
 
 ## ERC20Token
 
-1.01M
+Gas: 1.01M
 
 #### DOMAIN\_SEPARATOR
 
@@ -5574,7 +5574,7 @@ Emitted when an adjusment of the position made in Gearbox
 
 ## HStrategyHelper
 
-3.26M
+Gas: 3.26M
 
 #### calculateExpectedRatios
 
@@ -5868,7 +5868,7 @@ returns true if the rebalance between assets on different vaults is needed
 
 ## LStrategyHelper
 
-1.5M
+Gas: 1.5M
 
 #### constructor
 
@@ -5892,7 +5892,7 @@ returns true if the rebalance between assets on different vaults is needed
 
 _Inherits from_ [_DefaultAccessControlLateInit_](api#defaultaccesscontrollateinit)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-7.09M
+Gas: 7.09M
 
 ### Functions
 
@@ -6224,7 +6224,7 @@ Emitted when a swap is called on the router
 
 ## UniV3Helper
 
-2.82M
+Gas: 2.82M
 
 #### constructor
 
@@ -6314,7 +6314,7 @@ calculates the distribution of tokens that can be added to the position after sw
 
 _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessControlEnumerable_](api#accesscontrolenumerable)_,_ [_AccessControl_](api#accesscontrol)_,_ [_ERC165_](api#erc165)_,_ [_Context_](api#context)
 
-2.49M
+Gas: 2.49M
 
 ### Functions
 
@@ -6326,7 +6326,7 @@ _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessCo
 
 #### deposit
 
-483K
+Gas: 483K
 
 ```solidity
   function deposit(contract IERC20RootVault vault, uint256[] tokenAmounts, uint256 minLpTokens, bytes vaultOptions, bytes32[] proof) external returns (uint256[] actualTokenAmounts)
@@ -6339,7 +6339,7 @@ _Inherits from_ [_DefaultAccessControl_](api#defaultaccesscontrol)_,_ [_AccessCo
 
 #### updateRoot
 
-47K
+Gas: 47K
 
 ```solidity
   function updateRoot(bytes32 root_) external
@@ -6377,7 +6377,7 @@ Emitted when liquidity is deposited
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-851K
+Gas: 851K
 
 ### Functions
 
@@ -6512,7 +6512,7 @@ Emitted when new params are staged for commit
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-909K
+Gas: 909K
 
 ### Functions
 
@@ -6549,7 +6549,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-1.14M
+Gas: 1.14M
 
 ### Functions
 
@@ -6589,7 +6589,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-1.14M
+Gas: 1.14M
 
 ### Functions
 
@@ -6656,7 +6656,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-1.58M
+Gas: 1.58M
 
 ### Functions
 
@@ -6725,7 +6725,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Validator_](api#validator)_,_ [_BaseValidator_](api#basevalidator)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-1.75M
+Gas: 1.75M
 
 ### Functions
 
@@ -6805,7 +6805,7 @@ struct ValidatorParams {
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-4.96M
+Gas: 4.96M
 
 Vault that interfaces Aave protocol in the integration layer.
 
@@ -6871,7 +6871,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### updateTvls
 
-94K (93K - 95K)
+Gas: 94K (93K - 95K)
 
 ```solidity
   function updateTvls() external
@@ -6885,7 +6885,7 @@ Update all tvls to current aToken balances.
 
 #### initialize
 
-200K (159K - 245K)
+Gas: 200K (159K - 245K)
 
 ```solidity
   function initialize(uint256 nft_, address[] vaultTokens_) external
@@ -6917,7 +6917,7 @@ Can only be initialized by vault governance
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-2.31M
+Gas: 2.31M
 
 Governance that manages all Aave Vaults params and can deploy a new Aave Vault.
 
@@ -7015,7 +7015,7 @@ _Edge cases_
 
 #### stageDelayedProtocolParams
 
-88K (52K - 129K)
+Gas: 88K (52K - 129K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IAaveVaultGovernance.DelayedProtocolParams params) external
@@ -7057,7 +7057,7 @@ _Edge cases_
 
 #### commitDelayedProtocolParams
 
-50K (49K - 54K)
+Gas: 50K (49K - 54K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -7093,7 +7093,7 @@ _Edge cases_
 
 #### createVault
 
-729K (665K - 942K)
+Gas: 729K (665K - 942K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_) external returns (contract IAaveVault vault, uint256 nft)
@@ -7282,7 +7282,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 _Inherits from_ [_AggregateVault_](api#aggregatevault)_,_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)_,_ [_ERC20Token_](api#erc20token)
 
-7.12M
+Gas: 7.12M
 
 Contract that mints and burns LP tokens in exchange for ERC20 liquidity.
 
@@ -7317,7 +7317,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### addDepositorsToAllowlist
 
-112K (22K - 126K)
+Gas: 112K (22K - 126K)
 
 ```solidity
   function addDepositorsToAllowlist(address[] depositors) external
@@ -7342,7 +7342,7 @@ The action can be done only by user with admins, owners or by approved rights
 
 #### removeDepositorsFromAllowlist
 
-50K (49K - 53K)
+Gas: 50K (49K - 53K)
 
 ```solidity
   function removeDepositorsFromAllowlist(address[] depositors) external
@@ -7392,7 +7392,7 @@ Can only be initialized by vault governance
 
 #### deposit
 
-467K (357K - 750K)
+Gas: 467K (357K - 750K)
 
 ```solidity
   function deposit(uint256[] tokenAmounts, uint256 minLpTokens, bytes vaultOptions) external returns (uint256[] actualTokenAmounts)
@@ -7435,7 +7435,7 @@ The function of depositing the amount of tokens in exchange
 
 #### withdraw
 
-499K (364K - 983K)
+Gas: 499K (364K - 983K)
 
 ```solidity
   function withdraw(address to, uint256 lpTokenAmount, uint256[] minTokenAmounts, bytes[] vaultsOptions) external returns (uint256[] actualTokenAmounts)
@@ -7585,7 +7585,7 @@ Emitted when callback in withdraw failed
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-4.53M
+Gas: 4.53M
 
 Governance that manages all Lp Issuers params and can deploy a new LpIssuer Vault.
 
@@ -7834,7 +7834,7 @@ Strategy Params.
 
 #### stageDelayedStrategyParams
 
-160K (67K - 244K)
+Gas: 160K (67K - 244K)
 
 ```solidity
   function stageDelayedStrategyParams(uint256 nft, struct IERC20RootVaultGovernance.DelayedStrategyParams params) external
@@ -7877,7 +7877,7 @@ _Edge cases_
 
 #### commitDelayedStrategyParams
 
-118K (75K - 195K)
+Gas: 118K (75K - 195K)
 
 ```solidity
   function commitDelayedStrategyParams(uint256 nft) external
@@ -7921,7 +7921,7 @@ _Edge cases_
 
 #### stageDelayedProtocolPerVaultParams
 
-108K (54K - 108K)
+Gas: 108K (54K - 108K)
 
 ```solidity
   function stageDelayedProtocolPerVaultParams(uint256 nft, struct IERC20RootVaultGovernance.DelayedProtocolPerVaultParams params) external
@@ -7962,7 +7962,7 @@ _Edge cases_
 
 #### commitDelayedProtocolPerVaultParams
 
-80K (44K - 80K)
+Gas: 80K (44K - 80K)
 
 ```solidity
   function commitDelayedProtocolPerVaultParams(uint256 nft) external
@@ -8007,7 +8007,7 @@ _Edge cases_
 
 #### setStrategyParams
 
-113K (37K - 115K)
+Gas: 113K (37K - 115K)
 
 ```solidity
   function setStrategyParams(uint256 nft, struct IERC20RootVaultGovernance.StrategyParams params) external
@@ -8024,7 +8024,7 @@ Set Strategy params, i.e. Params that could be changed by Strategy or Protocol G
 
 #### setOperatorParams
 
-51K (35K - 77K)
+Gas: 51K (35K - 77K)
 
 ```solidity
   function setOperatorParams(struct IERC20RootVaultGovernance.OperatorParams params) external
@@ -8050,7 +8050,7 @@ _Properties_
 
 #### stageDelayedProtocolParams
 
-88K (52K - 129K)
+Gas: 88K (52K - 129K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IERC20RootVaultGovernance.DelayedProtocolParams params) external
@@ -8091,7 +8091,7 @@ _Edge cases_
 
 #### commitDelayedProtocolParams
 
-50K (49K - 54K)
+Gas: 50K (49K - 54K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -8127,7 +8127,7 @@ _Edge cases_
 
 #### createVault
 
-915K (794K - 1.32M)
+Gas: 915K (794K - 1.32M)
 
 ```solidity
   function createVault(address[] vaultTokens_, address strategy_, uint256[] subvaultNfts_, address owner_) external returns (contract IERC20RootVault vault, uint256 nft)
@@ -8347,7 +8347,7 @@ Emitted when new DelayedProtocolParams are committed
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-4.41M
+Gas: 4.41M
 
 Vault that stores ERC20 tokens.
 
@@ -8420,7 +8420,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-1.59M
+Gas: 1.59M
 
 Governance that manages all ERC20 Vaults params and can deploy a new ERC20 Vault.
 
@@ -8452,7 +8452,7 @@ _Edge cases_
 
 #### createVault
 
-475K (463K - 648K)
+Gas: 475K (463K - 648K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_) external returns (contract IERC20Vault vault, uint256 nft)
@@ -9508,7 +9508,7 @@ Emitted when tokens are reclaimed
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-4.91M
+Gas: 4.91M
 
 Vault that stores ERC20 tokens.
 
@@ -9551,7 +9551,7 @@ Can only be initialized by vault governance
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-1.6M
+Gas: 1.6M
 
 Governance that manages all Mellow Vaults params and can deploy a new Mellow Vault.
 
@@ -9664,7 +9664,7 @@ Whenever an `IERC721` `tokenId` token is transferred to this contract via `IERC7
 
 #### collectEarnings
 
-135K (121K - 195K)
+Gas: 135K (121K - 195K)
 
 ```solidity
   function collectEarnings() external returns (uint256[] collectedFees)
@@ -9878,7 +9878,7 @@ Emitted when new StrategyParams are set
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-6.61M
+Gas: 6.61M
 
 Vault that interfaces UniswapV3 protocol in the integration layer.
 
@@ -9990,7 +9990,7 @@ Returns liquidity corresponding to token amounts, based on the current Uniswap p
 
 #### initialize
 
-186K
+Gas: 186K
 
 ```solidity
   function initialize(uint256 nft_, address[] vaultTokens_, uint24 fee_, address uniV3Hepler_) external
@@ -10094,7 +10094,7 @@ Emitted when earnings are collected
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-3.02M
+Gas: 3.02M
 
 Governance that manages all UniV3 Vaults params and can deploy a new UniV3 Vault.
 
@@ -10219,7 +10219,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### stageDelayedProtocolParams
 
-88K (52K - 129K)
+Gas: 88K (52K - 129K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IUniV3VaultGovernance.DelayedProtocolParams params) external
@@ -10258,7 +10258,7 @@ _Edge cases_
 
 #### commitDelayedProtocolParams
 
-50K (50K - 54K)
+Gas: 50K (50K - 54K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -10294,7 +10294,7 @@ _Edge cases_
 
 #### stageDelayedStrategyParams
 
-121K
+Gas: 121K
 
 ```solidity
   function stageDelayedStrategyParams(uint256 nft, struct IUniV3VaultGovernance.DelayedStrategyParams params) external
@@ -10311,7 +10311,7 @@ Stage Delayed Strategy Params, i.e. Params that could be changed by Strategy or 
 
 #### commitDelayedStrategyParams
 
-94K
+Gas: 94K
 
 ```solidity
   function commitDelayedStrategyParams(uint256 nft) external
@@ -10329,7 +10329,7 @@ Can only be called after delayedStrategyParamsTimestamp
 
 #### createVault
 
-563K (550K - 577K)
+Gas: 563K (550K - 577K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_, uint24 fee_, address uniV3Helper_) external returns (contract IUniV3Vault vault, uint256 nft)
@@ -10753,7 +10753,7 @@ Emitted when New Vault is deployed
 
 _Inherits from_ [_Vault_](api#vault)_,_ [_ERC165_](api#erc165)_,_ [_ReentrancyGuard_](api#reentrancyguard)
 
-4.81M
+Gas: 4.81M
 
 Vault that interfaces Yearn protocol in the integration layer.
 
@@ -10848,7 +10848,7 @@ Can only be initialized by vault governance
 
 _Inherits from_ [_VaultGovernance_](api#vaultgovernance)_,_ [_ERC165_](api#erc165)_,_ [_ContractMeta_](api#contractmeta)
 
-2.4M
+Gas: 2.4M
 
 Governance that manages all Aave Vaults params and can deploy a new Aave Vault.
 
@@ -10978,7 +10978,7 @@ Returns true if this contract implements the interface defined by `interfaceId`.
 
 #### stageDelayedProtocolParams
 
-75K (49K - 106K)
+Gas: 75K (49K - 106K)
 
 ```solidity
   function stageDelayedProtocolParams(struct IYearnVaultGovernance.DelayedProtocolParams params) external
@@ -11019,7 +11019,7 @@ _Edge cases_
 
 #### commitDelayedProtocolParams
 
-43K (43K - 45K)
+Gas: 43K (43K - 45K)
 
 ```solidity
   function commitDelayedProtocolParams() external
@@ -11055,7 +11055,7 @@ _Edge cases_
 
 #### setYTokenForToken
 
-51K (35K - 56K)
+Gas: 51K (35K - 56K)
 
 ```solidity
   function setYTokenForToken(address token, address yToken) external
@@ -11092,7 +11092,7 @@ _Edge cases_
 
 #### createVault
 
-569K (559K - 810K)
+Gas: 569K (559K - 810K)
 
 ```solidity
   function createVault(address[] vaultTokens_, address owner_) external returns (contract IYearnVault vault, uint256 nft)

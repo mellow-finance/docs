@@ -16,7 +16,7 @@ The system is based on the following key contracts:
 2. **asset** (such as **wstETH** or other ERC20 token), with a corresponding **DefaultCollateral**.
 3. **SymbioticVault** - a contract created via the VaultConfigurator [link](https://docs.symbiotic.fi/handbooks/vaults-handbook)
 
-`MellowSymbioticVault` is a core vault contract in Simple-LRT. It has the following functional features:
+`MellowSymbioticVault` is a core vault contract in Simple LRT. It has the following functional features:
 
 1. Deposit and withdrawal are ERC4626 style, withdrawals are async though.
 2. Claim rewards from Symbiotic vaults and distribute it to farms.
@@ -55,7 +55,7 @@ By splitting the withdrawal logic into a separate contract, we ensure that users
 ### Class diagram
 
 <Frame>
-  <img src="/images/image%20%284%29.png" alt="" />
+  <img src="/images/image%20%284%29.png" alt="Inheritance diagram of MellowSymbioticVault, built on ERC4626Vault, VaultControl and OpenZeppelin upgradeable contracts" />
 </Frame>
 
 Idle vault is a do-nothing vault for buffering ERC20s for immediate withdrawals.
@@ -65,7 +65,7 @@ There is a factory contract for permissionless deployments of the vault.
 ### Roles
 
 <Frame>
-  <img src="/images/image%20%285%29.png" alt="" />
+  <img src="/images/image%20%285%29.png" alt="Diagram of Simple LRT roles: Lido/Mellow multisig and OZ Timelock control the Vault and Symbiotic Vault" />
 </Frame>
 
 ### Flows

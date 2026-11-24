@@ -71,7 +71,7 @@ Note: `forceAllowMask` in protocolParams overrides the permission for all addres
 
 #### **Validators**
 
-ProtocolGovernance also manages a set of validators for external calls (calls a Strategy can do on behalf of Vault). A validator is a contract that verifies that an external call is made in a good faith with correct parameters.&#x20;
+ProtocolGovernance also manages a set of validators for external calls (calls a Strategy can do on behalf of Vault). A validator is a contract that verifies that an external call is made in a good faith with correct parameters.
 
 ProtocolGovernance has a mapping of an address to a validator. The Governance may set a validator for an address. If there is no validator for an address, an external call to this address is forbidden. Otherwise, the validator checks if the call is valid, using ProtocolGovernance permissions and other validation logic.
 
@@ -85,7 +85,7 @@ There are several levels of management in the Mellow Protocol:
 
 ### VaultRegistry
 
-VaultRegistry stores information about all open vaults.&#x20;
+VaultRegistry stores information about all open vaults.
 
 The registry adheres to the ERC721 standard: each Vault is assigned an NFT. The semantics is that the NFT owner would be the ERC20Root vault that manages the actions of liquidity providers (i.e. deposits or withdraws tokens from vaults when needed), whereas the NFT approved address would be a Strategy, which is responsible for rebalancing tokens between vaults inside a Vault System.
 
@@ -103,7 +103,7 @@ The oracle is to be queried with a mask of desired safety levels. The oracle wou
 
 ### Deposits / Withdrawals
 
-![](/images/mellow_scheme_8.gif)
+![Diagram of an ERC20 Root Vault above ERC20, UniV3 and Yearn vaults, linked to ERC20, Uniswap V3 and Yearn](/images/mellow_scheme_8.gif)
 
 Deposits are made through ERC20RootVault in several steps:
 
@@ -115,7 +115,7 @@ Deposits are made through ERC20RootVault in several steps:
 
 The withdrawal is made similarly but with some modifications:
 
-1. For every token, the lower estimate of its TVL in the whole system is fetched&#x20;
+1. For every token, the lower estimate of its TVL in the whole system is fetched
 2. LP tokens amount desired to be burned by a withdrawer, total LP supply, and the lower estimate of TVL are used to calculate each token amount pending withdrawal
 3. ERC20RootVault transfers those tokens from the first subvault (typically ERC20Vault) in the Vault System. If those amounts are not enough then it goes to the 2nd subvault, etc.
 4. After ERC20RootVault has enough tokens on balance it burns lp tokens and transfers ERC20 tokens to withdrawer
@@ -127,7 +127,7 @@ Withdrawal amounts are subject to [withdrawal limits](architecture#withdrawal-li
 
 ### Fees
 
-Every period of time (set in the `managementFeeChargeDelay` parameter of ERC20Root vault), certain fees are charged to all the users (charging fees is triggered by any deposit or withdrawal, but done only if the set period of time from the latest charging has passed). Due annual fees rates are set in the ERC20RootVault parameters (see above).&#x20;
+Every period of time (set in the `managementFeeChargeDelay` parameter of ERC20Root vault), certain fees are charged to all the users (charging fees is triggered by any deposit or withdrawal, but done only if the set period of time from the latest charging has passed). Due annual fees rates are set in the ERC20RootVault parameters (see above).
 
 Management and protocol fees are charged by the elapsed time, at a rate correspondingly proportional to the rate of the annual fee, from all the users, in form of minting new LP tokens for the benefit of the protocol Treasury.
 
@@ -137,4 +137,4 @@ Performance fees are charged only if the value of 1 LP token has increased from 
 
 To rebalance tokens between the vaults `pull` method is used (available for anyone approved for ERC721 vault NFT). If it's called on any subvault except the first, it pulls tokens into the first vault. If it's called on the first vault then tokens can be pulled to any Vault of the Vault System.
 
-To rebalance tokens within the first vault `externalCall` function is typically used. External calls are allowed to be called by Strategy on behalf of the Vault to external DEXes like Uniswap and Curve.&#x20;
+To rebalance tokens within the first vault `externalCall` function is typically used. External calls are allowed to be called by Strategy on behalf of the Vault to external DEXes like Uniswap and Curve.
