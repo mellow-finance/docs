@@ -438,8 +438,500 @@
       "destination": "/resources/mellow-lrt-deprecated"
     },
     {
+      "source": "/vault-infrastructure-for-fintech-earn",
+      "destination": "/vault-infrastructure-for-fintech-earn-products"
+    },
+    {
+      "source": "/resources/media-kit",
+      "destination": "/resources/brand-assets"
+    },
+    {
+      "source": "/mellow-alm/mellow-backtesting-sdk",
+      "destination": "/mellow-alm/overview"
+    },
+    {
+      "source": "/user-tutorials",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/user-tutorials/deposit-guide",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/user-tutorials/withdrawal-guide",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/dvsteth-vault-overview",
+      "destination": "/dvsteth-vault/overview"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/contract-deployments",
+      "destination": "/restaking-vaults/multivault/multi-deployments"
+    },
+    {
+      "source": "/mellow-lrt-primitive/contract-deployments",
+      "destination": "/restaking-vaults/multivault/multi-deployments"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/security",
+      "destination": "/resources/mellow-lrt-deprecated/security"
+    },
+    {
+      "source": "/mellow-lrt-primitive/security",
+      "destination": "/resources/mellow-lrt-deprecated/security"
+    },
+    {
+      "source": "/deployment/emergency-withdrawal-guide-advanced",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules",
+      "destination": "/resources/mellow-lrt-deprecated/modules"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/delegatemodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/delegatemodules/defaultbondmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/defaultbondmodule"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/delegatemodules/erc20swapmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/erc20swapmodule"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/delegatemodules/stakingmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/stakingmodule"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/externalmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/externalmodules"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/tvlmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/tvlmodules/defaultbondtvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/defaultbondtvlmodule"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/tvlmodules/erc20tvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/erc20tvlmodule"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/modules/tvlmodules/managedtvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/managedtvlmodule"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/oracles",
+      "destination": "/resources/mellow-lrt-deprecated/oracles"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/oracles/chainlinkoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/chainlinkoracle"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/oracles/managedratiosoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/managedratiosoracle"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/oracles/priceoracle/chainlinkoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/chainlinkoracle"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/oracles/ratiosoracle/managedratiosoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/managedratiosoracle"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/security",
+      "destination": "/resources/mellow-lrt-deprecated/security"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/security/adminproxy",
+      "destination": "/resources/mellow-lrt-deprecated/security/adminproxy"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/strategies",
+      "destination": "/resources/mellow-lrt-deprecated/strategies"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/strategies/defaultbondstrategy",
+      "destination": "/resources/mellow-lrt-deprecated/strategies/defaultbondstrategy"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/strategies/simpledvtstakingstrategy",
+      "destination": "/resources/mellow-lrt-deprecated/strategies/simpledvtstakingstrategy"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/utils",
+      "destination": "/resources/mellow-lrt-deprecated/utils"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/utils/defaultaccesscontrol",
+      "destination": "/resources/mellow-lrt-deprecated/utils/defaultaccesscontrol"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/utils/depositwrapper",
+      "destination": "/resources/mellow-lrt-deprecated/utils/depositwrapper"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/validators",
+      "destination": "/resources/mellow-lrt-deprecated/validators"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/validators/allowallvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/allowallvalidator"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/validators/defaultbondvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/defaultbondvalidator"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/validators/erc20swapvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/erc20swapvalidator"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/validators/managedvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/managedvalidator"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/vault",
+      "destination": "/resources/mellow-lrt-deprecated/vault"
+    },
+    {
+      "source": "/mellow-lrt/lrt-contracts/vaultconfigurator",
+      "destination": "/resources/mellow-lrt-deprecated/vaultconfigurator"
+    },
+    {
+      "source": "/mellow-lrt/user-tutorials/withdrawal-guide",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules",
+      "destination": "/resources/mellow-lrt-deprecated/modules"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/delegatemodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/delegatemodules/defaultbondmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/defaultbondmodule"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/delegatemodules/erc20swapmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/erc20swapmodule"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/delegatemodules/stakingmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/stakingmodule"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/externalmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/externalmodules"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/tvlmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/tvlmodules/defaultbondtvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/defaultbondtvlmodule"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/tvlmodules/erc20tvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/erc20tvlmodule"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/modules/tvlmodules/managedtvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/managedtvlmodule"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/oracles",
+      "destination": "/resources/mellow-lrt-deprecated/oracles"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/oracles/chainlinkoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/chainlinkoracle"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/oracles/managedratiosoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/managedratiosoracle"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/security",
+      "destination": "/resources/mellow-lrt-deprecated/security"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/security/adminproxy",
+      "destination": "/resources/mellow-lrt-deprecated/security/adminproxy"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/strategies",
+      "destination": "/resources/mellow-lrt-deprecated/strategies"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/strategies/defaultbondstrategy",
+      "destination": "/resources/mellow-lrt-deprecated/strategies/defaultbondstrategy"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/strategies/simpledvtstakingstrategy",
+      "destination": "/resources/mellow-lrt-deprecated/strategies/simpledvtstakingstrategy"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/utils",
+      "destination": "/resources/mellow-lrt-deprecated/utils"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/utils/defaultaccesscontrol",
+      "destination": "/resources/mellow-lrt-deprecated/utils/defaultaccesscontrol"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/utils/depositwrapper",
+      "destination": "/resources/mellow-lrt-deprecated/utils/depositwrapper"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/validators",
+      "destination": "/resources/mellow-lrt-deprecated/validators"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/validators/allowallvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/allowallvalidator"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/validators/defaultbondvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/defaultbondvalidator"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/validators/erc20swapvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/erc20swapvalidator"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/validators/managedvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/managedvalidator"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/vault",
+      "destination": "/resources/mellow-lrt-deprecated/vault"
+    },
+    {
+      "source": "/mellow-lrt-primitive/lrt-contracts/vaultconfigurator",
+      "destination": "/resources/mellow-lrt-deprecated/vaultconfigurator"
+    },
+    {
+      "source": "/mellow-lrt-primitive/user-tutorials/emergency-withdrawal-guide-advanced",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/mellow-lrt-primitive/user-tutorials/withdrawal-guide",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules",
+      "destination": "/resources/mellow-lrt-deprecated/modules"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/delegatemodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/delegatemodules/defaultbondmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/defaultbondmodule"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/delegatemodules/erc20swapmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/erc20swapmodule"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/delegatemodules/stakingmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/delegatemodules/stakingmodule"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/externalmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/externalmodules"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/tvlmodules",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/tvlmodules/defaultbondtvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/defaultbondtvlmodule"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/tvlmodules/erc20tvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/erc20tvlmodule"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/modules/tvlmodules/managedtvlmodule",
+      "destination": "/resources/mellow-lrt-deprecated/modules/tvlmodules/managedtvlmodule"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/oracles",
+      "destination": "/resources/mellow-lrt-deprecated/oracles"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/oracles/chainlinkoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/chainlinkoracle"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/oracles/managedratiosoracle",
+      "destination": "/resources/mellow-lrt-deprecated/oracles/managedratiosoracle"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/security",
+      "destination": "/resources/mellow-lrt-deprecated/security"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/security/adminproxy",
+      "destination": "/resources/mellow-lrt-deprecated/security/adminproxy"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/strategies",
+      "destination": "/resources/mellow-lrt-deprecated/strategies"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/strategies/defaultbondstrategy",
+      "destination": "/resources/mellow-lrt-deprecated/strategies/defaultbondstrategy"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/strategies/simpledvtstakingstrategy",
+      "destination": "/resources/mellow-lrt-deprecated/strategies/simpledvtstakingstrategy"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/utils",
+      "destination": "/resources/mellow-lrt-deprecated/utils"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/utils/defaultaccesscontrol",
+      "destination": "/resources/mellow-lrt-deprecated/utils/defaultaccesscontrol"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/utils/depositwrapper",
+      "destination": "/resources/mellow-lrt-deprecated/utils/depositwrapper"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/validators",
+      "destination": "/resources/mellow-lrt-deprecated/validators"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/validators/allowallvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/allowallvalidator"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/validators/defaultbondvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/defaultbondvalidator"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/validators/erc20swapvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/erc20swapvalidator"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/validators/managedvalidator",
+      "destination": "/resources/mellow-lrt-deprecated/validators/managedvalidator"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/vault",
+      "destination": "/resources/mellow-lrt-deprecated/vault"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/lrt-contracts/vaultconfigurator",
+      "destination": "/resources/mellow-lrt-deprecated/vaultconfigurator"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/user-tutorials/emergency-withdrawal-guide-advanced",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/user-tutorials/withdrawal-guide",
+      "destination": "/resources/mellow-lrt-deprecated/emergency-withdrawal-guide-advanced"
+    },
+    {
+      "source": "/interoperable-vaults/deployments",
+      "destination": "/restaking-vaults/interoperable-vaults/interop-deployments"
+    },
+    {
+      "source": "/interoperable-vaults",
+      "destination": "/restaking-vaults/interoperable-vaults"
+    },
+    {
+      "source": "/multivault",
+      "destination": "/restaking-vaults/multivault"
+    },
+    {
+      "source": "/simple-lrt",
+      "destination": "/restaking-vaults/simple-lrt"
+    },
+    {
+      "source": "/mellow-permissionless-vaults",
+      "destination": "/mellow-alm/overview"
+    },
+    {
+      "source": "/mellow-strategies",
+      "destination": "/mellow-alm/overview"
+    },
+    {
+      "source": "/mellow-lrt",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/mellow-lrt-primitive",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/deployment",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
       "source": "/resources/mellow-lrt-depreciated/:slug*",
       "destination": "/resources/mellow-lrt-deprecated/:slug*"
+    },
+    {
+      "source": "/interoperable-vaults/:slug*",
+      "destination": "/restaking-vaults/interoperable-vaults/:slug*"
+    },
+    {
+      "source": "/multivault/:slug*",
+      "destination": "/restaking-vaults/multivault/:slug*"
+    },
+    {
+      "source": "/simple-lrt/:slug*",
+      "destination": "/restaking-vaults/simple-lrt/:slug*"
+    },
+    {
+      "source": "/mellow-permissionless-vaults/:slug*",
+      "destination": "/mellow-alm/overview"
+    },
+    {
+      "source": "/mellow-strategies/:slug*",
+      "destination": "/mellow-alm/overview"
+    },
+    {
+      "source": "/mellow-lrt/:slug*",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/mellow-lrt-primitive/:slug*",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/:slug*",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/deployment/:slug*",
+      "destination": "/resources/mellow-lrt-deprecated"
+    },
+    {
+      "source": "/user-tutorials/:slug*",
+      "destination": "/resources/mellow-lrt-deprecated"
     }
   ],
   "navbar": {
