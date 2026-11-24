@@ -54,13 +54,13 @@ Where `$$s_x = \frac{l_x}{l_x + l_y}, s_y = \frac{l_y}{l_x + l_y}$$`(i.e. shares
 
 By design, rebalances must not change `$$l_x + l_y$$`​. Hence, as token ratios in positions are different, additional tokens from the ERC20 vault might be needed for rebalance to succeed. This is the responsibility of the operator to have enough tokens on the ERC20 vault at the time of this rebalance. If there are not enough tokens, rebalance would be done partially (i.e. ratios would become closer to those which needed).
 
-Generally, as can be seen, the operator might need to call several such rebalances to obtain desired positions and token ratios, depending on market circumstances.&#x20;
+Generally, as can be seen, the operator might need to call several such rebalances to obtain desired positions and token ratios, depending on market circumstances.
 
 #### Erc20-UniV3 rebalance
 
 This rebalance is to be done to restore the portion of capital in the ERC20 vault as `erc20UniV3CapitalRatio`. For that, the following steps are done.
 
-* The capital of each vault, nominated in WETH, is calculated. For that, token amounts are obtained from `tvl()`, the average between `minTvl` and `maxTvl` is taken for each token, and then the total capital is obtained using the price between tokens from the oracle. Let the ERC20 capital be `$$e$$`, the lower vault capital be `$$l$$`, the upper vault capital be `$$u$$`.&#x20;
+* The capital of each vault, nominated in WETH, is calculated. For that, token amounts are obtained from `tvl()`, the average between `minTvl` and `maxTvl` is taken for each token, and then the total capital is obtained using the price between tokens from the oracle. Let the ERC20 capital be `$$e$$`, the lower vault capital be `$$l$$`, the upper vault capital be `$$u$$`.
 * We want `$$\frac{e}{e + l + u}$$`to be equal to `erc20UniV3CapitalRatio`. If they differ less than `minErc20UniV3CapitalRatioDeviation`, we don't do a rebalance.
 * Hence, we calculate `$$d$$`, which is the amount of capital to be taken from Uniswap V3 positions to obtain this ratio (of course, `$$d$$` can be negative, which means the capital is actually to be taken from the ERC20 vault to Uniswap V3 positions)
 * Certain amounts of tokens to be taken are calculated, based on `$$d$$`. The tokens are taken from (or to) Uniswap V3 positions keeping the ratio of Uniswap V3 liquidity between them the same.
@@ -69,7 +69,7 @@ This rebalance is to be done to restore the portion of capital in the ERC20 vaul
 
 #### Erc20 rebalance
 
-There is a parameter `erc20TokenRatio`, which is what share of the capital of the ERC20 vault we want to have in WSTETH. All the remaining share of capital is to be in WETH.&#x20;
+There is a parameter `erc20TokenRatio`, which is what share of the capital of the ERC20 vault we want to have in WSTETH. All the remaining share of capital is to be in WETH.
 
 If the current ratio and the desired ratio differ less than by `minErc20TokenRatioDeviation`, we don't do anything.
 
