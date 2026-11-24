@@ -890,6 +890,78 @@
       "destination": "/resources/mellow-lrt-deprecated"
     },
     {
+      "source": "/mellow-lrt-primitive/interoperable-vaults",
+      "destination": "/restaking-vaults/interoperable-vaults/overview"
+    },
+    {
+      "source": "/mellow-lrt-primitive/loyalty-points",
+      "destination": "/points/overview"
+    },
+    {
+      "source": "/mellow-lrt-primitive/loyalty-points/defi-points-integration-instructions",
+      "destination": "/points/defi-points-integration-instructions"
+    },
+    {
+      "source": "/mellow-lrt-primitive/loyalty-points/points-in-symbiotic-pre-deposit-contracts",
+      "destination": "/points/points-in-symbiotic-pre-deposit-contracts"
+    },
+    {
+      "source": "/mellow-lrt-primitive/multivault",
+      "destination": "/restaking-vaults/multivault/overview"
+    },
+    {
+      "source": "/mellow-lrt-primitive/simple-lrt",
+      "destination": "/restaking-vaults/simple-lrt/overview"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/interoperable-vaults",
+      "destination": "/restaking-vaults/interoperable-vaults/overview"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/loyalty-points",
+      "destination": "/points/overview"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/loyalty-points/defi-points-integration-instructions",
+      "destination": "/points/defi-points-integration-instructions"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/loyalty-points/points-in-symbiotic-pre-deposit-contracts",
+      "destination": "/points/points-in-symbiotic-pre-deposit-contracts"
+    },
+    {
+      "source": "/mellow-lrt-lst-primitive/simple-lrt",
+      "destination": "/restaking-vaults/simple-lrt/overview"
+    },
+    {
+      "source": "/architecture",
+      "destination": "/restaking-vaults/simple-lrt/architecture"
+    },
+    {
+      "source": "/deployments-1",
+      "destination": "/restaking-vaults/multivault/multi-deployments"
+    },
+    {
+      "source": "/dvv-deployment",
+      "destination": "/dvsteth-vault/dvv-deployment"
+    },
+    {
+      "source": "/multi-deployments",
+      "destination": "/restaking-vaults/multivault/multi-deployments"
+    },
+    {
+      "source": "/simple-deployments",
+      "destination": "/restaking-vaults/simple-lrt/simple-deployments"
+    },
+    {
+      "source": "/getting-started",
+      "destination": "/"
+    },
+    {
+      "source": "/untitled",
+      "destination": "/"
+    },
+    {
       "source": "/resources/mellow-lrt-depreciated/:slug*",
       "destination": "/resources/mellow-lrt-deprecated/:slug*"
     },
