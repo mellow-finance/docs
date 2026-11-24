@@ -52,7 +52,7 @@ $$
 
 Where `$$s_x = \frac{l_x}{l_x + l_y}, s_y = \frac{l_y}{l_x + l_y}$$`(i.e. shares of total strategy Uniswap V3 liquidity in the lower and the upper vault). To obtain those ratios, the strategy transfers tokens from one UniV3 vault to another, depending on which vault lacks liquidity. Let `$$r_x$$` be `$$\frac{l_x}{l_x + l_y}$$`before the rebalance. The rebalance is done only if `$$|s_x - r_x|$$` `> minUniV3LiquidityRatioDeviation`, which is a strategy parameter.
 
-By design, rebalances must not change `$$l_x + l_y$$`​. Hence, as token ratios in positions are different, additional tokens from the ERC20 vault might be needed for rebalance to succeed. This is the responsibility of the operator to have enough tokens on the ERC20 vault at the time of this rebalance. If there are not enough tokens, rebalance would be done partially (i.e. ratios would become closer to those which needed).
+By design, rebalances must not change `$$l_x + l_y$$`. Hence, as token ratios in positions are different, additional tokens from the ERC20 vault might be needed for rebalance to succeed. This is the responsibility of the operator to have enough tokens on the ERC20 vault at the time of this rebalance. If there are not enough tokens, rebalance would be done partially (i.e. ratios would become closer to those which needed).
 
 Generally, as can be seen, the operator might need to call several such rebalances to obtain desired positions and token ratios, depending on market circumstances.
 

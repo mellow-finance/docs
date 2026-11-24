@@ -21,19 +21,19 @@ A mandate is the set of rules that defines how a vault may operate. It includes 
 
 **Roles**
 
-* **​Depositors** provide stablecoin capital
-* **​Distribution partners** – wallets, exchanges, fintechs, banks, brokers, stablecoin platforms – own the product surface and customer relationship
-* **​Curators or vault managers** operate the strategy within the mandate
-* **​Mellow** provides the vault infrastructure
-* ​**Vault contracts** enforce the mandate
+* **Depositors** provide stablecoin capital
+* **Distribution partners** – wallets, exchanges, fintechs, banks, brokers, stablecoin platforms – own the product surface and customer relationship
+* **Curators or vault managers** operate the strategy within the mandate
+* **Mellow** provides the vault infrastructure
+* **Vault contracts** enforce the mandate
 
-​
+
 
 ## Stablecoin use cases
 
 ### **Earn products**
 
-Earn products on Mellow exist across multiple asset types. This section covers stablecoin Earn specifically. A distribution partner – wallet, exchange, fintech, bank, neobank, broker, asset issuer, or stablecoin platform – offers yield on stablecoin balances under their own brand. The user deposits an eligible stablecoin, sees an APY, and can withdraw according to the product's redemption rules.​
+Earn products on Mellow exist across multiple asset types. This section covers stablecoin Earn specifically. A distribution partner – wallet, exchange, fintech, bank, neobank, broker, asset issuer, or stablecoin platform – offers yield on stablecoin balances under their own brand. The user deposits an eligible stablecoin, sees an APY, and can withdraw according to the product's redemption rules.
 
 In the stablecoin context, an Earn product is a vault with a yield-focused mandate: approved strategies, risk limits, compliance constraints, and depositor eligibility configured for the partner's product requirements. The distribution partner owns the customer and the brand. The vault manager operates the strategy. Mellow provides the vault infrastructure.
 
@@ -66,14 +66,14 @@ Individuals holding stablecoin balances can manage them under the same vault arc
 
 The mandate defines the approved strategy set. The following are example strategy categories. Actual availability depends on the vault mandate, integrations, jurisdiction, and asset eligibility.
 
-​
 
-* ​**Tokenized T-bills and money-market funds** – BlackRock's BUIDL, Ondo's USDY, Superstate's USTB, Franklin Templeton's BENJI. Conservative base layer. Redemption timing varies by issuer (T+0 to T+2); the vault handles async settlement natively.
-* **​Lending markets** – Aave, Morpho, Compound, and other onchain lending protocols. The vault enforces which markets are approved, maximum allocation per market, and utilization thresholds for rebalancing.
-* ​**Short-duration yield** – liquidity pools, stablecoin AMMs, and other venues with intraday deployment and withdrawal. Serve as both yield generation and liquidity buffer.
-* **​CEX venues** – via Copper ClearLoop and Ceffu, capital routes to centralized opportunities under the same permission model as DeFi allocations.
 
-​
+* **Tokenized T-bills and money-market funds** – BlackRock's BUIDL, Ondo's USDY, Superstate's USTB, Franklin Templeton's BENJI. Conservative base layer. Redemption timing varies by issuer (T+0 to T+2); the vault handles async settlement natively.
+* **Lending markets** – Aave, Morpho, Compound, and other onchain lending protocols. The vault enforces which markets are approved, maximum allocation per market, and utilization thresholds for rebalancing.
+* **Short-duration yield** – liquidity pools, stablecoin AMMs, and other venues with intraday deployment and withdrawal. Serve as both yield generation and liquidity buffer.
+* **CEX venues** – via Copper ClearLoop and Ceffu, capital routes to centralized opportunities under the same permission model as DeFi allocations.
+
+
 
 A single vault can hold positions across all strategy types simultaneously. Multi-asset accounting and oracle-defined NAV produce a coherent portfolio view across assets with different pricing sources, settlement timings, and liquidity profiles. Adding a new approved venue is typically configuration rather than new contract code.
 
@@ -84,14 +84,14 @@ Core Vaults enforce 60+ onchain permissions at the contract level:
 
 
 * Allocation caps per strategy, per asset, and per venue
-* ​Asset whitelists – the vault only holds approved assets
-* ​Venue whitelists – the vault only routes to approved targets
-* ​Oracle price checks before operations execute
-* ​Withdrawal queue controls for fair redemption ordering
+* Asset whitelists – the vault only holds approved assets
+* Venue whitelists – the vault only routes to approved targets
+* Oracle price checks before operations execute
+* Withdrawal queue controls for fair redemption ordering
 
 
 
-Verifiers are the onchain components that validate each action against the vault's permission set. The verifier model is composable – routine operations may require a single verifier, while high-impact operations can require multiple verifier approvals, time locks, or enhanced validation. Verifiers do not distinguish between human curators and autonomous agents. The same rules apply.​
+Verifiers are the onchain components that validate each action against the vault's permission set. The verifier model is composable – routine operations may require a single verifier, while high-impact operations can require multiple verifier approvals, time locks, or enhanced validation. Verifiers do not distinguish between human curators and autonomous agents. The same rules apply.
 
 Guardrails are configurable through structured governance but cannot be breached during execution.
 
@@ -99,7 +99,7 @@ Guardrails are configurable through structured governance but cannot be breached
 
 Compliance rules are applied at the vault level, so different products can enforce different eligibility and transfer requirements without changing the base vault architecture. Core Vaults treat mandates as configurable objects.
 
-​Share-token eligibility – configurable hooks for KYC/KYB providers, transfer agents, accreditation registries, jurisdiction-based restrictions
+Share-token eligibility – configurable hooks for KYC/KYB providers, transfer agents, accreditation registries, jurisdiction-based restrictions
 
 Asset eligibility – per-asset and per-issuer rules; regulated tokenized instruments with transfer restrictions are handled separately from permissionless positions
 
